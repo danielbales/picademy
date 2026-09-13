@@ -23,27 +23,30 @@ export default function CriticCard({ critic, result, status, roastRevealed, fixR
         </span>
         <div className="cb-row-main">
           <h3 className="cb-row-title">{critic.name}</h3>
-          <div className="cb-critic-tags">
+          <p className="cb-critic-focus">
+            <span className="cb-focus-label">Focus:</span>
             {isHabit ? (
               <span className="cb-critic-tag" style={{ color: critic.color }}>
-                <Heart size={12} aria-hidden="true" /> Habits
+                <Heart size={10} aria-hidden="true" /> Habits
               </span>
             ) : (
               critic.skills.map((sid) => {
                 const s = SKILL_BY_ID[sid];
                 return (
                   <span key={sid} className="cb-critic-tag" style={{ color: s.color }}>
-                    <s.Icon size={12} aria-hidden="true" /> {s.label}
+                    <s.Icon size={10} aria-hidden="true" /> {s.label}
                   </span>
                 );
               })
             )}
+          </p>
+        </div>
+        {r && roastRevealed && (
+          <div className="cb-critic-score">
+            {fmt(score)}
+            {isHabit && <small>Not counted</small>}
           </div>
-        </div>
-        <div className="cb-critic-score">
-          {judging ? <span style={{ color: "var(--text-2)" }}>&ndash;</span> : r && roastRevealed ? fmt(score) : <span style={{ color: "var(--text-2)" }}>&ndash;</span>}
-          {r && roastRevealed && isHabit && <small>Not counted</small>}
-        </div>
+        )}
       </div>
 
       {judging && (
@@ -53,12 +56,6 @@ export default function CriticCard({ critic, result, status, roastRevealed, fixR
           </span>
           <p className="cb-waiting">{critic.waiting}</p>
         </div>
-      )}
-
-      {!judging && !r && (
-        <p className="cb-waiting">
-          {status === "ready" ? "Ready when you are." : status === "error" ? "No response." : "Waiting for a photo."}
-        </p>
       )}
 
       {r && roastRevealed && (

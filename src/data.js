@@ -49,7 +49,7 @@ export const TEMPERS = [
 ];
 
 export const HOST = {
-  idle: "Upload a photo. Critics will score it, roast it, and tell you exactly how to make your next one better.",
+  idle: "Upload a photo. The Judges will score it, roast it, and tell you exactly how to make your next one better.",
   ready: "Ooh, a new photo! Let\u2019s see what the Judges think.",
   reshootReady: "A reshoot! Let\u2019s see if you nailed it this time.",
   error: "The Judges wandered off. Probably chasing a laser pointer.",

@@ -186,8 +186,9 @@ body { margin: 0; background: #0A0B0D; }
 .cb-critic-head .cb-row-title { font-size: 14px; }
 .cb-critic-score { font-weight: 600; font-size: 20px; font-variant-numeric: tabular-nums; margin-top: 4px; }
 .cb-critic-score small { display: block; color: var(--text-2); font-size: 11px; font-weight: 500; }
-.cb-critic-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-.cb-critic-tag { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 500; opacity: 0.85; }
+.cb-critic-focus { display: flex; align-items: center; gap: 6px; margin: 2px 0 0; }
+.cb-focus-label { font-size: 11px; font-weight: 500; color: var(--text-2); }
+.cb-critic-tag { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 500; opacity: 0.8; }
 .cb-roast { margin: 14px 0 0; color: var(--body); line-height: 1.55; }
 .cb-waiting { color: var(--text-2); margin: 10px 0 0; font-size: 13px; }
 /* List mode overrides */
