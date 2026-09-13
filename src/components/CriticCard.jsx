@@ -1,6 +1,4 @@
-import { Heart } from "lucide-react";
 import { fmt } from "../helpers";
-import { SKILL_BY_ID } from "../data";
 import FixCard from "./FixCard";
 import FACES from "./faces";
 
@@ -23,23 +21,7 @@ export default function CriticCard({ critic, result, status, roastRevealed, fixR
         </span>
         <div className="cb-row-main">
           <h3 className="cb-row-title">{critic.name}</h3>
-          <p className="cb-critic-focus">
-            <span className="cb-focus-label">Focus:</span>
-            {isHabit ? (
-              <span className="cb-critic-tag" style={{ color: critic.color }}>
-                <Heart size={10} aria-hidden="true" /> Habits
-              </span>
-            ) : (
-              critic.skills.map((sid) => {
-                const s = SKILL_BY_ID[sid];
-                return (
-                  <span key={sid} className="cb-critic-tag" style={{ color: s.color }}>
-                    <s.Icon size={10} aria-hidden="true" /> {s.label}
-                  </span>
-                );
-              })
-            )}
-          </p>
+          <p className="cb-critic-focus"><span className="cb-focus-label">Focused on:</span> {critic.focus}</p>
         </div>
         {r && roastRevealed && (
           <div className="cb-critic-score">

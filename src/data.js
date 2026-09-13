@@ -17,6 +17,7 @@ export const CRITICS = [
     color: "#D4AA3A",
     tint: "rgba(212,170,58,.16)",
     skills: ["light", "technical"],
+    focus: "Light and exposure",
     waiting: "Basking in the light like a true king\u2026",
   },
   {
@@ -27,6 +28,7 @@ export const CRITICS = [
     color: "#E26AB5",
     tint: "rgba(226,106,181,.16)",
     skills: ["composition", "editing"],
+    focus: "Composition and color",
     waiting: "Diving deep into the composition\u2026",
   },
   {
@@ -37,6 +39,7 @@ export const CRITICS = [
     color: "#27AD75",
     tint: "rgba(39,173,117,.16)",
     skills: [],
+    focus: "Bias \u2764\uFE0F",
     waiting: "Putting on her reading glasses\u2026",
   },
 ];
