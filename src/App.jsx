@@ -213,8 +213,11 @@ export default function App() {
               <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openCamera("reshoot")}>
                 Reshoot and compare
               </button>
+              <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openCamera("new")}>
+                Take a new photo
+              </button>
               <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
-                New photo
+                Upload from library
               </button>
             </>
           )}
@@ -247,6 +250,25 @@ export default function App() {
             ))}
           </div>
         </section>
+
+        {done && result.frameTip && revealStep >= 8 && (
+          <section className="cb-section cb-fade-in">
+            <div className="cb-frame-tip">
+              <span className="cb-avatar cb-avatar-host" aria-hidden="true">
+                <Frame />
+              </span>
+              <div>
+                <p className="cb-frame-tip-label">
+                  The Frame&rsquo;s tip
+                  {result.photoType && result.photoType !== "other" && (
+                    <span className="cb-photo-type">{result.photoType.replace("_", " ")}</span>
+                  )}
+                </p>
+                <p className="cb-frame-tip-body">{result.frameTip}</p>
+              </div>
+            </div>
+          </section>
+        )}
 
         {done && result.assignment && revealStep >= 8 && (
           <section className="cb-section cb-fade-in">

@@ -39,9 +39,14 @@ const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile, g
     <>
       <div className="cb-photo-wrap">
         {isHung && photo && (
-          <svg className="cb-wire" viewBox="0 0 40 20" fill="none" aria-hidden="true">
-            <path d="M20 0 L20 4" stroke="#8A919E" strokeWidth="1.5" strokeLinecap="round" />
-            <path d="M8 20 L20 6 L32 20" stroke="#8A919E" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+          <svg className="cb-wire" viewBox="0 0 80 44" fill="none" aria-hidden="true">
+            {/* nail */}
+            <circle cx="40" cy="6" r="4" fill="#6B7280" />
+            <circle cx="40" cy="6" r="2.2" fill="#9CA3AF" />
+            <rect x="39" y="8" width="2" height="6" rx="1" fill="#6B7280" />
+            {/* strings */}
+            <line x1="40" y1="14" x2="12" y2="44" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" />
+            <line x1="40" y1="14" x2="68" y2="44" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         )}
         <div
@@ -72,15 +77,25 @@ const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile, g
             </div>
           ) : (
             <div className={`cb-drop${dragging ? " is-over" : ""}`}>
-              <button
-                type="button"
-                className="cb-drop-camera"
-                onClick={() => galleryRef.current?.click()}
-                aria-label="Upload a photo"
-              >
-                <ImagePlus size={28} aria-hidden="true" />
-              </button>
-              <strong>Upload a photo</strong>
+              <div className="cb-drop-btns">
+                <button
+                  type="button"
+                  className="cb-drop-camera"
+                  onClick={() => cameraRef.current?.click()}
+                  aria-label="Take a photo"
+                >
+                  <Camera size={28} aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  className="cb-drop-camera"
+                  onClick={() => galleryRef.current?.click()}
+                  aria-label="Upload a photo"
+                >
+                  <ImagePlus size={28} aria-hidden="true" />
+                </button>
+              </div>
+              <strong>Take or upload a photo</strong>
             </div>
           )}
         </div>

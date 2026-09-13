@@ -90,7 +90,7 @@ export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain
               <span className="cb-big cb-display cb-num">{shown.toFixed(1)}</span>
               <span className="cb-big-of">/ 10</span>
               <span className={`cb-grade cb-num grade-${grade[0].toLowerCase()}`} aria-label={`Grade ${grade}`}>
-                <Trophy size={18} aria-hidden="true" />
+                <Trophy size={28} aria-hidden="true" />
                 {grade.replace("-", "\u2212")}
               </span>
             </>
@@ -104,7 +104,7 @@ export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain
         {heroSub && <p className="cb-sub">{heroSub}</p>}
         {bestScore != null && (
           <p className="cb-best">
-            <Trophy size={14} aria-hidden="true" />
+            <Trophy size={18} aria-hidden="true" />
             {`Best: ${fmt(bestScore)} (${toGrade(bestScore)}) \u2014 beat it`}
           </p>
         )}
