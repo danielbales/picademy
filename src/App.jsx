@@ -5,7 +5,7 @@ import { grade } from "./api";
 import { prepareImage } from "./image";
 import { toGrade, average, fmt } from "./helpers";
 import { saveScore, getBest, saveCovered, getCovered } from "./scores";
-import Frame from "./components/Frame";
+import Host from "./components/Host";
 import ScoreHero, { Change } from "./components/ScoreHero";
 import CriticCard from "./components/CriticCard";
 import ImagePicker from "./components/ImagePicker";
@@ -86,7 +86,7 @@ export default function App() {
       });
       setCovered((c) => {
         const next = new Set(c);
-        [data.sterling, data.margaux, data.mom].forEach((fix) => {
+        [data.curren, data.harper, data.mom].forEach((fix) => {
           if (fix && fix.fundamental) next.add(fix.fundamental);
         });
         const arr = Array.from(next);
@@ -133,7 +133,7 @@ export default function App() {
         <header className="cb-bar">
           <h1 className="cb-brand cb-display">
             <span className="cb-brand-mark" aria-hidden="true">
-              <Frame />
+              <Host />
             </span>
             Picademy
           </h1>
@@ -153,11 +153,11 @@ export default function App() {
         {/* Host */}
         <div className="cb-host" aria-live="polite">
           <span className="cb-avatar cb-avatar-host" aria-hidden="true">
-            <Frame />
+            <Host />
           </span>
           <div>
             <p className="cb-host-name">
-              The Frame<span>Host</span>
+              Cammy<span>Host</span>
             </p>
             <p className="cb-host-line">{hostLine}</p>
           </div>
@@ -173,7 +173,7 @@ export default function App() {
         />
 
         {/* Temper */}
-        <p className="cb-control-label" id="cb-temper">How harsh should they be?</p>
+        <p className="cb-control-label" id="cb-temper">How harsh should the Judges be?</p>
         <div className="cb-seg" role="group" aria-labelledby="cb-temper">
           {TEMPERS.map((t) => (
             <button
@@ -196,7 +196,7 @@ export default function App() {
           {status === "ready" && (
             <>
               <button type="button" className="cb-btn" onClick={judge}>
-                Submit to the panel
+                Submit to the Judges
               </button>
               <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
                 Choose a different photo
@@ -205,7 +205,7 @@ export default function App() {
           )}
           {judging && (
             <button type="button" className="cb-btn" disabled>
-              The panel is deliberating&hellip;
+              The Judges are deliberating&hellip;
             </button>
           )}
           {status === "done" && (
@@ -243,7 +243,7 @@ export default function App() {
 
         {/* Panel */}
         <section className="cb-section" aria-live="polite">
-          <h2 className="cb-h2 cb-display">The panel</h2>
+          <h2 className="cb-h2 cb-display">The Judges</h2>
           <div className={`cb-panel-grid${revealStep >= 2 ? " is-list" : ""}`}>
             {CRITICS.map((c, i) => (
               <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} {...criticReveal(i)} />
@@ -255,11 +255,11 @@ export default function App() {
           <section className="cb-section cb-fade-in">
             <div className="cb-frame-tip">
               <span className="cb-avatar cb-avatar-host" aria-hidden="true">
-                <Frame />
+                <Host />
               </span>
               <div>
                 <p className="cb-frame-tip-label">
-                  The Frame&rsquo;s tip
+                  Cammy&rsquo;s tip
                   {result.photoType && result.photoType !== "other" && (
                     <span className="cb-photo-type">{result.photoType.replace("_", " ")}</span>
                   )}

@@ -234,8 +234,8 @@ body { margin: 0; background: #0A0B0D; }
 @keyframes cb-sway { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-3deg); } }
 @keyframes cb-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 
-.cb-critic-wait.is-sterling .cb-avatar { animation: cb-lean 8s ease-in-out infinite; }
-.cb-critic-wait.is-margaux .cb-avatar { animation: cb-sway 8s ease-in-out infinite 1s; }
+.cb-critic-wait.is-curren .cb-avatar { animation: cb-lean 8s ease-in-out infinite; }
+.cb-critic-wait.is-harper .cb-avatar { animation: cb-sway 8s ease-in-out infinite 1s; }
 .cb-critic-wait.is-mom .cb-avatar { animation: cb-bob 8s ease-in-out infinite 2s; }
 
 /* Fade in for verdict */
@@ -247,8 +247,8 @@ body { margin: 0; background: #0A0B0D; }
   .cb-progress span { transition: none; }
   .cb-photo.is-hung { animation: none; }
   .cb-photo.is-hung::after { animation: none; }
-  .cb-critic-wait.is-sterling .cb-avatar,
-  .cb-critic-wait.is-margaux .cb-avatar,
+  .cb-critic-wait.is-curren .cb-avatar,
+  .cb-critic-wait.is-harper .cb-avatar,
   .cb-critic-wait.is-mom .cb-avatar { animation: none; }
   .cb-fade-in { animation: none; }
 }

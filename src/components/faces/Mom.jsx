@@ -1,33 +1,31 @@
 export default function Mom({ className }) {
   return (
     <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
+      {/* Ears */}
+      <circle cx="10" cy="10" r="5" fill="#8B6A4A" />
+      <circle cx="30" cy="10" r="5" fill="#8B6A4A" />
+      <circle cx="10" cy="10" r="3" fill="#C4917A" />
+      <circle cx="30" cy="10" r="3" fill="#C4917A" />
       {/* Head */}
-      <circle cx="20" cy="21" r="14" fill="#F5DEB3" />
-      {/* Hair - soft, warm */}
-      <path d="M7 19 Q7 5 20 5 Q33 5 33 19 Q32 12 26 10 Q22 9 20 9 Q18 9 14 10 Q8 12 7 19Z" fill="#8B6340" />
-      {/* Soft side hair */}
-      <path d="M7 19 Q6 24 8 26 Q8.5 21 9 17Z" fill="#8B6340" />
-      <path d="M33 19 Q34 24 32 26 Q31.5 21 31 17Z" fill="#8B6340" />
-      {/* Glasses */}
-      <rect x="10" y="17" width="9" height="7" rx="3" fill="none" stroke="#9B8570" strokeWidth="1" />
-      <rect x="21" y="17" width="9" height="7" rx="3" fill="none" stroke="#9B8570" strokeWidth="1" />
-      <line x1="19" y1="20" x2="21" y2="20" stroke="#9B8570" strokeWidth="0.8" />
-      {/* Left eye - happy */}
-      <ellipse cx="14.5" cy="20.5" rx="1.6" ry="1.8" fill="#4A3728" />
-      <circle cx="15" cy="20" r="0.5" fill="#FFF" />
-      {/* Right eye - happy */}
-      <ellipse cx="25.5" cy="20.5" rx="1.6" ry="1.8" fill="#4A3728" />
-      <circle cx="26" cy="20" r="0.5" fill="#FFF" />
-      {/* Soft brows */}
-      <path d="M11 16 Q14.5 14.5 18 16" fill="none" stroke="#8B6340" strokeWidth="0.8" strokeLinecap="round" />
-      <path d="M22 16 Q25.5 14.5 29 16" fill="none" stroke="#8B6340" strokeWidth="0.8" strokeLinecap="round" />
+      <circle cx="20" cy="22" r="15" fill="#8B6A4A" />
+      {/* Muzzle */}
+      <ellipse cx="20" cy="26" rx="8" ry="6" fill="#C4A87A" />
+      {/* Eyes - warm and round */}
+      <ellipse cx="14" cy="20" rx="2.5" ry="2.8" fill="#3B2010" />
+      <circle cx="14.8" cy="19.2" r="0.8" fill="#FFF" opacity="0.9" />
+      <ellipse cx="26" cy="20" rx="2.5" ry="2.8" fill="#3B2010" />
+      <circle cx="26.8" cy="19.2" r="0.8" fill="#FFF" opacity="0.9" />
+      {/* Happy eyebrows */}
+      <path d="M11 16.5 Q14 15 17 16.5" fill="none" stroke="#6B4A2A" strokeWidth="0.8" strokeLinecap="round" />
+      <path d="M23 16.5 Q26 15 29 16.5" fill="none" stroke="#6B4A2A" strokeWidth="0.8" strokeLinecap="round" />
       {/* Nose */}
-      <path d="M20 22 L19 24 L21 24" fill="none" stroke="#D4B896" strokeWidth="0.7" strokeLinecap="round" strokeLinejoin="round" />
-      {/* Big warm smile */}
-      <path d="M14 27 Q17 31 20 31 Q23 31 26 27" fill="none" stroke="#C4917A" strokeWidth="1.2" strokeLinecap="round" />
+      <ellipse cx="20" cy="24" rx="2.5" ry="1.8" fill="#4A3020" />
+      <ellipse cx="20" cy="23.5" rx="1.2" ry="0.5" fill="#6B4A3A" opacity="0.5" />
+      {/* Smile */}
+      <path d="M15 28 Q17.5 31 20 31 Q22.5 31 25 28" fill="none" stroke="#6B4A2A" strokeWidth="1" strokeLinecap="round" />
       {/* Rosy cheeks */}
-      <circle cx="11" cy="25" r="2.5" fill="#F0A0A0" opacity="0.3" />
-      <circle cx="29" cy="25" r="2.5" fill="#F0A0A0" opacity="0.3" />
+      <circle cx="10" cy="25" r="3" fill="#E8A0A0" opacity="0.25" />
+      <circle cx="30" cy="25" r="3" fill="#E8A0A0" opacity="0.25" />
     </svg>
   );
 }

@@ -66,7 +66,7 @@ export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain
   if (firstLoad && !previous) return chain.length > 1 ? <ScoreChart points={chain} /> : null;
 
   let heroSub;
-  if (judging) heroSub = <span>The panel is deliberating</span>;
+  if (judging) heroSub = <span>The Judges are deliberating</span>;
   else if (done && previous)
     heroSub = (
       <>

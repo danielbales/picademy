@@ -23,24 +23,22 @@ export default function CriticCard({ critic, result, status, roastRevealed, fixR
         </span>
         <div className="cb-row-main">
           <h3 className="cb-row-title">{critic.name}</h3>
-          {r && roastRevealed && (
-            <div className="cb-critic-tags">
-              {isHabit ? (
-                <span className="cb-critic-tag" style={{ color: critic.color }}>
-                  <Heart size={12} aria-hidden="true" /> Habits
-                </span>
-              ) : (
-                critic.skills.map((sid) => {
-                  const s = SKILL_BY_ID[sid];
-                  return (
-                    <span key={sid} className="cb-critic-tag" style={{ color: s.color }}>
-                      <s.Icon size={12} aria-hidden="true" /> {s.label}
-                    </span>
-                  );
-                })
-              )}
-            </div>
-          )}
+          <div className="cb-critic-tags">
+            {isHabit ? (
+              <span className="cb-critic-tag" style={{ color: critic.color }}>
+                <Heart size={12} aria-hidden="true" /> Habits
+              </span>
+            ) : (
+              critic.skills.map((sid) => {
+                const s = SKILL_BY_ID[sid];
+                return (
+                  <span key={sid} className="cb-critic-tag" style={{ color: s.color }}>
+                    <s.Icon size={12} aria-hidden="true" /> {s.label}
+                  </span>
+                );
+              })
+            )}
+          </div>
         </div>
         <div className="cb-critic-score">
           {judging ? <span style={{ color: "var(--text-2)" }}>&ndash;</span> : r && roastRevealed ? fmt(score) : <span style={{ color: "var(--text-2)" }}>&ndash;</span>}

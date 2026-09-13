@@ -1,6 +1,6 @@
-import Sterling from "./Sterling";
-import Margaux from "./Margaux";
+import Curren from "./Curren";
+import Harper from "./Harper";
 import Mom from "./Mom";
 
-const FACES = { sterling: Sterling, margaux: Margaux, mom: Mom };
+const FACES = { curren: Curren, harper: Harper, mom: Mom };
 export default FACES;
