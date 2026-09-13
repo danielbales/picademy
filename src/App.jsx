@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { Target } from "lucide-react";
+import { Target, Flame } from "lucide-react";
 import { SKILLS, CRITICS, TEMPERS, HOST } from "./data";
 import { grade } from "./api";
 import { prepareImage } from "./image";
 import { toGrade, average, fmt } from "./helpers";
-import { saveScore, getBest, saveCovered, getCovered } from "./scores";
+import { saveScore, getBest, saveCovered, getCovered, getStreak, bumpStreak } from "./scores";
 import Host from "./components/Host";
 import ScoreHero, { Change } from "./components/ScoreHero";
 import CriticCard from "./components/CriticCard";
@@ -26,6 +26,7 @@ export default function App() {
   const [hostNote, setHostNote] = useState(null);
   const [bestScore, setBestScore] = useState(() => getBest());
   const [fileError, setFileError] = useState("");
+  const [streak, setStreak] = useState(() => getStreak());
   const [loadingIdx, setLoadingIdx] = useState(0);
   const [revealKey, setRevealKey] = useState(0);
   const [revealStep, setRevealStep] = useState(0);
@@ -95,6 +96,11 @@ export default function App() {
       });
       saveScore(entry.avg);
       setBestScore(getBest());
+      const streakResult = bumpStreak();
+      setStreak(streakResult.count);
+      if (streakResult.isNewBest) {
+        setHostNote(`${streakResult.count} days! Curren is impressed.`);
+      }
       setResult(data);
       setRevealKey((k) => k + 1);
       setStatus("done");
@@ -137,6 +143,12 @@ export default function App() {
             </span>
             Picademy
           </h1>
+          {streak > 0 && (
+            <span className="cb-streak is-active" aria-label={`${streak} day streak`}>
+              <Flame size={18} aria-hidden="true" />
+              <span className="cb-num">{streak}</span>
+            </span>
+          )}
         </header>
 
         <ScoreHero

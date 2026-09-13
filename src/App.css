@@ -37,6 +37,8 @@ body { margin: 0; background: #0A0B0D; }
 .cb-brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 20px; letter-spacing: -0.01em; margin: 0; }
 .cb-brand-mark { width: 32px; height: 32px; border-radius: 6px; background: var(--surface-2); overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .cb-brand-mark svg { width: 22px; height: 28px; flex: none; }
+.cb-streak { margin-left: auto; display: flex; align-items: center; gap: 4px; font-weight: 700; font-size: 16px; color: #F97316; }
+.cb-streak svg { filter: drop-shadow(0 0 4px rgba(249,115,22,.4)); }
 
 /* Hero */
 .cb-hero { padding: 8px 0 16px; }
@@ -94,10 +96,65 @@ body { margin: 0; background: #0A0B0D; }
   0% { opacity: 1; transform: translateX(-100%); }
   100% { opacity: 0; transform: translateX(100%); }
 }
-.cb-photo.frame-basic { border-width: 12px; border-color: #3A3D44; box-shadow: inset 0 0 0 3px #2A2D33, inset 0 1px 0 rgba(255,255,255,.06), 0 4px 12px rgba(0,0,0,.5), 0 1px 3px rgba(0,0,0,.3); border-image: linear-gradient(145deg, #4A4D54, #2A2D33) 1; }
-.cb-photo.frame-bronze { border-width: 14px; border-color: #B87333; box-shadow: inset 0 0 0 4px #8B5A2B, inset 0 2px 6px rgba(255,255,255,.2), inset 0 -2px 4px rgba(0,0,0,.3), 0 4px 16px rgba(184,115,51,.4), 0 0 32px rgba(184,115,51,.2), 0 8px 24px rgba(0,0,0,.3); border-image: linear-gradient(145deg, #D4935A, #8B5A2B, #C4834A) 1; }
-.cb-photo.frame-silver { border-width: 14px; border-color: #C0C0C0; box-shadow: inset 0 0 0 4px #8E8E8E, inset 0 2px 6px rgba(255,255,255,.35), inset 0 -2px 4px rgba(0,0,0,.2), 0 4px 20px rgba(192,192,192,.4), 0 0 40px rgba(192,192,192,.2), 0 8px 24px rgba(0,0,0,.25); border-image: linear-gradient(145deg, #E0E0E0, #909090, #D0D0D0) 1; }
-.cb-photo.frame-gold { border-width: 16px; border-color: #E8C84A; box-shadow: inset 0 0 0 4px #B8960F, inset 0 3px 6px rgba(255,255,255,.4), inset 0 -2px 4px rgba(0,0,0,.2), 0 4px 24px rgba(232,200,74,.5), 0 0 48px rgba(232,200,74,.25), 0 8px 32px rgba(0,0,0,.3); border-image: linear-gradient(145deg, #F5E070, #B8960F, #E8C84A, #F0D860) 1; }
+/* --- Ribbed gallery frames --- */
+.cb-photo.frame-basic {
+  border-width: 10px; border-color: #3A3D44;
+  box-shadow:
+    inset 0 0 0 2px #2A2D33,
+    inset 0 1px 0 rgba(255,255,255,.08),
+    inset 0 -1px 0 rgba(0,0,0,.4),
+    0 0 0 2px #4A4D54,
+    0 0 0 4px #2A2D33,
+    0 0 0 6px #3A3D44,
+    0 4px 16px rgba(0,0,0,.6);
+}
+.cb-photo.frame-bronze {
+  border-width: 12px; border-color: #B87333;
+  box-shadow:
+    inset 0 0 0 2px #8B5A2B,
+    inset 0 2px 4px rgba(255,255,255,.25),
+    inset 0 -2px 4px rgba(0,0,0,.4),
+    0 0 0 2px #D4935A,
+    0 0 0 4px #7A4A1E,
+    0 0 0 6px #C4834A,
+    0 0 0 8px #6A3E15,
+    0 0 0 10px #B87333,
+    0 4px 20px rgba(184,115,51,.4),
+    0 0 36px rgba(184,115,51,.15),
+    0 8px 28px rgba(0,0,0,.35);
+}
+.cb-photo.frame-silver {
+  border-width: 12px; border-color: #C0C0C0;
+  box-shadow:
+    inset 0 0 0 2px #8E8E8E,
+    inset 0 2px 4px rgba(255,255,255,.4),
+    inset 0 -2px 4px rgba(0,0,0,.25),
+    0 0 0 2px #D8D8D8,
+    0 0 0 4px #888888,
+    0 0 0 6px #C8C8C8,
+    0 0 0 8px #787878,
+    0 0 0 10px #B8B8B8,
+    0 4px 24px rgba(192,192,192,.4),
+    0 0 44px rgba(192,192,192,.18),
+    0 8px 28px rgba(0,0,0,.3);
+}
+.cb-photo.frame-gold {
+  border-width: 14px; border-color: #E8C84A;
+  box-shadow:
+    inset 0 0 0 2px #B8960F,
+    inset 0 3px 5px rgba(255,255,255,.45),
+    inset 0 -2px 5px rgba(0,0,0,.3),
+    0 0 0 2px #F0D860,
+    0 0 0 4px #9A7A0C,
+    0 0 0 6px #E8C84A,
+    0 0 0 8px #86690A,
+    0 0 0 10px #D4B430,
+    0 0 0 12px #9A7A0C,
+    0 0 0 14px #E0C040,
+    0 6px 28px rgba(232,200,74,.5),
+    0 0 56px rgba(232,200,74,.2),
+    0 10px 36px rgba(0,0,0,.35);
+}
 .cb-photo-grid { display: flex; gap: 2px; }
 .cb-photo-cell { position: relative; flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; background: #000; }
 .cb-photo-cell img { display: block; max-width: 100%; max-height: 32vh; width: auto; height: auto; }
@@ -107,8 +164,8 @@ body { margin: 0; background: #0A0B0D; }
 /* Drop zone */
 .cb-drop { width: 100%; aspect-ratio: 8 / 3; border-radius: 20px; background: var(--surface-2); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 16px; border: 1.5px solid var(--border); box-shadow: 0 0 20px rgba(212,168,67,.08); }
 .cb-drop.is-over { background: var(--surface-2); box-shadow: inset 0 0 0 2px var(--blue); }
-.cb-drop-camera { width: 64px; height: 64px; border-radius: 50%; border: 0; background: rgba(212,168,67,.22); color: #F0D050; display: grid; place-items: center; margin-bottom: 4px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.cb-drop-camera:hover { background: rgba(212,168,67,.34); }
+.cb-drop-camera { width: 64px; height: 64px; border-radius: 50%; border: 0; background: rgba(232,200,74,.28); color: #FFE566; display: grid; place-items: center; margin-bottom: 4px; cursor: pointer; -webkit-tap-highlight-color: transparent; box-shadow: 0 0 16px rgba(232,200,74,.18); }
+.cb-drop-camera:hover { background: rgba(232,200,74,.4); }
 .cb-drop-camera:active { transform: scale(0.95); }
 .cb-drop-btns { display: flex; gap: 16px; }
 .cb-drop strong { font-size: 17px; font-weight: 600; }
@@ -129,7 +186,7 @@ body { margin: 0; background: #0A0B0D; }
 .cb-control-label { color: var(--text-2); font-size: 14px; font-weight: 500; margin: 16px 0 8px; }
 .cb-seg { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--surface); border-radius: 999px; padding: 4px; }
 .cb-seg button { font: inherit; font-weight: 600; font-size: 15px; border: 0; background: transparent; color: #B0B7C3; padding: 10px 0; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.cb-seg button[aria-pressed="true"] { background: var(--surface-2); color: var(--text); }
+.cb-seg button[aria-pressed="true"] { background: var(--surface-2); color: var(--text); box-shadow: inset 0 0 0 1.5px rgba(232,200,74,.5); }
 .cb-seg button:disabled { cursor: not-allowed; }
 .cb-actions { display: grid; gap: 10px; margin-top: 12px; }
 .cb-actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
