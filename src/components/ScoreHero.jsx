@@ -74,8 +74,8 @@ export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain
         <span>since your last attempt</span>
       </>
     );
-  else if (done) heroSub = <span>First attempt at this scene. Reshoot it to track your progress.</span>;
-  else if (previous) heroSub = <span>Your last attempt. Submit the reshoot to compare.</span>;
+  else if (done) heroSub = <span>Try another shot like this to track your progress.</span>;
+  else if (previous) heroSub = <span>Your last attempt. Submit the new one to compare.</span>;
   else heroSub = null;
 
   return (

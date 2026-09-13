@@ -211,7 +211,7 @@ export default function App() {
           {status === "done" && (
             <>
               <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openCamera("reshoot")}>
-                Reshoot and compare
+                Try again and compare
               </button>
               <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openCamera("new")}>
                 Take a new photo

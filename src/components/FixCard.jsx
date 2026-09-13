@@ -21,6 +21,7 @@ export default function FixCard({ fix, isHabit }) {
         </ol>
       )}
       {fix.why && <p className="cb-why">{fix.why}</p>}
+      {fix.bonus && <p className="cb-bonus">{fix.bonus}</p>}
     </div>
   );
 }

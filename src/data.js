@@ -48,13 +48,12 @@ export const TEMPERS = [
   { id: "gentle", label: "Gentle", host: "Easy mode. Even baby birds need encouragement." },
   { id: "honest", label: "Honest", host: "Honest reviews, no sugar-coating." },
   { id: "brutal", label: "Brutal", host: "Brutal mode. Curren\u2019s sharpening his claws." },
-
 ];
 
 export const HOST = {
   idle: "Upload a photo. The Judges will score it, roast it, and tell you exactly how to make your next one better.",
   ready: "Ooh, a new photo! Let\u2019s see what the Judges think.",
-  reshootReady: "A reshoot! Let\u2019s see if you nailed it this time.",
+  reshootReady: "Round two! Let\u2019s see if you nailed it this time.",
   error: "The Judges wandered off. Probably chasing a laser pointer.",
   rateLimit: "Slow down! Even I need to catch my breath between photos.",
   loading: [
@@ -73,14 +72,27 @@ export const HOST = {
 };
 
 export const FUNDAMENTALS = [
+  // Curren — Light
   { id: "face_the_light", name: "Face the light", critic: "curren", skill: "light" },
   { id: "side_light", name: "Side light", critic: "curren", skill: "light" },
   { id: "golden_hour", name: "Golden hour", critic: "curren", skill: "light" },
   { id: "open_shade", name: "Open shade", critic: "curren", skill: "light" },
+  { id: "backlight", name: "Use backlighting", critic: "curren", skill: "light" },
+  { id: "window_light", name: "Window light", critic: "curren", skill: "light" },
+  { id: "bounce_light", name: "Bounce the light", critic: "curren", skill: "light" },
+  { id: "avoid_mixed_light", name: "Watch mixed lighting", critic: "curren", skill: "light" },
+  { id: "flash_off", name: "Turn off the flash", critic: "curren", skill: "light" },
+  // Curren — Technical
   { id: "tap_exposure", name: "Tap and slide exposure", critic: "curren", skill: "technical" },
   { id: "tap_focus", name: "Tap to focus", critic: "curren", skill: "technical" },
   { id: "hold_steady", name: "Hold it steady", critic: "curren", skill: "technical" },
   { id: "clean_lens", name: "Clean your lens", critic: "curren", skill: "technical" },
+  { id: "portrait_mode", name: "Try portrait mode", critic: "curren", skill: "technical" },
+  { id: "burst_mode", name: "Use burst mode", critic: "curren", skill: "technical" },
+  { id: "night_mode", name: "Use night mode", critic: "curren", skill: "technical" },
+  { id: "lock_exposure", name: "Lock focus and exposure", critic: "curren", skill: "technical" },
+  { id: "timer_mode", name: "Use the timer", critic: "curren", skill: "technical" },
+  // Harper — Composition
   { id: "rule_of_thirds", name: "Rule of thirds", critic: "harper", skill: "composition" },
   { id: "fill_the_frame", name: "Fill the frame", critic: "harper", skill: "composition" },
   { id: "simple_background", name: "Simple background", critic: "harper", skill: "composition" },
@@ -88,12 +100,29 @@ export const FUNDAMENTALS = [
   { id: "change_angle", name: "Change your angle", critic: "harper", skill: "composition" },
   { id: "leading_lines", name: "Leading lines", critic: "harper", skill: "composition" },
   { id: "check_edges", name: "Check your edges", critic: "harper", skill: "composition" },
+  { id: "negative_space", name: "Use negative space", critic: "harper", skill: "composition" },
+  { id: "symmetry", name: "Find symmetry", critic: "harper", skill: "composition" },
+  { id: "patterns", name: "Look for patterns", critic: "harper", skill: "composition" },
+  { id: "frame_in_frame", name: "Frame within a frame", critic: "harper", skill: "composition" },
+  { id: "foreground_interest", name: "Add foreground interest", critic: "harper", skill: "composition" },
+  { id: "depth_layers", name: "Create depth layers", critic: "harper", skill: "composition" },
+  // Harper — Editing
   { id: "crop_it", name: "Crop with purpose", critic: "harper", skill: "editing" },
   { id: "natural_color", name: "Natural color", critic: "harper", skill: "editing" },
   { id: "light_touch_edits", name: "Light-touch edits", critic: "harper", skill: "editing" },
+  { id: "recover_highlights", name: "Recover highlights", critic: "harper", skill: "editing" },
+  { id: "lift_shadows", name: "Lift shadows", critic: "harper", skill: "editing" },
+  { id: "try_bw", name: "Try black and white", critic: "harper", skill: "editing" },
+  { id: "fix_perspective", name: "Fix perspective", critic: "harper", skill: "editing" },
+  { id: "warmth_adjust", name: "Adjust warmth", critic: "harper", skill: "editing" },
+  // Mom — Habits
   { id: "take_three", name: "Take three versions", critic: "mom", skill: null },
   { id: "daily_photo", name: "One photo a day", critic: "mom", skill: null },
   { id: "favorites_album", name: "Keep a favorites album", critic: "mom", skill: null },
   { id: "study_a_photo", name: "Study a photo you love", critic: "mom", skill: null },
+  { id: "shoot_both", name: "Shoot both ways", critic: "mom", skill: null },
+  { id: "wait_to_delete", name: "Wait before deleting", critic: "mom", skill: null },
+  { id: "photo_story", name: "Tell a 3-photo story", critic: "mom", skill: null },
+  { id: "share_and_ask", name: "Share and ask", critic: "mom", skill: null },
 ];
 export const FUND_BY_ID = Object.fromEntries(FUNDAMENTALS.map((f) => [f.id, f]));
