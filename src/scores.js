@@ -3,7 +3,7 @@ const COVERED_KEY = "picademy-covered";
 
 function getAll() {
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = sessionStorage.getItem(KEY);
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
@@ -13,7 +13,7 @@ function getAll() {
 export function saveScore(avg) {
   const scores = getAll();
   scores.push(avg);
-  localStorage.setItem(KEY, JSON.stringify(scores));
+  sessionStorage.setItem(KEY, JSON.stringify(scores));
 }
 
 export function getBest() {

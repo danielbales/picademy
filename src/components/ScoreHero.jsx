@@ -90,8 +90,13 @@ export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain
               <span className="cb-big cb-display cb-num">{shown.toFixed(1)}</span>
               <span className="cb-big-of">/ 10</span>
               <span className={`cb-grade cb-num grade-${grade[0].toLowerCase()}`} aria-label={`Grade ${grade}`}>
-                <Trophy size={28} aria-hidden="true" />
-                {grade.replace("-", "\u2212")}
+                <span className="cb-grade-row">
+                  <Trophy size={28} aria-hidden="true" />
+                  {grade.replace("-", "\u2212")}
+                </span>
+                {grade[0] === "A" && <small>Gold</small>}
+                {grade[0] === "B" && <small>Silver</small>}
+                {grade[0] === "C" && <small>Bronze</small>}
               </span>
             </>
           ) : previous ? (
