@@ -23,13 +23,13 @@ export const CRITICS = [
   {
     id: "harper",
     name: "Harper",
-    role: "The dolphin who sees every angle. Judge of composition and color.",
+    role: "The cheetah who spots every detail. Judge of composition and color.",
     initials: "H",
     color: "#E26AB5",
     tint: "rgba(226,106,181,.16)",
     skills: ["composition", "editing"],
     focus: "Composition and color",
-    waiting: "Diving deep into the composition\u2026",
+    waiting: "Scanning the frame with laser focus\u2026",
   },
   {
     id: "mom",
@@ -58,7 +58,7 @@ export const HOST = {
   rateLimit: "Slow down! Even I need to catch my breath between photos.",
   loading: [
     "Curren is studying the light\u2026 like a perfect sunbeam.",
-    "Harper\u2019s rotating her head 180\u00b0 for a better look.",
+    "Harper\u2019s locked on like a cheetah tracking prey.",
     "Mom is looking for the \u2018like\u2019 button.",
     "The Judges are deliberating\u2026 snacks may be involved.",
   ],

@@ -157,7 +157,7 @@ export default function App() {
           </span>
           <div>
             <p className="cb-host-name">
-              Cammy<span>Host</span>
+              Lida<span>Host</span>
             </p>
             <p className="cb-host-line">{hostLine}</p>
           </div>
@@ -259,7 +259,7 @@ export default function App() {
               </span>
               <div>
                 <p className="cb-frame-tip-label">
-                  Cammy&rsquo;s tip
+                  Lida&rsquo;s tip
                   {result.photoType && result.photoType !== "other" && (
                     <span className="cb-photo-type">{result.photoType.replace("_", " ")}</span>
                   )}
