@@ -8,9 +8,7 @@ import { saveScore, getBest, saveCovered, getCovered } from "./scores";
 import Frame from "./components/Frame";
 import ScoreHero, { Change } from "./components/ScoreHero";
 import CriticCard from "./components/CriticCard";
-import Fundamentals from "./components/Fundamentals";
 import ImagePicker from "./components/ImagePicker";
-import Confetti from "./components/Confetti";
 import "./App.css";
 
 function Skel({ w, h = 14, r = 8, style }) {
@@ -30,6 +28,7 @@ export default function App() {
   const [fileError, setFileError] = useState("");
   const [loadingIdx, setLoadingIdx] = useState(0);
   const [revealKey, setRevealKey] = useState(0);
+  const [revealStep, setRevealStep] = useState(0);
   const pickerRef = useRef(null);
   const runId = useRef(0);
 
@@ -39,6 +38,14 @@ export default function App() {
     const t = setInterval(() => setLoadingIdx((i) => (i + 1) % HOST.loading.length), 2400);
     return () => clearInterval(t);
   }, [status]);
+
+  useEffect(() => {
+    if (status !== "done" || !result) { setRevealStep(0); return; }
+    setRevealStep(1);
+    const steps = [500, 1000, 1500, 2000, 2500, 3000, 3500];
+    const timers = steps.map((ms, i) => setTimeout(() => setRevealStep(i + 2), ms));
+    return () => timers.forEach(clearTimeout);
+  }, [status, result]);
 
   async function handleFile(file, mode = "new") {
     if (!file) return;
@@ -108,7 +115,10 @@ export default function App() {
     ? SKILLS.reduce((low, s) => (result.skills[s.id] < result.skills[low.id] ? s : low), SKILLS[0]).id
     : null;
 
-  const isNewBest = done && bestScore != null && avg >= bestScore;
+  const criticReveal = (criticIdx) => ({
+    roastRevealed: revealStep >= criticIdx * 2 + 2,
+    fixRevealed: revealStep >= criticIdx * 2 + 3,
+  });
 
   let hostLine = HOST.idle;
   if (hostNote) hostLine = hostNote;
@@ -119,7 +129,6 @@ export default function App() {
 
   return (
     <div className="cb">
-      <Confetti fire={isNewBest ? revealKey : 0} />
       <div className="cb-wrap">
         <header className="cb-bar">
           <h1 className="cb-brand cb-display">
@@ -160,6 +169,7 @@ export default function App() {
           previous={previous}
           onFile={handleFile}
           grade={gradeStr}
+          status={status}
         />
 
         {/* Temper */}
@@ -231,15 +241,15 @@ export default function App() {
         {/* Panel */}
         <section className="cb-section" aria-live="polite">
           <h2 className="cb-h2 cb-display">The panel</h2>
-          <div className={`cb-panel-grid${done ? " is-list" : ""}`}>
-            {CRITICS.map((c) => (
-              <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} />
+          <div className={`cb-panel-grid${revealStep >= 2 ? " is-list" : ""}`}>
+            {CRITICS.map((c, i) => (
+              <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} {...criticReveal(i)} />
             ))}
           </div>
         </section>
 
-        {done && result.assignment && (
-          <section className="cb-section">
+        {done && result.assignment && revealStep >= 8 && (
+          <section className="cb-section cb-fade-in">
             <div className="cb-promo">
               <span className="cb-icon">
                 <Target size={20} aria-hidden="true" />
@@ -253,7 +263,7 @@ export default function App() {
         )}
 
         {/* Skills */}
-        {(done || judging) && (
+        {((done && revealStep >= 8) || judging) && (
         <section className="cb-section" aria-live="polite">
           <h2 className="cb-h2 cb-display">Skill breakdown</h2>
           <div className="cb-skills-grid">
@@ -276,7 +286,6 @@ export default function App() {
         </section>
         )}
 
-        <Fundamentals covered={covered} />
       </div>
     </div>
   );

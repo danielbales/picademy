@@ -61,7 +61,6 @@ export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain
   const judging = status === "judging";
   const done = status === "done";
   const shown = useCountUp(avg, revealKey);
-  const isNewBest = done && bestScore != null && avg >= bestScore;
   const firstLoad = status === "idle" || status === "ready";
 
   if (firstLoad && !previous) return chain.length > 1 ? <ScoreChart points={chain} /> : null;
@@ -104,11 +103,9 @@ export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain
         </div>
         {heroSub && <p className="cb-sub">{heroSub}</p>}
         {bestScore != null && (
-          <p className={`cb-best${isNewBest ? " is-new" : ""}`}>
+          <p className="cb-best">
             <Trophy size={14} aria-hidden="true" />
-            {isNewBest
-              ? "New personal best!"
-              : `Best: ${fmt(bestScore)} (${toGrade(bestScore)}) \u2014 beat it`}
+            {`Best: ${fmt(bestScore)} (${toGrade(bestScore)}) \u2014 beat it`}
           </p>
         )}
       </section>

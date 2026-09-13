@@ -4,11 +4,7 @@ import { SKILL_BY_ID } from "../data";
 import FixCard from "./FixCard";
 import FACES from "./faces";
 
-function Skel({ w, h = 14, r = 8, style }) {
-  return <span className="cb-skel" style={{ width: w, height: h, borderRadius: r, ...style }} aria-hidden="true" />;
-}
-
-export default function CriticCard({ critic, result, status }) {
+export default function CriticCard({ critic, result, status, roastRevealed, fixRevealed }) {
   const judging = status === "judging";
   const r = result ? result[critic.id] : null;
   const isHabit = critic.id === "mom";
@@ -27,7 +23,7 @@ export default function CriticCard({ critic, result, status }) {
         </span>
         <div className="cb-row-main">
           <h3 className="cb-row-title">{critic.name}</h3>
-          {r && (
+          {r && roastRevealed && (
             <div className="cb-critic-tags">
               {isHabit ? (
                 <span className="cb-critic-tag" style={{ color: critic.color }}>
@@ -47,15 +43,16 @@ export default function CriticCard({ critic, result, status }) {
           )}
         </div>
         <div className="cb-critic-score">
-          {judging ? <Skel w={32} h={18} /> : r ? fmt(score) : <span style={{ color: "var(--text-2)" }}>&ndash;</span>}
-          {r && isHabit && <small>Not counted</small>}
+          {judging ? <span style={{ color: "var(--text-2)" }}>&ndash;</span> : r && roastRevealed ? fmt(score) : <span style={{ color: "var(--text-2)" }}>&ndash;</span>}
+          {r && roastRevealed && isHabit && <small>Not counted</small>}
         </div>
       </div>
 
       {judging && (
-        <div style={{ marginTop: 14 }}>
-          <Skel w="90%" h={14} style={{ display: "block" }} />
-          <Skel w="100%" h={84} r={16} style={{ display: "block", marginTop: 14 }} />
+        <div className={`cb-critic-wait is-${critic.id}`}>
+          <span className="cb-avatar cb-avatar-face" style={{ background: critic.tint }} aria-hidden="true">
+            {Face ? <Face /> : critic.initials}
+          </span>
           <p className="cb-waiting">{critic.waiting}</p>
         </div>
       )}
@@ -66,10 +63,10 @@ export default function CriticCard({ critic, result, status }) {
         </p>
       )}
 
-      {r && (
+      {r && roastRevealed && (
         <>
-          {r.roast && <p className="cb-roast">{r.roast}</p>}
-          {r.fundamental && <FixCard fix={r} isHabit={isHabit} />}
+          {r.roast && <p className="cb-roast cb-fade-in">{r.roast}</p>}
+          {r.fundamental && fixRevealed && <div className="cb-fade-in"><FixCard fix={r} isHabit={isHabit} /></div>}
         </>
       )}
     </article>

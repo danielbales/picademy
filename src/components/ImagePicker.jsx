@@ -10,7 +10,7 @@ function frameTier(grade) {
   return " frame-basic";
 }
 
-const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile, grade }, ref) {
+const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile, grade, status }, ref) {
   const [dragging, setDragging] = useState(false);
   const cameraRef = useRef(null);
   const galleryRef = useRef(null);
@@ -33,11 +33,19 @@ const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile, g
     e.target.value = "";
   }
 
+  const isHung = status === "judging" || status === "done";
+
   return (
     <>
       <div className="cb-photo-wrap">
+        {isHung && photo && (
+          <svg className="cb-wire" viewBox="0 0 40 20" fill="none" aria-hidden="true">
+            <path d="M20 0 L20 4" stroke="#8A919E" strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M8 20 L20 6 L32 20" stroke="#8A919E" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        )}
         <div
-          className={`cb-photo${frameTier(grade)}`}
+          className={`cb-photo${frameTier(grade)}${isHung ? " is-hung" : ""}`}
           onDragOver={(e) => {
             e.preventDefault();
             setDragging(true);
