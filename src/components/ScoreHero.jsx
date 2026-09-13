@@ -1,5 +1,4 @@
-import { ArrowUpRight, ArrowDownRight, Minus } from "lucide-react";
-import { Trophy } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, Minus, Trophy } from "lucide-react";
 import { useCountUp, fmt, toGrade } from "../helpers";
 
 function Skel({ w, h = 14, r = 8, style }) {
@@ -91,7 +90,8 @@ export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain
             <>
               <span className="cb-big cb-display cb-num">{shown.toFixed(1)}</span>
               <span className="cb-big-of">/ 10</span>
-              <span className="cb-grade cb-num" aria-label={`Grade ${grade}`}>
+              <span className={`cb-grade cb-num grade-${grade[0].toLowerCase()}`} aria-label={`Grade ${grade}`}>
+                <Trophy size={18} aria-hidden="true" />
                 {grade.replace("-", "\u2212")}
               </span>
             </>

@@ -11,6 +11,7 @@ import CriticCard from "./components/CriticCard";
 import Fundamentals from "./components/Fundamentals";
 import Onboarding from "./components/Onboarding";
 import ImagePicker from "./components/ImagePicker";
+import Confetti from "./components/Confetti";
 import "./App.css";
 
 function Skel({ w, h = 14, r = 8, style }) {
@@ -106,6 +107,8 @@ export default function App() {
     ? SKILLS.reduce((low, s) => (result.skills[s.id] < result.skills[low.id] ? s : low), SKILLS[0]).id
     : null;
 
+  const isNewBest = done && bestScore != null && avg >= bestScore;
+
   let hostLine = HOST.idle;
   if (hostNote) hostLine = hostNote;
   else if (judging) hostLine = HOST.loading[loadingIdx];
@@ -115,6 +118,7 @@ export default function App() {
 
   return (
     <div className="cb">
+      <Confetti fire={isNewBest ? revealKey : 0} />
       <div className="cb-wrap">
         <header className="cb-bar">
           <h1 className="cb-brand cb-display">
@@ -143,6 +147,7 @@ export default function App() {
           photo={photo}
           previous={previous}
           onFile={handleFile}
+          grade={gradeStr}
         />
 
         {/* Host */}
@@ -179,11 +184,6 @@ export default function App() {
 
         {/* Actions */}
         <div className="cb-actions">
-          {status === "idle" && (
-            <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openGallery("new")}>
-              Choose from library
-            </button>
-          )}
           {status === "ready" && (
             <>
               <button type="button" className="cb-btn" onClick={judge}>
@@ -237,9 +237,11 @@ export default function App() {
         {/* Panel */}
         <section className="cb-section" aria-live="polite">
           <h2 className="cb-h2 cb-display">The panel</h2>
-          {CRITICS.map((c) => (
-            <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} />
-          ))}
+          <div className={`cb-panel-grid${done ? " is-list" : ""}`}>
+            {CRITICS.map((c) => (
+              <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} />
+            ))}
+          </div>
         </section>
 
         {done && result.assignment && (
@@ -257,36 +259,28 @@ export default function App() {
         )}
 
         {/* Skills */}
+        {(done || judging) && (
         <section className="cb-section" aria-live="polite">
-          <h2 className="cb-h2 cb-display">Your skills</h2>
-          <ul className="cb-list">
+          <h2 className="cb-h2 cb-display">Skill breakdown</h2>
+          <div className="cb-skills-grid">
             {SKILLS.map((s) => {
               const score = done ? result.skills[s.id] : null;
               const isWeak = s.id === weakest;
               return (
-                <li key={s.id} className="cb-row">
-                  <span className="cb-icon" style={{ background: s.tint, color: s.color }}>
-                    <s.Icon size={20} aria-hidden="true" />
-                  </span>
-                  <div className="cb-row-main">
-                    <p className="cb-row-title">{s.label}</p>
-                    <p className="cb-row-sub">
-                      {isWeak ? <span className="is-weak">Needs work</span> : `Taught by ${s.teacher}`}
-                    </p>
-                  </div>
-                  <div className="cb-row-end">
-                    {judging ? (
-                      <Skel w={36} h={16} />
-                    ) : (
-                      <p className="cb-row-value">{score !== null ? fmt(score) : "\u2013"}</p>
-                    )}
-                    {done && previous && <Change value={score - previous.result.skills[s.id]} />}
-                  </div>
-                </li>
+                <div key={s.id} className={`cb-skill-cell${isWeak ? " is-weak" : ""}`}>
+                  <p className="cb-skill-label">{s.label}</p>
+                  {judging ? (
+                    <Skel w={36} h={20} r={6} />
+                  ) : (
+                    <p className="cb-skill-score cb-num">{score !== null ? fmt(score) : "\u2013"}</p>
+                  )}
+                  {done && previous && <Change value={score - previous.result.skills[s.id]} />}
+                </div>
               );
             })}
-          </ul>
+          </div>
         </section>
+        )}
 
         <Fundamentals covered={covered} />
       </div>

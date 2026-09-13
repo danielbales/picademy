@@ -1,4 +1,6 @@
+import { Heart } from "lucide-react";
 import { fmt } from "../helpers";
+import { SKILL_BY_ID } from "../data";
 import FixCard from "./FixCard";
 import FACES from "./faces";
 
@@ -25,7 +27,24 @@ export default function CriticCard({ critic, result, status }) {
         </span>
         <div className="cb-row-main">
           <h3 className="cb-row-title">{critic.name}</h3>
-          <p className="cb-row-sub">{critic.role}</p>
+          {r && (
+            <div className="cb-critic-tags">
+              {isHabit ? (
+                <span className="cb-critic-tag" style={{ color: critic.color }}>
+                  <Heart size={12} aria-hidden="true" /> Habits
+                </span>
+              ) : (
+                critic.skills.map((sid) => {
+                  const s = SKILL_BY_ID[sid];
+                  return (
+                    <span key={sid} className="cb-critic-tag" style={{ color: s.color }}>
+                      <s.Icon size={12} aria-hidden="true" /> {s.label}
+                    </span>
+                  );
+                })
+              )}
+            </div>
+          )}
         </div>
         <div className="cb-critic-score">
           {judging ? <Skel w={32} h={18} /> : r ? fmt(score) : <span style={{ color: "var(--text-2)" }}>&ndash;</span>}

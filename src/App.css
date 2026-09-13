@@ -46,7 +46,11 @@ body { margin: 0; background: #0A0B0D; }
 .cb-big.is-empty { color: var(--text-2); }
 .cb-big-of { color: var(--text-2); font-size: 22px; font-weight: 500; }
 .cb-hint { color: var(--text-2); font-size: 15px; font-weight: 500; align-self: center; margin-left: 8px; }
-.cb-grade { margin-left: auto; align-self: center; background: var(--surface-2); border-radius: 999px; padding: 6px 14px; font-weight: 600; font-size: 17px; }
+.cb-grade { margin-left: auto; align-self: center; background: var(--surface-2); border-radius: 999px; padding: 6px 14px; font-weight: 600; font-size: 17px; display: inline-flex; align-items: center; gap: 6px; }
+.cb-grade.grade-a { color: #E8C84A; background: rgba(232,200,74,.14); }
+.cb-grade.grade-b { color: #C0C0C0; background: rgba(192,192,192,.14); }
+.cb-grade.grade-c { color: #B87333; background: rgba(184,115,51,.14); }
+.cb-grade.grade-d, .cb-grade.grade-f { color: var(--text-2); }
 .cb-sub { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 4px 0 0; color: var(--text-2); font-size: 15px; }
 .cb-best { display: flex; align-items: center; gap: 6px; margin: 8px 0 0; color: var(--text-2); font-size: 14px; font-weight: 500; }
 .cb-best.is-new { color: var(--green); }
@@ -65,9 +69,12 @@ body { margin: 0; background: #0A0B0D; }
 .cb-onboard-tagline { font-size: 17px; line-height: 1.5; color: var(--body); margin: 0; max-width: 320px; }
 
 /* Photo */
-.cb-photo-wrap { position: relative; margin-top: 60px; }
-.cb-peek { position: absolute; right: 28px; top: -54px; width: 64px; z-index: 0; transform: rotate(-4deg); pointer-events: none; }
-.cb-photo { position: relative; z-index: 1; overflow: hidden; border-radius: 20px; background: var(--surface); }
+.cb-photo-wrap { position: relative; margin-top: 8px; }
+.cb-photo { position: relative; z-index: 1; overflow: hidden; border-radius: 20px; background: var(--surface); transition: box-shadow .5s ease, border-color .5s ease; border: 3px solid transparent; }
+.cb-photo.frame-basic { border-color: #4A4E56; }
+.cb-photo.frame-bronze { border-color: #B87333; box-shadow: 0 0 12px rgba(184,115,51,.25); }
+.cb-photo.frame-silver { border-color: #C0C0C0; box-shadow: 0 0 16px rgba(192,192,192,.3); }
+.cb-photo.frame-gold { border-color: #E8C84A; box-shadow: 0 0 20px rgba(232,200,74,.35), 0 0 40px rgba(232,200,74,.15); }
 .cb-photo-grid { display: flex; gap: 2px; }
 .cb-photo-cell { position: relative; flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; background: #000; }
 .cb-photo-cell img { display: block; max-width: 100%; max-height: 56vh; width: auto; height: auto; }
@@ -117,15 +124,19 @@ body { margin: 0; background: #0A0B0D; }
 .cb-note-title { font-weight: 600; margin: 0 0 2px; }
 .cb-note-body { margin: 0; color: var(--body); }
 
-/* List */
-.cb-list { list-style: none; margin: 0; padding: 6px 0; background: var(--surface); border-radius: 20px; }
+/* Skills grid */
+.cb-skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cb-skill-cell { background: var(--surface); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; }
+.cb-skill-cell.is-weak { border: 1px solid var(--red); }
+.cb-skill-label { font-size: 14px; font-weight: 500; color: var(--text-2); margin: 0; }
+.cb-skill-score { font-size: 24px; font-weight: 600; margin: 0; }
+.cb-skill-cell.is-weak .cb-skill-label { color: var(--red); }
+
+/* List (shared) */
 .cb-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; }
 .cb-row-main { flex: 1; min-width: 0; }
 .cb-row-title { font-weight: 600; font-size: 16px; margin: 0; }
 .cb-row-sub { color: var(--text-2); font-size: 14px; margin: 0; }
-.cb-row-sub .is-weak { color: var(--red); font-weight: 500; }
-.cb-row-end { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
-.cb-row-value { font-weight: 600; margin: 0; font-variant-numeric: tabular-nums; }
 .cb-row-end .cb-change { font-size: 14px; }
 .cb-icon { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; flex: none; }
 
@@ -136,13 +147,25 @@ body { margin: 0; background: #0A0B0D; }
 .cb-promo-body { margin: 0; color: var(--body); }
 
 /* Critics */
-.cb-critic { background: var(--surface); border-radius: 20px; padding: 16px; }
-.cb-critic + .cb-critic { margin-top: 12px; }
-.cb-critic-head { display: flex; align-items: center; gap: 12px; }
-.cb-critic-score { text-align: right; font-weight: 600; font-size: 20px; font-variant-numeric: tabular-nums; }
-.cb-critic-score small { display: block; color: var(--text-2); font-size: 12px; font-weight: 500; }
+.cb-panel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.cb-panel-grid.is-list { grid-template-columns: 1fr; gap: 12px; }
+.cb-critic { background: var(--surface); border-radius: 20px; padding: 14px; display: flex; flex-direction: column; }
+.cb-critic-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+.cb-critic-head .cb-avatar { width: 48px; height: 48px; }
+.cb-critic-head .cb-avatar-face svg { width: 48px; height: 48px; }
+.cb-critic-head .cb-row-main { min-width: 0; }
+.cb-critic-head .cb-row-title { font-size: 14px; }
+.cb-critic-score { font-weight: 600; font-size: 20px; font-variant-numeric: tabular-nums; margin-top: 4px; }
+.cb-critic-score small { display: block; color: var(--text-2); font-size: 11px; font-weight: 500; }
+.cb-critic-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.cb-critic-tag { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 500; opacity: 0.85; }
 .cb-roast { margin: 14px 0 0; color: var(--body); line-height: 1.55; }
-.cb-waiting { color: var(--text-2); margin: 12px 0 0; font-size: 15px; }
+.cb-waiting { color: var(--text-2); margin: 10px 0 0; font-size: 13px; }
+/* List mode overrides */
+.is-list .cb-critic { padding: 16px; }
+.is-list .cb-critic-head { flex-direction: row; text-align: left; gap: 12px; }
+.is-list .cb-critic-head .cb-row-title { font-size: 16px; }
+.is-list .cb-critic-score { margin-top: 0; margin-left: auto; }
 
 /* Fix card */
 .cb-fix { margin-top: 14px; background: var(--surface-2); border-radius: 16px; padding: 14px; }

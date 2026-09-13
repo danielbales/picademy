@@ -1,8 +1,16 @@
 import { useState, useRef, forwardRef, useImperativeHandle } from "react";
 import { ImagePlus, Camera } from "lucide-react";
-import Frame from "./Frame";
 
-const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile }, ref) {
+function frameTier(grade) {
+  if (!grade) return "";
+  const g = grade[0];
+  if (g === "A") return " frame-gold";
+  if (g === "B") return " frame-silver";
+  if (g === "C") return " frame-bronze";
+  return " frame-basic";
+}
+
+const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile, grade }, ref) {
   const [dragging, setDragging] = useState(false);
   const cameraRef = useRef(null);
   const galleryRef = useRef(null);
@@ -28,9 +36,8 @@ const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile },
   return (
     <>
       <div className="cb-photo-wrap">
-        <Frame className="cb-peek" />
         <div
-          className="cb-photo"
+          className={`cb-photo${frameTier(grade)}`}
           onDragOver={(e) => {
             e.preventDefault();
             setDragging(true);

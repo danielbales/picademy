@@ -1,4 +1,4 @@
-const CACHE = "the-crit-v2";
+const CACHE = "the-crit-v3";
 
 self.addEventListener("install", () => {
   self.skipWaiting();
