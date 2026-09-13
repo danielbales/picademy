@@ -15,6 +15,7 @@ function Skel({ w, h = 14, r = 8, style }) {
   return <span className="cb-skel" style={{ width: w, height: h, borderRadius: r, ...style }} aria-hidden="true" />;
 }
 
+
 export default function App() {
   const [photo, setPhoto] = useState(null);
   const [previous, setPrevious] = useState(null);
