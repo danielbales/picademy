@@ -43,9 +43,9 @@ function ScoreChart({ points }) {
     <div className="cb-chart">
       <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Score across ${vals.length} attempts at this scene, ${up ? "trending up" : "trending down"}`}>
         <line x1={pad} x2={W - pad} y1={H - pad} y2={H - pad} stroke="#2A2D33" strokeDasharray="2 6" />
-        <path d={d} fill="none" stroke="#0052FF" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
-        <circle cx={lx} cy={ly} r="11" fill="#0052FF" opacity="0.22" />
-        <circle cx={lx} cy={ly} r="5" fill="#0052FF" stroke="#0A0B0D" strokeWidth="2" />
+        <path d={d} fill="none" stroke="#D4A843" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+        <circle cx={lx} cy={ly} r="11" fill="#D4A843" opacity="0.22" />
+        <circle cx={lx} cy={ly} r="5" fill="#D4A843" stroke="#0A0B0D" strokeWidth="2" />
       </svg>
       <div className="cb-chart-labels">
         <span>Attempt 1</span>

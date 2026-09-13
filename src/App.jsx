@@ -4,12 +4,11 @@ import { SKILLS, CRITICS, TEMPERS, HOST } from "./data";
 import { grade } from "./api";
 import { prepareImage } from "./image";
 import { toGrade, average, fmt } from "./helpers";
-import { saveScore, getBest } from "./scores";
+import { saveScore, getBest, saveCovered, getCovered } from "./scores";
 import Frame from "./components/Frame";
 import ScoreHero, { Change } from "./components/ScoreHero";
 import CriticCard from "./components/CriticCard";
 import Fundamentals from "./components/Fundamentals";
-import Onboarding from "./components/Onboarding";
 import ImagePicker from "./components/ImagePicker";
 import Confetti from "./components/Confetti";
 import "./App.css";
@@ -23,7 +22,7 @@ export default function App() {
   const [previous, setPrevious] = useState(null);
   const [result, setResult] = useState(null);
   const [chain, setChain] = useState([]);
-  const [covered, setCovered] = useState([]);
+  const [covered, setCovered] = useState(() => getCovered());
   const [status, setStatus] = useState("idle");
   const [temper, setTemper] = useState("honest");
   const [hostNote, setHostNote] = useState(null);
@@ -83,7 +82,9 @@ export default function App() {
         [data.sterling, data.margaux, data.mom].forEach((fix) => {
           if (fix && fix.fundamental) next.add(fix.fundamental);
         });
-        return Array.from(next);
+        const arr = Array.from(next);
+        saveCovered(arr);
+        return arr;
       });
       saveScore(entry.avg);
       setBestScore(getBest());
@@ -140,16 +141,6 @@ export default function App() {
           bestScore={bestScore}
         />
 
-        {status === "idle" && <Onboarding />}
-
-        <ImagePicker
-          ref={pickerRef}
-          photo={photo}
-          previous={previous}
-          onFile={handleFile}
-          grade={gradeStr}
-        />
-
         {/* Host */}
         <div className="cb-host" aria-live="polite">
           <span className="cb-avatar cb-avatar-host" aria-hidden="true">
@@ -162,6 +153,14 @@ export default function App() {
             <p className="cb-host-line">{hostLine}</p>
           </div>
         </div>
+
+        <ImagePicker
+          ref={pickerRef}
+          photo={photo}
+          previous={previous}
+          onFile={handleFile}
+          grade={gradeStr}
+        />
 
         {/* Temper */}
         <p className="cb-control-label" id="cb-temper">How harsh should they be?</p>
@@ -204,14 +203,9 @@ export default function App() {
               <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openCamera("reshoot")}>
                 Reshoot and compare
               </button>
-              <div className="cb-actions-row">
-                <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
-                  New photo
-                </button>
-                <button type="button" className="cb-btn is-secondary" onClick={judge}>
-                  Judge it again
-                </button>
-              </div>
+              <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
+                New photo
+              </button>
             </>
           )}
           {status === "error" && (

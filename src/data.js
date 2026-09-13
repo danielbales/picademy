@@ -11,7 +11,7 @@ export const SKILL_BY_ID = Object.fromEntries(SKILLS.map((s) => [s.id, s]));
 export const CRITICS = [
   {
     id: "sterling",
-    name: "Sterling Voss",
+    name: "Sterling",
     role: "Collector. Trained on Ansel Adams prints.",
     initials: "S",
     color: "#D4AA3A",
@@ -21,7 +21,7 @@ export const CRITICS = [
   },
   {
     id: "margaux",
-    name: "Margaux Fontaine",
+    name: "Margaux",
     role: "Curator. Disciple of Cartier-Bresson.",
     initials: "M",
     color: "#E26AB5",
@@ -48,7 +48,7 @@ export const TEMPERS = [
 ];
 
 export const HOST = {
-  idle: "No submissions yet. My gilding is wasted on empty walls.",
+  idle: "Bring me a photo. My critics will score it, roast it, and tell you exactly how to make it worthy of my gilding.",
   ready: "A new piece. Let\u2019s see if it\u2019s worthy of my gilding.",
   reshootReady: "A revision. The artist returns. I remain magnificent.",
   error: "The critics wandered off. Probably admiring me in the next room.",

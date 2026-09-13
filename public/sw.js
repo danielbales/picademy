@@ -1,4 +1,4 @@
-const CACHE = "the-crit-v3";
+const CACHE = "picademy-v1";
 
 self.addEventListener("install", () => {
   self.skipWaiting();

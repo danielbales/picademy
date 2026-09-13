@@ -1,7 +1,7 @@
 const API_URL = "https://crit-api.danielbales.workers.dev/grade";
 
 function getDeviceId() {
-  const key = "the-crit-device-id";
+  const key = "picademy-device-id";
   let id = localStorage.getItem(key);
   if (!id || !/^[A-Za-z0-9-]{16,64}$/.test(id)) {
     id = crypto.randomUUID();

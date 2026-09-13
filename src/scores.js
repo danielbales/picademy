@@ -1,4 +1,5 @@
 const KEY = "picademy-scores";
+const COVERED_KEY = "picademy-covered";
 
 function getAll() {
   try {
@@ -18,4 +19,17 @@ export function saveScore(avg) {
 export function getBest() {
   const scores = getAll();
   return scores.length ? Math.max(...scores) : null;
+}
+
+export function saveCovered(covered) {
+  localStorage.setItem(COVERED_KEY, JSON.stringify(covered));
+}
+
+export function getCovered() {
+  try {
+    const raw = localStorage.getItem(COVERED_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
 }
