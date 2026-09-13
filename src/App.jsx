@@ -4,10 +4,12 @@ import { SKILLS, CRITICS, TEMPERS, HOST } from "./data";
 import { grade } from "./api";
 import { prepareImage } from "./image";
 import { toGrade, average, fmt } from "./helpers";
-import Dolly from "./components/Dolly";
+import { saveScore, getBest } from "./scores";
+import Frame from "./components/Frame";
 import ScoreHero, { Change } from "./components/ScoreHero";
 import CriticCard from "./components/CriticCard";
 import Fundamentals from "./components/Fundamentals";
+import Onboarding from "./components/Onboarding";
 import ImagePicker from "./components/ImagePicker";
 import "./App.css";
 
@@ -24,6 +26,7 @@ export default function App() {
   const [status, setStatus] = useState("idle");
   const [temper, setTemper] = useState("honest");
   const [hostNote, setHostNote] = useState(null);
+  const [bestScore, setBestScore] = useState(() => getBest());
   const [fileError, setFileError] = useState("");
   const [loadingIdx, setLoadingIdx] = useState(0);
   const [revealKey, setRevealKey] = useState(0);
@@ -76,11 +79,13 @@ export default function App() {
       });
       setCovered((c) => {
         const next = new Set(c);
-        [data.hank, data.brayden, data.mom].forEach((fix) => {
-          if (fix.fundamental) next.add(fix.fundamental);
+        [data.sterling, data.margaux, data.mom].forEach((fix) => {
+          if (fix && fix.fundamental) next.add(fix.fundamental);
         });
         return Array.from(next);
       });
+      saveScore(entry.avg);
+      setBestScore(getBest());
       setResult(data);
       setRevealKey((k) => k + 1);
       setStatus("done");
@@ -114,9 +119,9 @@ export default function App() {
         <header className="cb-bar">
           <h1 className="cb-brand cb-display">
             <span className="cb-brand-mark" aria-hidden="true">
-              <Dolly />
+              <Frame />
             </span>
-            The Crit
+            Picademy
           </h1>
         </header>
 
@@ -128,7 +133,10 @@ export default function App() {
           prevAvg={prevAvg}
           chain={chain}
           revealKey={revealKey}
+          bestScore={bestScore}
         />
+
+        {status === "idle" && <Onboarding />}
 
         <ImagePicker
           ref={pickerRef}
@@ -140,11 +148,11 @@ export default function App() {
         {/* Host */}
         <div className="cb-host" aria-live="polite">
           <span className="cb-avatar cb-avatar-host" aria-hidden="true">
-            <Dolly />
+            <Frame />
           </span>
           <div>
             <p className="cb-host-name">
-              Dolly<span>Host</span>
+              The Frame<span>Host</span>
             </p>
             <p className="cb-host-line">{hostLine}</p>
           </div>
@@ -172,14 +180,9 @@ export default function App() {
         {/* Actions */}
         <div className="cb-actions">
           {status === "idle" && (
-            <>
-              <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openCamera("new")}>
-                Take a photo
-              </button>
-              <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
-                Choose from library
-              </button>
-            </>
+            <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openGallery("new")}>
+              Choose from library
+            </button>
           )}
           {status === "ready" && (
             <>

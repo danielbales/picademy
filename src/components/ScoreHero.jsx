@@ -1,5 +1,6 @@
 import { ArrowUpRight, ArrowDownRight, Minus } from "lucide-react";
-import { useCountUp } from "../helpers";
+import { Trophy } from "lucide-react";
+import { useCountUp, fmt, toGrade } from "../helpers";
 
 function Skel({ w, h = 14, r = 8, style }) {
   return <span className="cb-skel" style={{ width: w, height: h, borderRadius: r, ...style }} aria-hidden="true" />;
@@ -57,10 +58,14 @@ function ScoreChart({ points }) {
 
 export { Change };
 
-export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain, revealKey }) {
+export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain, revealKey, bestScore }) {
   const judging = status === "judging";
   const done = status === "done";
   const shown = useCountUp(avg, revealKey);
+  const isNewBest = done && bestScore != null && avg >= bestScore;
+  const firstLoad = status === "idle" || status === "ready";
+
+  if (firstLoad && !previous) return chain.length > 1 ? <ScoreChart points={chain} /> : null;
 
   let heroSub;
   if (judging) heroSub = <span>The panel is deliberating</span>;
@@ -73,7 +78,7 @@ export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain
     );
   else if (done) heroSub = <span>First attempt at this scene. Reshoot it to track your progress.</span>;
   else if (previous) heroSub = <span>Your last attempt. Submit the reshoot to compare.</span>;
-  else heroSub = <span>Submit a photo to get your score</span>;
+  else heroSub = null;
 
   return (
     <>
@@ -95,11 +100,17 @@ export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain
               <span className="cb-big cb-display cb-num is-empty">{prevAvg.toFixed(1)}</span>
               <span className="cb-big-of">/ 10</span>
             </>
-          ) : (
-            <span className="cb-big cb-display is-empty">&ndash;</span>
-          )}
+          ) : null}
         </div>
-        <p className="cb-sub">{heroSub}</p>
+        {heroSub && <p className="cb-sub">{heroSub}</p>}
+        {bestScore != null && (
+          <p className={`cb-best${isNewBest ? " is-new" : ""}`}>
+            <Trophy size={14} aria-hidden="true" />
+            {isNewBest
+              ? "New personal best!"
+              : `Best: ${fmt(bestScore)} (${toGrade(bestScore)}) \u2014 beat it`}
+          </p>
+        )}
       </section>
 
       {chain.length > 1 && <ScoreChart points={chain} />}

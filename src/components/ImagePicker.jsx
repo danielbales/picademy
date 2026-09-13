@@ -1,6 +1,6 @@
 import { useState, useRef, forwardRef, useImperativeHandle } from "react";
 import { ImagePlus, Camera } from "lucide-react";
-import Dolly from "./Dolly";
+import Frame from "./Frame";
 
 const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile }, ref) {
   const [dragging, setDragging] = useState(false);
@@ -28,7 +28,7 @@ const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile },
   return (
     <>
       <div className="cb-photo-wrap">
-        <Dolly className="cb-peek" />
+        <Frame className="cb-peek" />
         <div
           className="cb-photo"
           onDragOver={(e) => {
@@ -60,19 +60,12 @@ const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile },
               <button
                 type="button"
                 className="cb-drop-camera"
-                onClick={() => cameraRef.current?.click()}
-                aria-label="Take a photo"
-              >
-                <Camera size={28} aria-hidden="true" />
-              </button>
-              <strong>Take a photo</strong>
-              <button
-                type="button"
-                className="cb-drop-link"
                 onClick={() => galleryRef.current?.click()}
+                aria-label="Upload a photo"
               >
-                or choose from library
+                <ImagePlus size={28} aria-hidden="true" />
               </button>
+              <strong>Upload a photo</strong>
             </div>
           )}
         </div>
