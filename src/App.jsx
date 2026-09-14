@@ -44,7 +44,7 @@ export default function App() {
   useEffect(() => {
     if (status !== "done" || !result) { setRevealStep(0); return; }
     setRevealStep(1);
-    const steps = [500, 1000, 1500, 2000, 2500, 3000, 3500];
+    const steps = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500];
     const timers = steps.map((ms, i) => setTimeout(() => setRevealStep(i + 2), ms));
     return () => timers.forEach(clearTimeout);
   }, [status, result]);
@@ -88,7 +88,7 @@ export default function App() {
       });
       setCovered((c) => {
         const next = new Set(c);
-        [data.curren, data.harper, data.mom].forEach((fix) => {
+        [data.curren, data.harper, data.kai, data.mom].forEach((fix) => {
           if (fix && fix.fundamental) next.add(fix.fundamental);
         });
         const arr = Array.from(next);
@@ -138,7 +138,16 @@ export default function App() {
     <div className="cb">
       <div className="cb-wrap">
         <header className="cb-bar">
-          <h1 className="cb-brand cb-display">
+          <h1 className="cb-brand cb-display" onClick={() => {
+            setPhoto(null);
+            setPrevious(null);
+            setResult(null);
+            setChain([]);
+            setStatus("idle");
+            setHostNote(null);
+            setFileError("");
+            window.scrollTo(0, 0);
+          }} style={{ cursor: "pointer" }}>
             <span className="cb-brand-mark" aria-hidden="true">
               <Host />
             </span>
@@ -224,15 +233,12 @@ export default function App() {
           {status === "done" && (
             <>
               <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openCamera("reshoot")}>
-                Try again and compare
-              </button>
-              <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openCamera("new")}>
-                Take a new photo
+                Reshoot and compare
               </button>
               <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
-                Upload from library
+                New photo
               </button>
-            </>
+</>
           )}
           {status === "error" && (
             <>
@@ -264,7 +270,7 @@ export default function App() {
           </div>
         </section>
 
-        {done && result.frameTip && revealStep >= 8 && (
+        {done && result.frameTip && revealStep >= 10 && (
           <section className="cb-section cb-fade-in">
             <div className="cb-frame-tip">
               <span className="cb-avatar cb-avatar-host" aria-hidden="true">
@@ -283,7 +289,7 @@ export default function App() {
           </section>
         )}
 
-        {done && result.assignment && revealStep >= 8 && (
+        {done && result.assignment && revealStep >= 10 && (
           <section className="cb-section cb-fade-in">
             <div className="cb-promo">
               <span className="cb-icon">
@@ -298,7 +304,7 @@ export default function App() {
         )}
 
         {/* Skills */}
-        {((done && revealStep >= 8) || judging) && (
+        {((done && revealStep >= 10) || judging) && (
         <section className="cb-section" aria-live="polite">
           <h2 className="cb-h2 cb-display">Skill breakdown</h2>
           <div className="cb-skills-grid">

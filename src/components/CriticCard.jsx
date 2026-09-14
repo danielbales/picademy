@@ -9,7 +9,9 @@ export default function CriticCard({ critic, result, status, roastRevealed, fixR
   const score = r
     ? isHabit
       ? 10
-      : Math.round(((result.skills[critic.skills[0]] + result.skills[critic.skills[1]]) / 2) * 10) / 10
+      : critic.skills.length === 1
+        ? result.skills[critic.skills[0]]
+        : Math.round((critic.skills.reduce((sum, s) => sum + result.skills[s], 0) / critic.skills.length) * 10) / 10
     : null;
   const Face = FACES[critic.id];
 

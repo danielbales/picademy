@@ -235,7 +235,7 @@ body { margin: 0; background: #0A0B0D; }
 .cb-promo-body { margin: 0; color: var(--body); }
 
 /* Critics */
-.cb-panel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.cb-panel-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .cb-panel-grid.is-list { grid-template-columns: 1fr; gap: 12px; }
 .cb-critic { background: var(--surface); border-radius: 20px; padding: 18px; display: flex; flex-direction: column; }
 .cb-critic-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
@@ -293,9 +293,11 @@ body { margin: 0; background: #0A0B0D; }
 @keyframes cb-lean { 0%, 100% { transform: translateX(0) rotate(0); } 50% { transform: translateX(3px) rotate(2deg); } }
 @keyframes cb-sway { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-3deg); } }
 @keyframes cb-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes cb-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
 .cb-critic-wait.is-curren .cb-avatar { animation: cb-lean 8s ease-in-out infinite; }
 .cb-critic-wait.is-harper .cb-avatar { animation: cb-sway 8s ease-in-out infinite 1s; }
+.cb-critic-wait.is-kai .cb-avatar { animation: cb-pulse 8s ease-in-out infinite 1.5s; }
 .cb-critic-wait.is-mom .cb-avatar { animation: cb-bob 8s ease-in-out infinite 2s; }
 
 /* Fade in for verdict */
@@ -309,6 +311,7 @@ body { margin: 0; background: #0A0B0D; }
   .cb-photo.is-hung::after { animation: none; }
   .cb-critic-wait.is-curren .cb-avatar,
   .cb-critic-wait.is-harper .cb-avatar,
+  .cb-critic-wait.is-kai .cb-avatar,
   .cb-critic-wait.is-mom .cb-avatar { animation: none; }
   .cb-fade-in { animation: none; }
 }
