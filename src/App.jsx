@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Target, Flame } from "lucide-react";
-import { SKILLS, CRITICS, TEMPERS, HOST } from "./data";
+import { SKILLS, CRITICS, GUESTS, TEMPERS, HOST } from "./data";
 import { grade } from "./api";
 import { prepareImage } from "./image";
 import { toGrade, average, fmt } from "./helpers";
@@ -28,6 +28,7 @@ export default function App() {
   const [bestScore, setBestScore] = useState(() => getBest());
   const [fileError, setFileError] = useState("");
   const [streak, setStreak] = useState(() => getStreak());
+  const [guest, setGuest] = useState(() => GUESTS[Math.floor(Math.random() * GUESTS.length)]);
   const [loadingIdx, setLoadingIdx] = useState(0);
   const [revealKey, setRevealKey] = useState(0);
   const [revealStep, setRevealStep] = useState(0);
@@ -75,10 +76,12 @@ export default function App() {
   async function judge() {
     if (!photo || status === "judging") return;
     const id = ++runId.current;
+    const pickedGuest = GUESTS[Math.floor(Math.random() * GUESTS.length)];
+    setGuest(pickedGuest);
     setHostNote(null);
     setStatus("judging");
     try {
-      const data = await grade(photo, temper, previous);
+      const data = await grade(photo, temper, previous, pickedGuest.id);
       if (runId.current !== id) return;
       const entry = { photoId: photo.id, avg: average(data.skills) };
       const isReshoot = !!previous;
@@ -88,7 +91,7 @@ export default function App() {
       });
       setCovered((c) => {
         const next = new Set(c);
-        [data.curren, data.harper, data.kai, data.mom].forEach((fix) => {
+        [data.curren, data.harper, data.kai, data.guest].forEach((fix) => {
           if (fix && fix.fundamental) next.add(fix.fundamental);
         });
         const arr = Array.from(next);
@@ -264,7 +267,7 @@ export default function App() {
         <section className="cb-section" aria-live="polite">
           <h2 className="cb-h2 cb-display">The Judges</h2>
           <div className={`cb-panel-grid${revealStep >= 2 ? " is-list" : ""}`}>
-            {CRITICS.map((c, i) => (
+            {[...CRITICS, guest].map((c, i) => (
               <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} {...criticReveal(i)} />
             ))}
           </div>

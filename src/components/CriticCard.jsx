@@ -4,10 +4,10 @@ import FACES from "./faces";
 
 export default function CriticCard({ critic, result, status, roastRevealed, fixRevealed }) {
   const judging = status === "judging";
-  const r = result ? result[critic.id] : null;
-  const isHabit = critic.id === "mom";
+  const isGuest = !!critic.isGuest;
+  const r = result ? result[isGuest ? "guest" : critic.id] : null;
   const score = r
-    ? isHabit
+    ? isGuest
       ? 10
       : critic.skills.length === 1
         ? result.skills[critic.skills[0]]
@@ -28,7 +28,7 @@ export default function CriticCard({ critic, result, status, roastRevealed, fixR
         {r && roastRevealed && (
           <div className="cb-critic-score">
             {fmt(score)}
-            {isHabit && <small>Not counted</small>}
+            {isGuest && <small>Guest judge</small>}
           </div>
         )}
       </div>
@@ -45,7 +45,7 @@ export default function CriticCard({ critic, result, status, roastRevealed, fixR
       {r && roastRevealed && (
         <>
           {r.roast && <p className="cb-roast cb-fade-in">{r.roast}</p>}
-          {r.fundamental && fixRevealed && <div className="cb-fade-in"><FixCard fix={r} isHabit={isHabit} /></div>}
+          {r.fundamental && fixRevealed && <div className="cb-fade-in"><FixCard fix={r} isHabit={isGuest} /></div>}
         </>
       )}
     </article>

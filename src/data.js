@@ -42,6 +42,9 @@ export const CRITICS = [
     focus: "Focus and color",
     waiting: "Wrapping eight arms around the details\u2026",
   },
+];
+
+export const GUESTS = [
   {
     id: "mom",
     name: "Mom",
@@ -49,9 +52,53 @@ export const CRITICS = [
     initials: "\u2764",
     color: "#27AD75",
     tint: "rgba(39,173,117,.16)",
-    skills: [],
+    isGuest: true,
     focus: "Bias \u2764\uFE0F",
     waiting: "Putting on her reading glasses\u2026",
+  },
+  {
+    id: "gramps",
+    name: "Gramps",
+    role: "Old-school film purist. Everything was better on 35mm.",
+    initials: "G",
+    color: "#5D7A3A",
+    tint: "rgba(93,122,58,.16)",
+    isGuest: true,
+    focus: "The old ways",
+    waiting: "Adjusting his spectacles\u2026",
+  },
+  {
+    id: "blitz",
+    name: "Blitz",
+    role: "Social media hummingbird. Judges by shareability.",
+    initials: "B",
+    color: "#00C853",
+    tint: "rgba(0,200,83,.16)",
+    isGuest: true,
+    focus: "Virality",
+    waiting: "Refreshing the feed at 80 flaps per second\u2026",
+  },
+  {
+    id: "professor",
+    name: "Professor",
+    role: "Academic owl. Quotes Ansel Adams at every opportunity.",
+    initials: "P",
+    color: "#8B6914",
+    tint: "rgba(139,105,20,.16)",
+    isGuest: true,
+    focus: "Theory",
+    waiting: "Cross-referencing with the textbook\u2026",
+  },
+  {
+    id: "reef",
+    name: "Reef",
+    role: "Brutally honest crab. Says what everyone is thinking.",
+    initials: "R",
+    color: "#E74C3C",
+    tint: "rgba(231,76,60,.16)",
+    isGuest: true,
+    focus: "Real talk",
+    waiting: "Sharpening his pincers\u2026",
   },
 ];
 
@@ -134,14 +181,14 @@ export const FUNDAMENTALS = [
   { id: "try_bw", name: "Try black and white", critic: "kai", skill: "editing" },
   { id: "fix_perspective", name: "Fix perspective", critic: "kai", skill: "editing" },
   { id: "warmth_adjust", name: "Adjust warmth", critic: "kai", skill: "editing" },
-  // Mom — Habits
-  { id: "take_three", name: "Take three versions", critic: "mom", skill: null },
-  { id: "daily_photo", name: "One photo a day", critic: "mom", skill: null },
-  { id: "favorites_album", name: "Keep a favorites album", critic: "mom", skill: null },
-  { id: "study_a_photo", name: "Study a photo you love", critic: "mom", skill: null },
-  { id: "shoot_both", name: "Shoot both ways", critic: "mom", skill: null },
-  { id: "wait_to_delete", name: "Wait before deleting", critic: "mom", skill: null },
-  { id: "photo_story", name: "Tell a 3-photo story", critic: "mom", skill: null },
-  { id: "share_and_ask", name: "Share and ask", critic: "mom", skill: null },
+  // Guest — Habits
+  { id: "take_three", name: "Take three versions", critic: "guest", skill: null },
+  { id: "daily_photo", name: "One photo a day", critic: "guest", skill: null },
+  { id: "favorites_album", name: "Keep a favorites album", critic: "guest", skill: null },
+  { id: "study_a_photo", name: "Study a photo you love", critic: "guest", skill: null },
+  { id: "shoot_both", name: "Shoot both ways", critic: "guest", skill: null },
+  { id: "wait_to_delete", name: "Wait before deleting", critic: "guest", skill: null },
+  { id: "photo_story", name: "Tell a 3-photo story", critic: "guest", skill: null },
+  { id: "share_and_ask", name: "Share and ask", critic: "guest", skill: null },
 ];
 export const FUND_BY_ID = Object.fromEntries(FUNDAMENTALS.map((f) => [f.id, f]));

@@ -10,10 +10,11 @@ function getDeviceId() {
   return id;
 }
 
-export async function grade(photo, temper, previous) {
+export async function grade(photo, temper, previous, guestId) {
   const body = {
     photo: { mediaType: photo.mediaType, base64: photo.base64 },
     temper,
+    guestId,
   };
   if (previous) {
     body.previous = {
