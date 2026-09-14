@@ -11,6 +11,17 @@ import CriticCard from "./components/CriticCard";
 import ImagePicker from "./components/ImagePicker";
 import "./App.css";
 
+const MYSTERY_GUEST = {
+  id: "mystery",
+  name: "???",
+  initials: "?",
+  color: "#6B7280",
+  tint: "rgba(107,114,128,.16)",
+  isGuest: true,
+  focus: "Mystery",
+  waiting: "A mystery judge is stepping out of the shadows...",
+};
+
 function Skel({ w, h = 14, r = 8, style }) {
   return <span className="cb-skel" style={{ width: w, height: h, borderRadius: r, ...style }} aria-hidden="true" />;
 }
@@ -267,7 +278,7 @@ export default function App() {
         <section className="cb-section" aria-live="polite">
           <h2 className="cb-h2 cb-display">The Judges</h2>
           <div className={`cb-panel-grid${revealStep >= 2 ? " is-list" : ""}`}>
-            {[...CRITICS, guest].map((c, i) => (
+            {[...CRITICS, judging || done ? guest : MYSTERY_GUEST].map((c, i) => (
               <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} {...criticReveal(i)} />
             ))}
           </div>
