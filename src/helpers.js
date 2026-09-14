@@ -3,8 +3,8 @@ import { SKILLS } from "./data";
 
 export function toGrade(avg) {
   const scale = [
-    [9.0, "A+"], [8.3, "A"], [7.7, "A-"], [7.2, "B+"], [6.7, "B"],
-    [6.2, "B-"], [5.7, "C+"], [5.2, "C"], [4.5, "C-"], [3.5, "D"],
+    [8.5, "A+"], [7.8, "A"], [7.2, "A-"], [6.7, "B+"], [6.2, "B"],
+    [5.7, "B-"], [5.2, "C+"], [4.7, "C"], [4.0, "C-"], [3.0, "D"],
   ];
   for (const [min, g] of scale) if (avg >= min) return g;
   return "F";
