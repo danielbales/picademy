@@ -2,6 +2,13 @@ import { fmt } from "../helpers";
 import FixCard from "./FixCard";
 import FACES from "./faces";
 
+function scoreMood(score) {
+  if (score == null) return "neutral";
+  if (score >= 7.5) return "happy";
+  if (score >= 5) return "neutral";
+  return "grumpy";
+}
+
 export default function CriticCard({ critic, result, status, roastRevealed, fixRevealed }) {
   const judging = status === "judging";
   const isGuest = !!critic.isGuest;
@@ -14,12 +21,13 @@ export default function CriticCard({ critic, result, status, roastRevealed, fixR
         : Math.round((critic.skills.reduce((sum, s) => sum + result.skills[s], 0) / critic.skills.length) * 10) / 10
     : null;
   const Face = FACES[critic.id];
+  const mood = roastRevealed ? scoreMood(score) : "neutral";
 
   return (
     <article className="cb-critic">
       <div className="cb-critic-head">
-        <span className="cb-avatar cb-avatar-face" style={{ background: critic.tint }} aria-hidden="true">
-          {Face ? <Face /> : critic.initials}
+        <span className="cb-avatar cb-avatar-face" style={{ background: critic.tint, boxShadow: roastRevealed ? `0 0 12px 2px ${critic.tint}` : undefined }} aria-hidden="true">
+          {Face ? <Face mood={mood} /> : critic.initials}
         </span>
         <div className="cb-row-main">
           <h3 className="cb-row-title">{critic.name}</h3>
@@ -36,7 +44,7 @@ export default function CriticCard({ critic, result, status, roastRevealed, fixR
       {judging && (
         <div className={`cb-critic-wait is-${critic.id}`}>
           <span className="cb-avatar cb-avatar-face" style={{ background: critic.tint }} aria-hidden="true">
-            {Face ? <Face /> : critic.initials}
+            {Face ? <Face mood="neutral" /> : critic.initials}
           </span>
           <p className="cb-waiting">{critic.waiting}</p>
         </div>

@@ -239,8 +239,9 @@ body { margin: 0; background: #0A0B0D; }
 .cb-panel-grid.is-list { grid-template-columns: 1fr; gap: 12px; }
 .cb-critic { background: var(--surface); border-radius: 20px; padding: 18px; display: flex; flex-direction: column; }
 .cb-critic-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
-.cb-critic-head .cb-avatar { width: 48px; height: 48px; }
-.cb-critic-head .cb-avatar-face svg { width: 48px; height: 48px; }
+.cb-critic-head .cb-avatar { width: 48px; height: 48px; transition: box-shadow 0.4s ease; }
+.cb-critic-head .cb-avatar-face svg { width: 48px; height: 48px; display: block; }
+.cb-critic-head .cb-avatar-face { animation: cb-breathe 4s ease-in-out infinite; }
 .cb-critic-head .cb-row-main { min-width: 0; }
 .cb-critic-head .cb-row-title { font-size: 15px; }
 .cb-critic-score { font-weight: 600; font-size: 20px; font-variant-numeric: tabular-nums; margin-top: 4px; }
@@ -252,8 +253,13 @@ body { margin: 0; background: #0A0B0D; }
 /* List mode overrides */
 .is-list .cb-critic { padding: 16px; }
 .is-list .cb-critic-head { flex-direction: row; text-align: left; gap: 12px; }
+.is-list .cb-critic-head .cb-avatar { width: 56px; height: 56px; }
+.is-list .cb-critic-head .cb-avatar-face svg { width: 56px; height: 56px; }
 .is-list .cb-critic-head .cb-row-title { font-size: 16px; }
 .is-list .cb-critic-score { margin-top: 0; margin-left: auto; }
+
+/* Idle breathing animation for avatars */
+@keyframes cb-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
 
 /* Fix card */
 .cb-fix { margin-top: 14px; background: var(--surface-2); border-radius: 16px; padding: 14px; }
@@ -322,4 +328,5 @@ body { margin: 0; background: #0A0B0D; }
   .cb-critic-wait.is-professor .cb-avatar,
   .cb-critic-wait.is-reef .cb-avatar { animation: none; }
   .cb-fade-in { animation: none; }
+  .cb-critic-head .cb-avatar-face { animation: none; }
 }
