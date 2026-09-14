@@ -4,6 +4,7 @@ import { SKILLS, CRITICS, GUESTS, TEMPERS, HOST } from "./data";
 import { grade } from "./api";
 import { prepareImage } from "./image";
 import { toGrade, average, fmt } from "./helpers";
+import { fireConfetti } from "./confetti";
 import { saveScore, getBest, saveCovered, getCovered, getStreak, bumpStreak } from "./scores";
 import Host from "./components/Host";
 import ScoreHero, { Change } from "./components/ScoreHero";
@@ -58,6 +59,9 @@ export default function App() {
     setRevealStep(1);
     const steps = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500];
     const timers = steps.map((ms, i) => setTimeout(() => setRevealStep(i + 2), ms));
+    if (toGrade(average(result.skills))[0] === "A") {
+      timers.push(setTimeout(fireConfetti, 800));
+    }
     return () => timers.forEach(clearTimeout);
   }, [status, result]);
 
