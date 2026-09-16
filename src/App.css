@@ -58,6 +58,7 @@ body { margin: 0; background: #0A0B0D; }
 .cb-sub { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 4px 0 0; color: var(--text-2); font-size: 15px; }
 .cb-best { display: flex; align-items: center; gap: 8px; margin: 8px 0 0; color: var(--text-2); font-size: 15px; font-weight: 500; }
 .cb-best.is-new { color: var(--green); }
+.cb-best-thumb { width: 28px; height: 28px; border-radius: 6px; object-fit: cover; border: 1.5px solid var(--border); flex: none; margin-left: 2px; }
 .cb-change { display: inline-flex; align-items: center; gap: 1px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .cb-change.is-up { color: var(--green); }
 .cb-change.is-down { color: var(--red); }

@@ -113,8 +113,8 @@ export default function App() {
         saveCovered(arr);
         return arr;
       });
-      saveScore(entry.avg);
-      setBestScore(getBest());
+      const best = await saveScore(entry.avg, photo.url);
+      setBestScore(best);
       const streakResult = bumpStreak();
       setStreak(streakResult.count);
       if (streakResult.isNewBest) {

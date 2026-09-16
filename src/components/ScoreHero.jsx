@@ -110,7 +110,10 @@ export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain
         {bestScore != null && (
           <p className="cb-best">
             <Trophy size={18} aria-hidden="true" />
-            {`Best: ${fmt(bestScore)} (${toGrade(bestScore)}) \u2014 beat it`}
+            {`Best: ${fmt(bestScore.score)} (${toGrade(bestScore.score)}) \u2014 beat it`}
+            {bestScore.thumb && (
+              <img className="cb-best-thumb" src={bestScore.thumb} alt="Best scoring photo" />
+            )}
           </p>
         )}
       </section>

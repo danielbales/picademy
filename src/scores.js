@@ -51,15 +51,55 @@ function getAll() {
   }
 }
 
-export function saveScore(avg) {
+export async function saveScore(avg, photoUrl) {
   const scores = getAll();
   scores.push(avg);
   sessionStorage.setItem(KEY, JSON.stringify(scores));
+  // Track best photo thumbnail
+  const prev = getBest();
+  if (prev === null || avg >= prev.score) {
+    const thumb = await makeThumbnail(photoUrl);
+    const best = { score: avg, thumb };
+    sessionStorage.setItem(KEY + "-best", JSON.stringify(best));
+    return best;
+  }
+  return prev;
+}
+
+function makeThumbnail(dataUrl) {
+  return new Promise((resolve) => {
+    try {
+      const img = new Image();
+      img.onload = () => {
+        const c = document.createElement("canvas");
+        const size = 48;
+        c.width = size;
+        c.height = size;
+        const ctx = c.getContext("2d");
+        const s = Math.min(img.width, img.height);
+        const sx = (img.width - s) / 2;
+        const sy = (img.height - s) / 2;
+        ctx.drawImage(img, sx, sy, s, s, 0, 0, size, size);
+        resolve(c.toDataURL("image/jpeg", 0.5));
+      };
+      img.onerror = () => resolve(null);
+      img.src = dataUrl;
+    } catch {
+      resolve(null);
+    }
+  });
 }
 
 export function getBest() {
+  // Try new format first (with thumbnail)
+  try {
+    const raw = sessionStorage.getItem(KEY + "-best");
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  // Fallback to old format
   const scores = getAll();
-  return scores.length ? Math.max(...scores) : null;
+  if (!scores.length) return null;
+  return { score: Math.max(...scores), thumb: null };
 }
 
 export function saveCovered(covered) {
