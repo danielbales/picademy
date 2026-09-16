@@ -1,3 +1,5 @@
+import { getTurnstileToken } from "./turnstile";
+
 const API_URL = "https://crit-api.danielbales.workers.dev/grade";
 
 function getDeviceId() {
@@ -23,13 +25,22 @@ export async function grade(photo, temper, previous, guestId) {
     };
   }
 
+  const headers = {
+    "Content-Type": "application/json",
+    "x-device-id": getDeviceId(),
+  };
+
+  // Prefer Turnstile token when available, fall back to static app token
+  const tsToken = await getTurnstileToken();
+  if (tsToken) {
+    headers["x-turnstile-token"] = tsToken;
+  } else {
+    headers["x-app-token"] = import.meta.env.VITE_APP_TOKEN;
+  }
+
   const res = await fetch(API_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-app-token": import.meta.env.VITE_APP_TOKEN,
-      "x-device-id": getDeviceId(),
-    },
+    headers,
     body: JSON.stringify(body),
   });
 

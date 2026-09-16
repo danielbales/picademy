@@ -1,16 +1,31 @@
-# React + Vite
+# Picademy
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A photography critique app with animal judge characters. Upload a phone photo and get scored on composition, light, technical quality, and editing - with personality-driven feedback from a panel of animal critics.
 
-Currently, two official plugins are available:
+## The Cast
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Curren** (lion) - judges light quality with regal authority
+- **Harper** (cheetah) - obsesses over composition and framing
+- **Kai** (octopus) - catches every technical and editing flaw
+- **Guest judges** rotate each round: Mom (bear), Gramps (tortoise), Blitz (hummingbird), Professor (owl), Reef (crab)
+- **Lida** (chameleon) - the host, provides photo-type tips
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React + Vite, deployed to Cloudflare Pages
+- **API**: Cloudflare Worker proxying Gemini for AI-powered critiques
+- **Scoring**: 1-10 per skill, letter grades (A+ through F), trophy tiers
 
-## Expanding the Oxlint configuration
+## Development
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```
+npm install
+npm run dev
+```
+
+## Deploy
+
+```
+npm run build
+npx wrangler pages deploy dist --project-name the-crit --commit-dirty=true
+```

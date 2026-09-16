@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { Target, Flame } from "lucide-react";
+import { Target, Flame, Share2 } from "lucide-react";
 import { SKILLS, CRITICS, GUESTS, TEMPERS, HOST } from "./data";
 import { grade } from "./api";
 import { prepareImage } from "./image";
 import { toGrade, average, fmt } from "./helpers";
 import { fireConfetti } from "./confetti";
+import { renderTurnstile } from "./turnstile";
+import { shareResult } from "./share";
 import { saveScore, getBest, saveCovered, getCovered, getStreak, bumpStreak } from "./scores";
 import Host from "./components/Host";
 import ScoreHero, { Change } from "./components/ScoreHero";
@@ -46,6 +48,8 @@ export default function App() {
   const [revealStep, setRevealStep] = useState(0);
   const pickerRef = useRef(null);
   const runId = useRef(0);
+
+  useEffect(() => { renderTurnstile("#turnstile"); }, []);
 
   useEffect(() => {
     if (status !== "judging") return undefined;
@@ -145,6 +149,18 @@ export default function App() {
     fixRevealed: revealStep >= criticIdx * 2 + 3,
   });
 
+  async function handleShare() {
+    if (!result || !photo) return;
+    const guestRoast = result.guest;
+    await shareResult({
+      photoUrl: photo.url,
+      score: avg,
+      grade: gradeStr,
+      roast: guestRoast.roast,
+      criticName: guest.name,
+    });
+  }
+
   let hostLine = HOST.idle;
   if (hostNote) hostLine = hostNote;
   else if (judging) hostLine = HOST.loading[loadingIdx];
@@ -154,7 +170,7 @@ export default function App() {
 
   return (
     <div className="cb">
-      <div className="cb-wrap">
+      <div className={`cb-wrap${done ? " cb-has-sticky" : ""}`}>
         <header className="cb-bar">
           <h1 className="cb-brand cb-display" onClick={() => {
             setPhoto(null);
@@ -212,26 +228,30 @@ export default function App() {
           status={status}
         />
 
-        {/* Temper */}
-        <p className="cb-control-label" id="cb-temper">How harsh should the Judges be?</p>
-        <div className="cb-seg" role="group" aria-labelledby="cb-temper">
-          {TEMPERS.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              aria-pressed={temper === t.id}
-              disabled={judging}
-              onClick={() => {
-                setTemper(t.id);
-                setHostNote(t.host);
-              }}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
+        {/* Temper - hidden after grading */}
+        {!done && (
+          <>
+            <p className="cb-control-label" id="cb-temper">How harsh should the Judges be?</p>
+            <div className="cb-seg" role="group" aria-labelledby="cb-temper">
+              {TEMPERS.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  aria-pressed={temper === t.id}
+                  disabled={judging}
+                  onClick={() => {
+                    setTemper(t.id);
+                    setHostNote(t.host);
+                  }}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
 
-        {/* Actions */}
+        {/* Inline actions (pre-results) */}
         <div className="cb-actions">
           {status === "ready" && (
             <>
@@ -247,16 +267,6 @@ export default function App() {
             <button type="button" className="cb-btn" disabled>
               The Judges are deliberating&hellip;
             </button>
-          )}
-          {status === "done" && (
-            <>
-              <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openCamera("reshoot")}>
-                Reshoot and compare
-              </button>
-              <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
-                New photo
-              </button>
-</>
           )}
           {status === "error" && (
             <>
@@ -346,6 +356,25 @@ export default function App() {
         )}
 
       </div>
+
+      {/* Sticky bottom bar for results */}
+      <div id="turnstile" style={{ position: "fixed", bottom: 0, left: 0, zIndex: -1 }} />
+
+      {done && (
+        <div className="cb-sticky-bar">
+          <div className="cb-sticky-inner">
+            <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openCamera("reshoot")}>
+              Reshoot and compare
+            </button>
+            <button type="button" className="cb-btn is-share" onClick={handleShare} aria-label="Share result">
+              <Share2 size={20} aria-hidden="true" />
+            </button>
+            <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
+              New photo
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

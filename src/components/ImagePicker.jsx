@@ -259,20 +259,19 @@ const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile, g
                   type="button"
                   className="cb-drop-camera"
                   onClick={() => cameraRef.current?.click()}
-                  aria-label="Take a photo"
                 >
                   <Camera size={28} aria-hidden="true" />
+                  <span>Take photo</span>
                 </button>
                 <button
                   type="button"
                   className="cb-drop-camera"
                   onClick={() => galleryRef.current?.click()}
-                  aria-label="Upload a photo"
                 >
                   <ImagePlus size={28} aria-hidden="true" />
+                  <span>Choose photo</span>
                 </button>
               </div>
-              <strong>Take or upload a photo</strong>
             </div>
           )}
         </div>
