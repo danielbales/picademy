@@ -14,12 +14,12 @@ import "./App.css";
 
 const MYSTERY_GUEST = {
   id: "mystery",
-  name: "???",
+  name: "Random",
   initials: "?",
   color: "#6B7280",
   tint: "rgba(107,114,128,.16)",
   isGuest: true,
-  focus: "Mystery",
+  focus: "Surprise",
   waiting: "A mystery judge is stepping out of the shadows...",
 };
 
@@ -280,7 +280,7 @@ export default function App() {
 
         {/* Panel */}
         <section className="cb-section" aria-live="polite">
-          <h2 className="cb-h2 cb-display">The Judges</h2>
+          <h2 className="cb-h2 cb-display">Judges</h2>
           <div className={`cb-panel-grid${revealStep >= 2 ? " is-list" : ""}`}>
             {[...CRITICS, judging || done ? guest : MYSTERY_GUEST].map((c, i) => (
               <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} {...criticReveal(i)} />
