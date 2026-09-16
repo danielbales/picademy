@@ -6,7 +6,7 @@ import { prepareImage } from "./image";
 import { toGrade, average, fmt } from "./helpers";
 import { fireConfetti } from "./confetti";
 import { renderTurnstile } from "./turnstile";
-import { shareResult } from "./share";
+import { shareResult, pickFeaturedRoast } from "./share";
 import { saveScore, getBest, saveCovered, getCovered, getStreak, bumpStreak, getRemaining, useGrade, addCredits, bumpLimitHit } from "./scores";
 import Host from "./components/Host";
 import ScoreHero, { Change } from "./components/ScoreHero";
@@ -49,6 +49,7 @@ export default function App() {
   const [revealKey, setRevealKey] = useState(0);
   const [revealStep, setRevealStep] = useState(0);
   const [remaining, setRemaining] = useState(() => getRemaining());
+  const [shareState, setShareState] = useState("idle"); // idle | sharing | shared | downloaded
   const pickerRef = useRef(null);
   const runId = useRef(0);
 
@@ -79,6 +80,7 @@ export default function App() {
   useEffect(() => {
     if (status !== "done" || !result) { setRevealStep(0); return; }
     setRevealStep(1);
+    setShareState("idle");
     const steps = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500];
     const timers = steps.map((ms, i) => setTimeout(() => setRevealStep(i + 2), ms));
     if (toGrade(average(result.skills))[0] === "A") {
@@ -107,6 +109,7 @@ export default function App() {
     setPhoto(prepared);
     setResult(null);
     setHostNote(null);
+    setShareState("idle");
     setStatus("ready");
   }
 
@@ -170,15 +173,24 @@ export default function App() {
   });
 
   async function handleShare() {
-    if (!result || !photo) return;
-    const guestRoast = result.guest;
-    await shareResult({
-      photoUrl: photo.url,
-      score: avg,
-      grade: gradeStr,
-      roast: guestRoast.roast,
-      criticName: guest.name,
-    });
+    if (!result || !photo || shareState === "sharing") return;
+    setShareState("sharing");
+    try {
+      const { roast, criticName } = pickFeaturedRoast(result, guest);
+      const outcome = await shareResult({
+        photoUrl: photo.url,
+        score: avg,
+        grade: gradeStr,
+        roast,
+        criticName,
+      });
+      setShareState(outcome === "shared" ? "shared" : outcome === "downloaded" ? "downloaded" : "idle");
+      if (outcome === "shared" || outcome === "downloaded") {
+        setTimeout(() => setShareState("idle"), 2500);
+      }
+    } catch {
+      setShareState("idle");
+    }
   }
 
   let hostLine = HOST.idle;
@@ -187,6 +199,12 @@ export default function App() {
   else if (status === "error") hostLine = HOST.error;
   else if (done) hostLine = result.host || HOST.byGrade[gradeStr[0]];
   else if (status === "ready") hostLine = previous ? HOST.reshootReady : HOST.ready;
+
+  const shareLabel =
+    shareState === "sharing" ? "Preparing card\u2026"
+    : shareState === "shared" ? "Shared!"
+    : shareState === "downloaded" ? "Saved!"
+    : "Share this roast";
 
   return (
     <div className="cb">
@@ -200,6 +218,7 @@ export default function App() {
             setStatus("idle");
             setHostNote(null);
             setFileError("");
+            setShareState("idle");
             window.scrollTo(0, 0);
           }} style={{ cursor: "pointer" }}>
             <span className="cb-brand-mark" aria-hidden="true">
@@ -407,7 +426,14 @@ export default function App() {
             <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openCamera("reshoot")}>
               Reshoot and compare
             </button>
-            <button type="button" className="cb-btn is-share" onClick={handleShare} aria-label="Share result">
+            <button
+              type="button"
+              className={`cb-btn is-share${shareState !== "idle" ? " is-active" : ""}`}
+              onClick={handleShare}
+              disabled={shareState === "sharing"}
+              aria-label={shareLabel}
+              title={shareLabel}
+            >
               <Share2 size={20} aria-hidden="true" />
             </button>
             <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
