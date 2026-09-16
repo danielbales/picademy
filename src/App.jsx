@@ -7,12 +7,14 @@ import { toGrade, average, fmt } from "./helpers";
 import { fireConfetti } from "./confetti";
 import { renderTurnstile } from "./turnstile";
 import { shareResult } from "./share";
-import { saveScore, getBest, saveCovered, getCovered, getStreak, bumpStreak } from "./scores";
+import { saveScore, getBest, saveCovered, getCovered, getStreak, bumpStreak, getRemaining, useGrade, addCredits, bumpLimitHit } from "./scores";
 import Host from "./components/Host";
 import ScoreHero, { Change } from "./components/ScoreHero";
 import CriticCard from "./components/CriticCard";
 import ImagePicker from "./components/ImagePicker";
 import "./App.css";
+
+const BUY_LINK = "https://buy.stripe.com/REPLACE_WITH_YOUR_LINK";
 
 const MYSTERY_GUEST = {
   id: "mystery",
@@ -46,10 +48,26 @@ export default function App() {
   const [loadingIdx, setLoadingIdx] = useState(0);
   const [revealKey, setRevealKey] = useState(0);
   const [revealStep, setRevealStep] = useState(0);
+  const [remaining, setRemaining] = useState(() => getRemaining());
   const pickerRef = useRef(null);
   const runId = useRef(0);
 
   useEffect(() => { renderTurnstile("#turnstile"); }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const n = parseInt(params.get("redeem"), 10);
+    if (n > 0 && n <= 200) {
+      addCredits(n);
+      setRemaining(getRemaining());
+      window.history.replaceState({}, "", window.location.pathname);
+      setHostNote(`${n} critiques added! The judges are ready.`);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (status === "ready" && remaining.total === 0) bumpLimitHit();
+  }, [status, remaining.total]);
 
   useEffect(() => {
     if (status !== "judging") return undefined;
@@ -124,6 +142,8 @@ export default function App() {
       if (streakResult.isNewBest) {
         setHostNote(`${streakResult.count} days! Curren is impressed.`);
       }
+      useGrade();
+      setRemaining(getRemaining());
       setResult(data);
       setRevealKey((k) => k + 1);
       setStatus("done");
@@ -253,11 +273,25 @@ export default function App() {
 
         {/* Inline actions (pre-results) */}
         <div className="cb-actions">
-          {status === "ready" && (
+          {status === "ready" && remaining.total > 0 && (
             <>
               <button type="button" className="cb-btn" onClick={judge}>
                 Submit to the Judges
               </button>
+              <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
+                Choose a different photo
+              </button>
+            </>
+          )}
+          {status === "ready" && remaining.total === 0 && (
+            <>
+              <div className="cb-paywall">
+                <p className="cb-paywall-title">You've used your 5 free critiques today</p>
+                <a href={BUY_LINK} className="cb-btn cb-btn-buy" target="_blank" rel="noopener noreferrer">
+                  Buy 20 critiques - $4.99
+                </a>
+                <p className="cb-paywall-sub">Or come back tomorrow for 5 more free ones.</p>
+              </div>
               <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
                 Choose a different photo
               </button>
@@ -279,6 +313,13 @@ export default function App() {
             </>
           )}
         </div>
+        {status === "ready" && remaining.total > 0 && (
+          <p className="cb-remaining">
+            {remaining.freeLeft > 0
+              ? `${remaining.freeLeft} of ${remaining.daily} free critiques left today`
+              : `${remaining.credits} credit${remaining.credits !== 1 ? "s" : ""} remaining`}
+          </p>
+        )}
         {fileError && <p className="cb-error" role="alert">{fileError}</p>}
 
         {done && previous && result.progress && (

@@ -1,9 +1,68 @@
 const KEY = "picademy-scores";
 const COVERED_KEY = "picademy-covered";
 const STREAK_KEY = "picademy-streak";
+const DAILY_KEY = "picademy-daily";
+const CREDITS_KEY = "picademy-credits";
+const LIMIT_HITS_KEY = "picademy-limit-hits";
+const FREE_DAILY = 5;
 
 function today() {
   return new Date().toISOString().slice(0, 10);
+}
+
+/* ---- Daily usage & credits ---- */
+
+function loadDaily() {
+  try {
+    const raw = localStorage.getItem(DAILY_KEY);
+    if (!raw) return { date: today(), used: 0 };
+    const d = JSON.parse(raw);
+    return d.date === today() ? d : { date: today(), used: 0 };
+  } catch {
+    return { date: today(), used: 0 };
+  }
+}
+
+export function getRemaining() {
+  const d = loadDaily();
+  const freeLeft = Math.max(0, FREE_DAILY - d.used);
+  const credits = getCredits();
+  return { freeLeft, credits, total: freeLeft + credits, daily: FREE_DAILY };
+}
+
+export function getCredits() {
+  try {
+    return parseInt(localStorage.getItem(CREDITS_KEY) || "0", 10) || 0;
+  } catch {
+    return 0;
+  }
+}
+
+export function useGrade() {
+  const d = loadDaily();
+  if (d.used < FREE_DAILY) {
+    d.used++;
+    localStorage.setItem(DAILY_KEY, JSON.stringify(d));
+    return true;
+  }
+  const credits = getCredits();
+  if (credits > 0) {
+    localStorage.setItem(CREDITS_KEY, String(credits - 1));
+    return true;
+  }
+  return false;
+}
+
+export function addCredits(n) {
+  const current = getCredits();
+  localStorage.setItem(CREDITS_KEY, String(current + n));
+}
+
+export function bumpLimitHit() {
+  try {
+    const hits = parseInt(localStorage.getItem(LIMIT_HITS_KEY) || "0", 10) || 0;
+    localStorage.setItem(LIMIT_HITS_KEY, String(hits + 1));
+  } catch { /* ignore */ }
 }
 
 function loadStreak() {

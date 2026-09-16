@@ -159,6 +159,11 @@ body { margin: 0; background: #0A0B0D; }
 .cb-seg button:disabled { cursor: not-allowed; }
 .cb-actions { display: grid; gap: 10px; margin-top: 12px; }
 .cb-actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cb-remaining { text-align: center; font-size: 13px; color: var(--text-2); margin: 8px 0 0; }
+.cb-paywall { text-align: center; padding: 24px 20px; background: var(--surface); border-radius: 20px; }
+.cb-paywall-title { font-weight: 600; font-size: 17px; margin: 0 0 16px; }
+.cb-paywall-sub { font-size: 14px; color: var(--text-2); margin: 14px 0 0; }
+.cb-btn-buy { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
 
 /* Sticky bottom bar for results */
 .cb-sticky-bar { position: sticky; bottom: 0; z-index: 10; background: linear-gradient(transparent, var(--bg) 16px); padding: 16px 0 max(12px, env(safe-area-inset-bottom)); pointer-events: none; }
