@@ -50,24 +50,25 @@ function wrapText(ctx, text, x, y, maxW, lineH) {
  * Never feature Mom or Professor as the main share line.
  */
 export function pickFeaturedRoast(result, guest) {
-  if (!result) return { roast: "", criticName: "" };
+  if (!result) return { roast: "", criticName: "", focus: "" };
 
+  const CRITIC_FOCUS = { curren: "Light", harper: "Composition", kai: "Focus & color" };
   const candidates = [];
 
   // Guest judges (highest priority when they are the savage ones)
   if (result.guest?.roast && guest) {
     const id = guest.id;
-    if (id === "reef") candidates.push({ roast: result.guest.roast, criticName: guest.name, priority: 1 });
-    else if (id === "blitz") candidates.push({ roast: result.guest.roast, criticName: guest.name, priority: 2 });
-    else if (id === "gramps") candidates.push({ roast: result.guest.roast, criticName: guest.name, priority: 3 });
+    if (id === "reef") candidates.push({ roast: result.guest.roast, criticName: guest.name, focus: guest.focus, priority: 1 });
+    else if (id === "blitz") candidates.push({ roast: result.guest.roast, criticName: guest.name, focus: guest.focus, priority: 2 });
+    else if (id === "gramps") candidates.push({ roast: result.guest.roast, criticName: guest.name, focus: guest.focus, priority: 3 });
     else if (id !== "mom" && id !== "professor") {
-      candidates.push({ roast: result.guest.roast, criticName: guest.name, priority: 5 });
+      candidates.push({ roast: result.guest.roast, criticName: guest.name, focus: guest.focus, priority: 5 });
     }
   }
 
   // Host one-liner (often punchy)
   if (result.host && typeof result.host === "string" && result.host.length > 12) {
-    candidates.push({ roast: result.host, criticName: "Lida", priority: 4 });
+    candidates.push({ roast: result.host, criticName: "Lida", focus: "Host", priority: 4 });
   }
 
   // Fallback to core judges if needed (prefer the ones with actual roasts)
@@ -75,12 +76,12 @@ export function pickFeaturedRoast(result, guest) {
     const r = result[id];
     if (r?.roast) {
       const name = id === "kai" ? "Kai" : id === "harper" ? "Harper" : "Curren";
-      candidates.push({ roast: r.roast, criticName: name, priority: 6 });
+      candidates.push({ roast: r.roast, criticName: name, focus: CRITIC_FOCUS[id], priority: 6 });
     }
   }
 
   if (!candidates.length) {
-    return { roast: "The judges have spoken.", criticName: "Picademy" };
+    return { roast: "The judges have spoken.", criticName: "Picademy", focus: "" };
   }
 
   candidates.sort((a, b) => a.priority - b.priority);
@@ -92,10 +93,14 @@ export function pickFeaturedRoast(result, guest) {
     roast = roast.slice(0, 107).replace(/\s+\S*$/, "") + "…";
   }
 
-  return { roast, criticName: best.criticName };
+  return { roast, criticName: best.criticName, focus: best.focus || "" };
 }
 
-export async function generateShareCard({ photoUrl, score, grade, roast, criticName }) {
+function hexA(hex, a) {
+  return `rgba(${parseInt(hex.slice(1, 3), 16)},${parseInt(hex.slice(3, 5), 16)},${parseInt(hex.slice(5, 7), 16)},${a})`;
+}
+
+export async function generateShareCard({ photoUrl, score, grade, roast, criticName, focus, skills }) {
   const W = 1080;
   const H = 1350;
   const c = document.createElement("canvas");
@@ -104,14 +109,32 @@ export async function generateShareCard({ photoUrl, score, grade, roast, criticN
   const ctx = c.getContext("2d");
   const pad = 48;
 
-  // Background
+  const g = grade[0];
+  const accent =
+    g === "A" ? "#E8C84A" : g === "B" ? "#C0C0C0" : g === "C" ? "#B87333" : "#6B7280";
+
+  // Background with soft radial glow
   ctx.fillStyle = "#0A0B0D";
   ctx.fillRect(0, 0, W, H);
+  const glow = ctx.createRadialGradient(W / 2, 740, 60, W / 2, 740, 480);
+  glow.addColorStop(0, hexA(accent, 0.1));
+  glow.addColorStop(1, "transparent");
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 300, W, 900);
 
-  // Photo
+  // Photo with drop shadow
   const img = await loadImage(photoUrl);
   const photoW = W - pad * 2;
-  const photoH = 640;
+  const photoH = 620;
+  ctx.save();
+  ctx.shadowColor = "rgba(0,0,0,0.5)";
+  ctx.shadowBlur = 40;
+  ctx.shadowOffsetY = 8;
+  roundRect(ctx, pad, pad, photoW, photoH, 24);
+  ctx.fillStyle = "#000";
+  ctx.fill();
+  ctx.restore();
+
   ctx.save();
   roundRect(ctx, pad, pad, photoW, photoH, 24);
   ctx.clip();
@@ -123,67 +146,160 @@ export async function generateShareCard({ photoUrl, score, grade, roast, criticN
   ctx.drawImage(img, sx, sy, sw, sh, pad, pad, photoW, photoH);
   ctx.restore();
 
-  // Grade accent color
-  const g = grade[0];
-  const accent =
-    g === "A" ? "#E8C84A" : g === "B" ? "#C0C0C0" : g === "C" ? "#B87333" : "#6B7280";
-  const tierLabel =
-    g === "A" ? "GOLD" : g === "B" ? "SILVER" : g === "C" ? "BRONZE" : "";
+  // Gradient accent line under photo
+  const lineGrad = ctx.createLinearGradient(pad + 60, 0, W - pad - 60, 0);
+  lineGrad.addColorStop(0, "transparent");
+  lineGrad.addColorStop(0.3, accent);
+  lineGrad.addColorStop(0.7, accent);
+  lineGrad.addColorStop(1, "transparent");
+  ctx.fillStyle = lineGrad;
+  ctx.fillRect(pad, pad + photoH + 16, photoW, 3);
 
-  // Thin accent bar under photo
-  ctx.fillStyle = accent;
-  ctx.fillRect(pad, photoH + pad + 20, photoW, 4);
-
-  // Score block
-  const scoreY = photoH + pad + 120;
+  // Score (left) + Grade pill (right)
+  const scoreY = pad + photoH + 100;
   ctx.textBaseline = "alphabetic";
-  ctx.textAlign = "center";
+  ctx.textAlign = "left";
 
-  // Big score
-  ctx.font = "600 92px Inter, system-ui, -apple-system, sans-serif";
+  ctx.font = "600 88px Inter, system-ui, -apple-system, sans-serif";
   ctx.fillStyle = "#F5F5F7";
   const scoreStr = score.toFixed(1);
-  ctx.fillText(scoreStr, W / 2 - 40, scoreY);
+  const sm = ctx.measureText(scoreStr);
+  ctx.fillText(scoreStr, pad + 12, scoreY);
 
-  // / 10
-  ctx.font = "400 36px Inter, system-ui, -apple-system, sans-serif";
+  ctx.font = "400 34px Inter, system-ui, -apple-system, sans-serif";
   ctx.fillStyle = "#6B7280";
-  ctx.fillText("/ 10", W / 2 + 70, scoreY);
+  ctx.fillText("/ 10", pad + 12 + sm.width + 10, scoreY);
 
-  // Grade badge
-  ctx.font = "700 48px Inter, system-ui, -apple-system, sans-serif";
-  ctx.fillStyle = accent;
-  ctx.fillText(grade.replace("-", "\u2212"), W / 2, scoreY + 70);
-
+  // Grade pill with glow
+  const gradeText = grade.replace("-", "\u2212");
+  const tierLabel = g === "A" ? "GOLD" : g === "B" ? "SILVER" : g === "C" ? "BRONZE" : "";
+  ctx.font = "700 36px Inter, system-ui, -apple-system, sans-serif";
+  const gm = ctx.measureText(gradeText);
+  let tierW = 0;
   if (tierLabel) {
-    ctx.font = "600 20px Inter, system-ui, -apple-system, sans-serif";
-    ctx.fillStyle = accent;
-    ctx.globalAlpha = 0.85;
-    ctx.fillText(tierLabel, W / 2, scoreY + 100);
-    ctx.globalAlpha = 1;
+    ctx.font = "600 16px Inter, system-ui, sans-serif";
+    tierW = ctx.measureText(tierLabel).width + 14;
+  }
+  const pillPad = 20;
+  const pillW = gm.width + tierW + pillPad * 2;
+  const pillH = 52;
+  const pillX = W - pad - 12 - pillW;
+  const pillY = scoreY - 42;
+
+  ctx.save();
+  ctx.shadowColor = hexA(accent, 0.2);
+  ctx.shadowBlur = 24;
+  roundRect(ctx, pillX, pillY, pillW, pillH, 14);
+  ctx.fillStyle = hexA(accent, 0.12);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = hexA(accent, 0.3);
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.restore();
+
+  ctx.textAlign = "left";
+  ctx.font = "700 36px Inter, system-ui, -apple-system, sans-serif";
+  ctx.fillStyle = accent;
+  ctx.fillText(gradeText, pillX + pillPad, scoreY - 6);
+  if (tierLabel) {
+    ctx.font = "600 16px Inter, system-ui, sans-serif";
+    ctx.fillStyle = hexA(accent, 0.85);
+    ctx.fillText(tierLabel, pillX + pillPad + gm.width + 14, scoreY - 12);
   }
 
-  // Roast
-  const roastStartY = scoreY + 160;
+  // Skill bars (2x2 grid)
+  if (skills) {
+    const barTop = scoreY + 48;
+    const skillInfo = [
+      { key: "composition", label: "Composition", color: "#578BFA" },
+      { key: "light", label: "Light", color: "#F4B740" },
+      { key: "technical", label: "Focus", color: "#3CC8C8" },
+      { key: "editing", label: "Editing", color: "#A78BFA" },
+    ];
+    const colW = (W - pad * 2 - 48) / 2;
+    const rowGap = 48;
+
+    for (let i = 0; i < 4; i++) {
+      const { key, label, color } = skillInfo[i];
+      const col = i % 2;
+      const row = Math.floor(i / 2);
+      const bx = pad + 12 + col * (colW + 48);
+      const by = barTop + row * rowGap;
+
+      ctx.textAlign = "left";
+      ctx.font = "500 18px Inter, system-ui, sans-serif";
+      ctx.fillStyle = "#8A919E";
+      ctx.fillText(label, bx, by);
+
+      ctx.textAlign = "right";
+      ctx.font = "600 18px Inter, system-ui, sans-serif";
+      ctx.fillStyle = "#D4D8DE";
+      ctx.fillText(skills[key].toFixed(1), bx + colW, by);
+
+      const barY = by + 10;
+      const barH = 8;
+      roundRect(ctx, bx, barY, colW, barH, 4);
+      ctx.fillStyle = "#1E2025";
+      ctx.fill();
+
+      const fillW = Math.max(6, (skills[key] / 10) * colW);
+      ctx.save();
+      ctx.shadowColor = hexA(color, 0.3);
+      ctx.shadowBlur = 8;
+      roundRect(ctx, bx, barY, fillW, barH, 4);
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // Faded divider
+  const divY = scoreY + 168;
+  const divGrad = ctx.createLinearGradient(pad, 0, W - pad, 0);
+  divGrad.addColorStop(0, "transparent");
+  divGrad.addColorStop(0.15, "#2A2D33");
+  divGrad.addColorStop(0.85, "#2A2D33");
+  divGrad.addColorStop(1, "transparent");
+  ctx.fillStyle = divGrad;
+  ctx.fillRect(pad, divY, W - pad * 2, 1);
+
+  // Roast with decorative quote mark
+  const roastY = divY + 48;
   ctx.textAlign = "left";
+  ctx.font = "700 72px Georgia, 'Times New Roman', serif";
+  ctx.fillStyle = hexA(accent, 0.2);
+  ctx.fillText("\u201C", pad - 4, roastY + 10);
+
   ctx.font = "italic 32px Inter, system-ui, -apple-system, sans-serif";
   ctx.fillStyle = "#D4D8DE";
-  const lines = wrapText(ctx, `\u201C${roast}\u201D`, pad + 12, roastStartY, W - pad * 2 - 24, 46);
+  const lines = wrapText(ctx, roast, pad + 12, roastY, W - pad * 2 - 24, 48);
 
-  // Attribution
-  ctx.font = "500 26px Inter, system-ui, -apple-system, sans-serif";
-  ctx.fillStyle = "#8A919E";
-  ctx.fillText(`— ${criticName}`, pad + 12, roastStartY + lines * 46 + 16);
-
-  // Branding
-  ctx.textAlign = "center";
-  ctx.font = "700 28px Inter, system-ui, -apple-system, sans-serif";
+  // Attribution with focus
+  const attrY = roastY + lines * 48 + 24;
+  ctx.font = "600 26px Inter, system-ui, -apple-system, sans-serif";
   ctx.fillStyle = accent;
-  ctx.fillText("PICADEMY", W / 2, H - pad - 8);
+  const nameStr = `\u2014 ${criticName}`;
+  ctx.fillText(nameStr, pad + 12, attrY);
+  if (focus) {
+    const nameW = ctx.measureText(nameStr).width;
+    ctx.font = "500 22px Inter, system-ui, -apple-system, sans-serif";
+    ctx.fillStyle = "#6B7280";
+    ctx.fillText(`\u00B7  ${focus}`, pad + 12 + nameW + 14, attrY);
+  }
+
+  // Footer
+  ctx.textAlign = "center";
+  ctx.fillStyle = hexA(accent, 0.3);
+  ctx.fillRect(W / 2 - 50, H - pad - 72, 100, 2);
+
+  ctx.font = "700 40px 'Inter Tight', Inter, system-ui, -apple-system, sans-serif";
+  ctx.fillStyle = hexA(accent, 0.9);
+  ctx.fillText("PICADEMY", W / 2, H - pad - 24);
 
   ctx.font = "400 20px Inter, system-ui, -apple-system, sans-serif";
   ctx.fillStyle = "#6B7280";
-  ctx.fillText("picademy.app", W / 2, H - 20);
+  ctx.fillText("picademy.app", W / 2, H - pad + 8);
 
   return new Promise((resolve) => c.toBlob(resolve, "image/jpeg", 0.92));
 }

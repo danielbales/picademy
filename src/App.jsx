@@ -176,13 +176,15 @@ export default function App() {
     if (!result || !photo || shareState === "sharing") return;
     setShareState("sharing");
     try {
-      const { roast, criticName } = pickFeaturedRoast(result, guest);
+      const { roast, criticName, focus } = pickFeaturedRoast(result, guest);
       const outcome = await shareResult({
         photoUrl: photo.url,
         score: avg,
         grade: gradeStr,
         roast,
         criticName,
+        focus,
+        skills: result.skills,
       });
       setShareState(outcome === "shared" ? "shared" : outcome === "downloaded" ? "downloaded" : "idle");
       if (outcome === "shared" || outcome === "downloaded") {
