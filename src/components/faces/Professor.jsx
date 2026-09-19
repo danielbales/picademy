@@ -1,4 +1,4 @@
-export default function Professor({ mood = "neutral" }) {
+export default function Professor({ mood = "neutral", temper }) {
   // Mouth paths by mood
   const mouth = {
     happy: "M16 25 Q20 29 24 25",
@@ -137,6 +137,17 @@ export default function Professor({ mood = "neutral" }) {
       <path d="M15 30 Q20 32.5 25 30" fill="none" stroke="#C4A886" strokeWidth="0.5" opacity="0.5" />
       <path d="M16 31.5 Q20 33.5 24 31.5" fill="none" stroke="#C4A886" strokeWidth="0.45" opacity="0.45" />
       <path d="M17 33 Q20 34.8 23 33" fill="none" stroke="#C4A886" strokeWidth="0.4" opacity="0.4" />
+
+      {/* ---- TEMPER OVERLAYS ---- */}
+      {temper === "brutal" && (
+        <>
+          <path d="M15 6 Q13 1 11 -1" stroke="#CC2200" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+          <path d="M25 6 Q27 1 29 -1" stroke="#CC2200" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        </>
+      )}
+      {temper === "gentle" && (
+        <ellipse cx="20" cy="2" rx="8" ry="2.5" fill="none" stroke="#FFD700" strokeWidth="1.5" opacity="0.7" />
+      )}
     </svg>
   );
 }

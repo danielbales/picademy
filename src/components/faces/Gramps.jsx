@@ -1,4 +1,4 @@
-export default function Gramps({ mood = "neutral" }) {
+export default function Gramps({ mood = "neutral", temper }) {
   // Mouth shape by mood
   const mouth = {
     happy: "M34 23.8 Q35.5 25.5 38 24.2",
@@ -149,6 +149,17 @@ export default function Gramps({ mood = "neutral" }) {
       {/* Tail */}
       <path d="M8 22 Q5 20 4 18" stroke="url(#gramps-skin)" strokeWidth="1.8" fill="none" strokeLinecap="round" />
       <circle cx="3.8" cy="17.8" r="0.6" fill="#8B9B6B" />
+
+      {/* ---- TEMPER OVERLAYS ---- */}
+      {temper === "brutal" && (
+        <>
+          <path d="M32.5 17.5 Q31 14 30 12" stroke="#CC2200" strokeWidth="2" strokeLinecap="round" fill="none" />
+          <path d="M35.5 17.5 Q37 14 38 12" stroke="#CC2200" strokeWidth="2" strokeLinecap="round" fill="none" />
+        </>
+      )}
+      {temper === "gentle" && (
+        <ellipse cx="34" cy="14" rx="5" ry="1.5" fill="none" stroke="#FFD700" strokeWidth="1.2" opacity="0.7" />
+      )}
     </svg>
   );
 }

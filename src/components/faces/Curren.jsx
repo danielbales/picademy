@@ -1,4 +1,4 @@
-export default function Curren({ mood = "neutral" }) {
+export default function Curren({ mood = "neutral", temper }) {
   // Mouth paths by mood
   const mouth =
     mood === "happy"
@@ -160,6 +160,17 @@ export default function Curren({ mood = "neutral" }) {
 
       {/* ---- CHIN FUR ---- */}
       <ellipse cx="20" cy="32" rx="6" ry="2.5" fill="#F0C470" opacity="0.4" />
+
+      {/* ---- TEMPER OVERLAYS ---- */}
+      {temper === "brutal" && (
+        <>
+          <path d="M15 3 Q13 -1 11 -3" stroke="#CC2200" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+          <path d="M25 3 Q27 -1 29 -3" stroke="#CC2200" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        </>
+      )}
+      {temper === "gentle" && (
+        <ellipse cx="20" cy="-1" rx="9" ry="2.5" fill="none" stroke="#FFD700" strokeWidth="1.5" opacity="0.7" />
+      )}
     </svg>
   );
 }

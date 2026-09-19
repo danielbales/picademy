@@ -160,6 +160,11 @@ export async function generateShareCard({ photoUrl, score, grade, roast, criticN
   ctx.textBaseline = "alphabetic";
   ctx.textAlign = "left";
 
+  // Context label so viewers understand the card
+  ctx.font = "600 20px Inter, system-ui, sans-serif";
+  ctx.fillStyle = "#6B7280";
+  ctx.fillText("JUDGES' REVIEW", pad + 12, scoreY - 32);
+
   ctx.font = "600 88px Inter, system-ui, -apple-system, sans-serif";
   ctx.fillStyle = "#F5F5F7";
   const scoreStr = score.toFixed(1);

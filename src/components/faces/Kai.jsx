@@ -1,4 +1,4 @@
-export default function Kai({ mood = "neutral" }) {
+export default function Kai({ mood = "neutral", temper }) {
   // Mouth shapes by mood
   const mouth = {
     happy: "M16 20.5 Q18 23 20 23 Q22 23 24 20.5",
@@ -147,6 +147,17 @@ export default function Kai({ mood = "neutral" }) {
 
       {/* Subtle bottom edge shadow on mantle */}
       <ellipse cx="20" cy="24" rx="9" ry="1.5" fill="#4A2FAA" opacity="0.15" />
+
+      {/* ---- TEMPER OVERLAYS ---- */}
+      {temper === "brutal" && (
+        <>
+          <path d="M15 4 Q13 0 11 -2" stroke="#CC2200" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+          <path d="M25 4 Q27 0 29 -2" stroke="#CC2200" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        </>
+      )}
+      {temper === "gentle" && (
+        <ellipse cx="20" cy="0" rx="8" ry="2.5" fill="none" stroke="#FFD700" strokeWidth="1.5" opacity="0.7" />
+      )}
     </svg>
   );
 }

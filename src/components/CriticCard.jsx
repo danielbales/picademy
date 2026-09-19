@@ -9,7 +9,7 @@ function scoreMood(score) {
   return "grumpy";
 }
 
-export default function CriticCard({ critic, result, status, roastRevealed, fixRevealed }) {
+export default function CriticCard({ critic, result, status, roastRevealed, fixRevealed, temper }) {
   const judging = status === "judging";
   const isGuest = !!critic.isGuest;
   const r = result ? result[isGuest ? "guest" : critic.id] : null;
@@ -27,7 +27,7 @@ export default function CriticCard({ critic, result, status, roastRevealed, fixR
     <article className="cb-critic">
       <div className="cb-critic-head">
         <span className="cb-avatar cb-avatar-face" style={{ background: critic.tint, boxShadow: roastRevealed ? `0 0 12px 2px ${critic.tint}` : undefined }} aria-hidden="true">
-          {Face ? <Face mood={mood} /> : critic.initials}
+          {Face ? <Face mood={mood} temper={temper} /> : critic.initials}
         </span>
         <div className="cb-row-main">
           <h3 className="cb-row-title">{critic.name}</h3>
@@ -44,7 +44,7 @@ export default function CriticCard({ critic, result, status, roastRevealed, fixR
       {judging && (
         <div className={`cb-critic-wait is-${critic.id}`}>
           <span className="cb-avatar cb-avatar-face" style={{ background: critic.tint }} aria-hidden="true">
-            {Face ? <Face mood="neutral" /> : critic.initials}
+            {Face ? <Face mood="neutral" temper={temper} /> : critic.initials}
           </span>
           <p className="cb-waiting">{critic.waiting}</p>
         </div>

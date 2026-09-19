@@ -355,7 +355,7 @@ export default function App() {
           <h2 className="cb-h2 cb-display">Judges</h2>
           <div className={`cb-panel-grid${revealStep >= 2 ? " is-list" : ""}`}>
             {[...CRITICS, judging || done ? guest : MYSTERY_GUEST].map((c, i) => (
-              <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} {...criticReveal(i)} />
+              <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} temper={temper} {...criticReveal(i)} />
             ))}
           </div>
         </section>

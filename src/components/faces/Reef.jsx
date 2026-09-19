@@ -1,4 +1,4 @@
-export default function Reef({ mood = "neutral" }) {
+export default function Reef({ mood = "neutral", temper }) {
   // Mouth by mood
   const mouth = {
     happy: "M15 27 Q20 31 25 27",
@@ -137,6 +137,17 @@ export default function Reef({ mood = "neutral" }) {
       {/* Mouth detail for grumpy - teeth or grimace line */}
       {mood === "grumpy" && (
         <path d="M18 27.2 L22 27.2" stroke="#8B2020" strokeWidth="0.4" opacity="0.5" />
+      )}
+
+      {/* ---- TEMPER OVERLAYS ---- */}
+      {temper === "brutal" && (
+        <>
+          <path d="M16 17 Q14 12 12 9" stroke="#CC2200" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+          <path d="M24 17 Q26 12 28 9" stroke="#CC2200" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        </>
+      )}
+      {temper === "gentle" && (
+        <ellipse cx="20" cy="5" rx="9" ry="2" fill="none" stroke="#FFD700" strokeWidth="1.5" opacity="0.7" />
       )}
     </svg>
   );

@@ -1,4 +1,4 @@
-export default function Mom({ mood = "neutral" }) {
+export default function Mom({ mood = "neutral", temper }) {
   // Mouth shapes by mood
   const mouth = {
     happy: "M14 28.5 Q17 32 20 32 Q23 32 26 28.5",
@@ -129,6 +129,17 @@ export default function Mom({ mood = "neutral" }) {
 
       {/* Chin shadow */}
       <ellipse cx="20" cy="33" rx="7" ry="1.5" fill="#6B4A2A" opacity="0.12" />
+
+      {/* ---- TEMPER OVERLAYS ---- */}
+      {temper === "brutal" && (
+        <>
+          <path d="M15 7 Q13 2 11 0" stroke="#CC2200" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+          <path d="M25 7 Q27 2 29 0" stroke="#CC2200" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        </>
+      )}
+      {temper === "gentle" && (
+        <ellipse cx="20" cy="3" rx="8" ry="2.5" fill="none" stroke="#FFD700" strokeWidth="1.5" opacity="0.7" />
+      )}
     </svg>
   );
 }

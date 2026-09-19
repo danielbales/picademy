@@ -1,4 +1,4 @@
-export default function Blitz({ mood = "neutral" }) {
+export default function Blitz({ mood = "neutral", temper }) {
   // Mouth/beak expression by mood
   const beakLower = {
     happy: "M25.2 13 L33 12.5 L25.2 14.2Z",
@@ -142,6 +142,17 @@ export default function Blitz({ mood = "neutral" }) {
       {/* Tiny feet */}
       <path d="M18 27 L16 30 M16 30 L14.8 29 M16 30 L17 29.2" stroke="#555" strokeWidth="0.6" strokeLinecap="round" />
       <path d="M22 27 L24 30 M24 30 L22.8 29 M24 30 L25.2 29.2" stroke="#555" strokeWidth="0.6" strokeLinecap="round" />
+
+      {/* ---- TEMPER OVERLAYS ---- */}
+      {temper === "brutal" && (
+        <>
+          <path d="M17 8 Q15.5 4 14 2" stroke="#CC2200" strokeWidth="2" strokeLinecap="round" fill="none" />
+          <path d="M23 8 Q24.5 4 26 2" stroke="#CC2200" strokeWidth="2" strokeLinecap="round" fill="none" />
+        </>
+      )}
+      {temper === "gentle" && (
+        <ellipse cx="20" cy="4" rx="6" ry="2" fill="none" stroke="#FFD700" strokeWidth="1.2" opacity="0.7" />
+      )}
     </svg>
   );
 }
