@@ -9,6 +9,7 @@ import { renderTurnstile } from "./turnstile";
 import { shareResult, pickFeaturedRoast } from "./share";
 import { saveScore, getBest, saveCovered, getCovered, getStreak, bumpStreak, getRemaining, useGrade, addCredits, bumpLimitHit } from "./scores";
 import Host from "./components/Host";
+import ApertureMark from "./components/ApertureMark";
 import ScoreHero, { Change } from "./components/ScoreHero";
 import CriticCard from "./components/CriticCard";
 import ImagePicker from "./components/ImagePicker";
@@ -225,7 +226,7 @@ export default function App() {
             window.scrollTo(0, 0);
           }} style={{ cursor: "pointer" }}>
             <span className="cb-brand-mark" aria-hidden="true">
-              <Host />
+              <ApertureMark />
             </span>
             Aperture
           </h1>
