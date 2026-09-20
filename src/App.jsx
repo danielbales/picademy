@@ -290,18 +290,20 @@ export default function App() {
           recent={recent}
         />
 
-        {/* Host */}
-        <div className="cb-host" aria-live="polite">
-          <span className="cb-avatar cb-avatar-host" aria-hidden="true">
-            <Host />
-          </span>
-          <div>
-            <p className="cb-host-name">
-              Lida<span>Host</span>
-            </p>
-            <p className="cb-host-line">{hostLine}</p>
+        {/* Host - hidden until user has a photo */}
+        {(status !== "idle" || photo || bestScore) && (
+          <div className="cb-host" aria-live="polite">
+            <span className="cb-avatar cb-avatar-host" aria-hidden="true">
+              <Host />
+            </span>
+            <div>
+              <p className="cb-host-name">
+                Lida<span>Host</span>
+              </p>
+              <p className="cb-host-line">{hostLine}</p>
+            </div>
           </div>
-        </div>
+        )}
 
         <ImagePicker
           ref={pickerRef}

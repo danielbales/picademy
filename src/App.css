@@ -43,12 +43,13 @@ body { margin: 0; background: #0A0B0D; }
 .cb-onboard { margin: 20px 0 8px; }
 .cb-onboard-steps { display: flex; gap: 12px; margin-bottom: 24px; }
 .cb-onboard-step { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
-.cb-onboard-num { font-family: 'Inter Tight', 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 40px; line-height: 1; color: var(--gold); opacity: 0.7; }
+.cb-onboard-num { font-family: 'Inter Tight', 'Inter', system-ui, sans-serif; font-weight: 600; font-size: 36px; line-height: 1; color: rgba(255,255,255,0.12); letter-spacing: -0.02em; }
 .cb-onboard-step p { margin: 0; font-size: 13px; color: var(--text-2); line-height: 1.3; }
 .cb-onboard-label { margin: 0 0 12px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-2); text-align: center; }
 .cb-onboard-faces { display: flex; justify-content: center; gap: 24px; }
 .cb-onboard-judge { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .cb-onboard-judge .cb-avatar { width: 52px; height: 52px; }
+.cb-onboard-judge .cb-avatar-face svg { width: 52px; height: 52px; display: block; }
 .cb-onboard-name { font-size: 14px; font-weight: 600; color: var(--text-1); }
 .cb-onboard-focus { font-size: 12px; color: var(--text-2); }
 .cb-streak { margin-left: auto; display: flex; align-items: center; gap: 4px; font-weight: 700; font-size: 16px; color: #F97316; }
