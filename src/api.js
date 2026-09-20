@@ -1,6 +1,6 @@
 import { getTurnstileToken } from "./turnstile";
 
-const API_URL = "https://crit-api.danielbales.workers.dev/grade";
+const API_URL = "https://crit-api.dbales1210.workers.dev/grade";
 
 function getDeviceId() {
   const key = "picademy-device-id";
@@ -12,11 +12,12 @@ function getDeviceId() {
   return id;
 }
 
-export async function grade(photo, temper, previous, guestId) {
+export async function grade(photo, temper, previous, guestId, covered) {
   const body = {
     photo: { mediaType: photo.mediaType, base64: photo.base64 },
     temper,
     guestId,
+    covered,
   };
   if (previous) {
     body.previous = {

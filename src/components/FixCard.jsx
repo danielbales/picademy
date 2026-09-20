@@ -4,9 +4,15 @@ export default function FixCard({ fix, isHabit }) {
   const f = FUND_BY_ID[fix.fundamental];
   return (
     <div className="cb-fix">
+      {fix.postTip && (
+        <div className="cb-post-tip">
+          <p className="cb-fix-kicker">Fix this photo now</p>
+          <p className="cb-post-tip-body">{fix.postTip}</p>
+        </div>
+      )}
       <div className="cb-fix-head">
         <div>
-          <p className="cb-fix-kicker">{isHabit ? "Try this habit" : "Try this"}</p>
+          <p className="cb-fix-kicker">{isHabit ? "Try this habit" : "Next time"}</p>
           <p className="cb-fix-name">{f ? f.name : "Next step"}</p>
         </div>
       </div>
@@ -21,6 +27,7 @@ export default function FixCard({ fix, isHabit }) {
         </ol>
       )}
       {fix.why && <p className="cb-why">{fix.why}</p>}
+      {fix.reference && <p className="cb-reference">{fix.reference}</p>}
       {fix.bonus && <p className="cb-bonus">{fix.bonus}</p>}
     </div>
   );

@@ -121,7 +121,7 @@ export default function App() {
     setHostNote(null);
     setStatus("judging");
     try {
-      const data = await grade(photo, temper, previous, pickedGuest.id);
+      const data = await grade(photo, temper, previous, pickedGuest.id, covered);
       if (runId.current !== id) return;
       const entry = { photoId: photo.id, avg: average(data.skills) };
       const isReshoot = !!previous;
@@ -226,7 +226,7 @@ export default function App() {
             <span className="cb-brand-mark" aria-hidden="true">
               <Host />
             </span>
-            Picademy
+            Aperture
           </h1>
           {streak > 0 && (
             <span className="cb-streak is-active" aria-label={`${streak} day streak`}>
@@ -267,6 +267,7 @@ export default function App() {
           onFile={handleFile}
           grade={gradeStr}
           status={status}
+          crop={done ? result.crop : null}
         />
 
         {/* Temper - hidden after grading */}

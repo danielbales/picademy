@@ -1,5 +1,19 @@
-import { useState, useRef, forwardRef, useImperativeHandle } from "react";
+import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from "react";
 import { ImagePlus, Camera } from "lucide-react";
+
+function ShutterAnim() {
+  const [phase, setPhase] = useState("closing");
+  useEffect(() => {
+    const t = setTimeout(() => setPhase("done"), 600);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <div className={`cb-shutter${phase === "done" ? " is-done" : ""}`} aria-hidden="true">
+      {Array.from({ length: 8 }, (_, i) => <div key={i} className="cb-shutter-blade" />)}
+      <div className="cb-shutter-flash" />
+    </div>
+  );
+}
 
 function trophyTier(grade) {
   if (!grade) return "";
@@ -198,11 +212,22 @@ function TrophyBase({ grade }) {
   );
 }
 
-const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile, grade, status }, ref) {
+const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile, grade, status, crop }, ref) {
   const [dragging, setDragging] = useState(false);
+  const [showShutter, setShowShutter] = useState(false);
+  const prevStatusRef = useRef(status);
   const cameraRef = useRef(null);
   const galleryRef = useRef(null);
   const pickModeRef = useRef("new");
+
+  useEffect(() => {
+    if (status === "judging" && prevStatusRef.current !== "judging") {
+      setShowShutter(true);
+      const t = setTimeout(() => setShowShutter(false), 1800);
+      return () => clearTimeout(t);
+    }
+    prevStatusRef.current = status;
+  }, [status]);
 
   useImperativeHandle(ref, () => ({
     openCamera(mode = "new") {
@@ -239,6 +264,7 @@ const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile, g
             onFile(e.dataTransfer.files?.[0], "new");
           }}
         >
+          {showShutter && <ShutterAnim />}
           {photo ? (
             <div className={`cb-photo-grid${previous ? " is-pair" : ""}`}>
               {previous && (
@@ -250,6 +276,15 @@ const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile, g
               <div className="cb-photo-cell">
                 <img src={photo.url} alt={previous ? "Your reshoot" : "The photo being judged"} />
                 {previous && <span className="cb-tag">After</span>}
+                {crop && (
+                  <div className="cb-crop-overlay">
+                    <div className="cb-crop-mask cb-crop-top" style={{ height: `${crop.top * 100}%` }} />
+                    <div className="cb-crop-mask cb-crop-bottom" style={{ height: `${crop.bottom * 100}%` }} />
+                    <div className="cb-crop-mask cb-crop-left" style={{ top: `${crop.top * 100}%`, bottom: `${crop.bottom * 100}%`, width: `${crop.left * 100}%` }} />
+                    <div className="cb-crop-mask cb-crop-right" style={{ top: `${crop.top * 100}%`, bottom: `${crop.bottom * 100}%`, width: `${crop.right * 100}%` }} />
+                    <p className="cb-crop-label">{crop.description}</p>
+                  </div>
+                )}
               </div>
             </div>
           ) : (

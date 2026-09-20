@@ -81,7 +81,7 @@ export function pickFeaturedRoast(result, guest) {
   }
 
   if (!candidates.length) {
-    return { roast: "The judges have spoken.", criticName: "Picademy", focus: "" };
+    return { roast: "The judges have spoken.", criticName: "Aperture", focus: "" };
   }
 
   candidates.sort((a, b) => a.priority - b.priority);
@@ -300,24 +300,24 @@ export async function generateShareCard({ photoUrl, score, grade, roast, criticN
 
   ctx.font = "700 40px 'Inter Tight', Inter, system-ui, -apple-system, sans-serif";
   ctx.fillStyle = hexA(accent, 0.9);
-  ctx.fillText("PICADEMY", W / 2, H - pad - 24);
+  ctx.fillText("APERTURE", W / 2, H - pad - 24);
 
   ctx.font = "400 20px Inter, system-ui, -apple-system, sans-serif";
   ctx.fillStyle = "#6B7280";
-  ctx.fillText("picademy.app", W / 2, H - pad + 8);
+  ctx.fillText("aperture.app", W / 2, H - pad + 8);
 
   return new Promise((resolve) => c.toBlob(resolve, "image/jpeg", 0.92));
 }
 
 export async function shareResult(opts) {
   const blob = await generateShareCard(opts);
-  const file = new File([blob], "picademy-score.jpg", { type: "image/jpeg" });
+  const file = new File([blob], "aperture-score.jpg", { type: "image/jpeg" });
 
   if (navigator.canShare?.({ files: [file] })) {
     try {
       await navigator.share({
         files: [file],
-        text: `My photo scored ${opts.score.toFixed(1)}/10 on Picademy`,
+        text: `My photo scored ${opts.score.toFixed(1)}/10 on Aperture`,
       });
       return "shared";
     } catch (e) {
@@ -329,7 +329,7 @@ export async function shareResult(opts) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "picademy-score.jpg";
+  a.download = "aperture-score.jpg";
   a.click();
   URL.revokeObjectURL(url);
   return "downloaded";
