@@ -12,6 +12,7 @@ import Host from "./components/Host";
 import ApertureMark from "./components/ApertureMark";
 import ScoreHero, { Change } from "./components/ScoreHero";
 import CriticCard from "./components/CriticCard";
+import FACES from "./components/faces";
 import ImagePicker from "./components/ImagePicker";
 import "./App.css";
 
@@ -231,7 +232,51 @@ export default function App() {
           )}
         </header>
 
-        <p className="cb-tagline">Get your photos judged by AI critics</p>
+        <p className="cb-tagline">
+          {done
+            ? "Upload another to keep improving"
+            : judging
+            ? "The judges are reviewing your photo"
+            : status === "ready"
+            ? "Ready when you are"
+            : "Get your photos judged by AI critics"}
+        </p>
+
+        {status === "idle" && !bestScore && (
+          <section className="cb-onboard">
+            <div className="cb-onboard-steps">
+              <div className="cb-onboard-step">
+                <span className="cb-onboard-num">1</span>
+                <p>Upload any photo</p>
+              </div>
+              <div className="cb-onboard-step">
+                <span className="cb-onboard-num">2</span>
+                <p>Get roasted by AI judges</p>
+              </div>
+              <div className="cb-onboard-step">
+                <span className="cb-onboard-num">3</span>
+                <p>Learn real tips to improve</p>
+              </div>
+            </div>
+            <div className="cb-onboard-judges">
+              <p className="cb-onboard-label">Meet the judges</p>
+              <div className="cb-onboard-faces">
+                {CRITICS.map((c) => {
+                  const Face = FACES[c.id];
+                  return (
+                    <div key={c.id} className="cb-onboard-judge">
+                      <span className="cb-avatar cb-avatar-face" style={{ background: c.tint }} aria-hidden="true">
+                        {Face && <Face mood="neutral" temper="honest" />}
+                      </span>
+                      <span className="cb-onboard-name">{c.name}</span>
+                      <span className="cb-onboard-focus">{c.focus}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        )}
 
         <ScoreHero
           status={status}
@@ -391,8 +436,8 @@ export default function App() {
                 Reshoot and compare
               </button>
             ) : (
-              <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openGallery("new")}>
-                Try another photo
+              <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openGallery("reshoot")}>
+                Try another and compare
               </button>
             )}
             <button

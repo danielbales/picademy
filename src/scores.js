@@ -103,7 +103,7 @@ export function bumpStreak() {
 
 function getAll() {
   try {
-    const raw = sessionStorage.getItem(KEY);
+    const raw = localStorage.getItem(KEY);
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
@@ -113,20 +113,20 @@ function getAll() {
 export async function saveScore(avg, photoUrl) {
   const scores = getAll();
   scores.push(avg);
-  sessionStorage.setItem(KEY, JSON.stringify(scores));
+  localStorage.setItem(KEY, JSON.stringify(scores));
   const thumb = await makeThumbnail(photoUrl);
   // Track best photo thumbnail
   const prev = getBest();
   let best = prev;
   if (prev === null || avg >= prev.score) {
     best = { score: avg, thumb };
-    sessionStorage.setItem(KEY + "-best", JSON.stringify(best));
+    localStorage.setItem(KEY + "-best", JSON.stringify(best));
   }
   // Track last 3 submissions
   const recent = getRecent();
   recent.push({ score: avg, thumb });
   if (recent.length > 3) recent.shift();
-  sessionStorage.setItem(KEY + "-recent", JSON.stringify(recent));
+  localStorage.setItem(KEY + "-recent", JSON.stringify(recent));
   return best;
 }
 
@@ -157,7 +157,7 @@ function makeThumbnail(dataUrl) {
 export function getBest() {
   // Try new format first (with thumbnail)
   try {
-    const raw = sessionStorage.getItem(KEY + "-best");
+    const raw = localStorage.getItem(KEY + "-best");
     if (raw) return JSON.parse(raw);
   } catch {}
   // Fallback to old format
@@ -168,7 +168,7 @@ export function getBest() {
 
 export function getRecent() {
   try {
-    const raw = sessionStorage.getItem(KEY + "-recent");
+    const raw = localStorage.getItem(KEY + "-recent");
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
