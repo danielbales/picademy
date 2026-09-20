@@ -273,6 +273,11 @@ export default function App() {
                     </div>
                   );
                 })}
+                <div className="cb-onboard-judge">
+                  <span className="cb-avatar cb-onboard-mystery" aria-hidden="true">?</span>
+                  <span className="cb-onboard-name">Mystery</span>
+                  <span className="cb-onboard-focus">Surprise guest</span>
+                </div>
               </div>
             </div>
           </section>

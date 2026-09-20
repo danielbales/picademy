@@ -50,6 +50,7 @@ body { margin: 0; background: #0A0B0D; }
 .cb-onboard-judge { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .cb-onboard-judge .cb-avatar { width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; }
 .cb-onboard-judge .cb-avatar-face svg { width: 48px; height: 48px; display: block; flex: none; }
+.cb-onboard-mystery { background: rgba(107,114,128,.16); font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.3); }
 .cb-onboard-name { font-size: 14px; font-weight: 600; color: var(--text-1); }
 .cb-onboard-focus { font-size: 12px; color: var(--text-2); }
 .cb-streak { margin-left: auto; display: flex; align-items: center; gap: 4px; font-weight: 700; font-size: 16px; color: #F97316; }
