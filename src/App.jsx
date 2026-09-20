@@ -239,7 +239,7 @@ export default function App() {
             ? "The judges are reviewing your photo"
             : status === "ready"
             ? "Ready when you are"
-            : "Get your photos judged by AI critics"}
+            : "How good are your photos?"}
         </p>
 
         {status === "idle" && !bestScore && (

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Generate OG Image</title>
+<style>body{background:#222;display:flex;flex-direction:column;align-items:center;padding:40px;font-family:system-ui}canvas{border:1px solid #444;max-width:90vw}button{margin-top:20px;padding:12px 24px;font-size:16px;cursor:pointer;background:#E8C84A;border:none;border-radius:8px;font-weight:600}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<canvas id="c" width="1200" height="630"></canvas>
+<button onclick="download()">Download og-image.png</button>
+<script>
+const W = 1200, H = 630;
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+
+function draw() {
+  // Background
+  ctx.fillStyle = '#0A0B0D';
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle radial glow behind center
+  const glow = ctx.createRadialGradient(W/2, H/2, 40, W/2, H/2, 380);
+  glow.addColorStop(0, 'rgba(232,200,74,0.08)');
+  glow.addColorStop(1, 'transparent');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, W, H);
+
+  // Aperture icon (6-blade)
+  drawAperture(160, H/2, 90);
+
+  // Brand name
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'left';
+  ctx.font = '700 72px "Inter Tight", "Inter", system-ui, sans-serif';
+  ctx.fillStyle = '#F5F5F7';
+  ctx.fillText('Aperture', 280, H/2 - 40);
+
+  // Tagline
+  ctx.font = '400 28px "Inter", system-ui, sans-serif';
+  ctx.fillStyle = '#9CA3AF';
+  ctx.fillText('How good are your photos?', 284, H/2 + 30);
+
+  // Judge avatars
+  const judges = [
+    { name: 'Curren', color: '#D4AA3A', tint: 'rgba(212,170,58,.25)', emoji: '' },
+    { name: 'Harper', color: '#D4A840', tint: 'rgba(212,168,64,.25)', emoji: '' },
+    { name: 'Kai', color: '#7B68EE', tint: 'rgba(123,104,238,.25)', emoji: '' },
+  ];
+  const startX = 284;
+  const avatarY = H/2 + 90;
+  judges.forEach((j, i) => {
+    const cx = startX + i * 100 + 24;
+    // Glow
+    ctx.beginPath();
+    ctx.arc(cx, avatarY, 26, 0, Math.PI * 2);
+    ctx.fillStyle = j.tint;
+    ctx.fill();
+    // Circle
+    ctx.beginPath();
+    ctx.arc(cx, avatarY, 22, 0, Math.PI * 2);
+    ctx.fillStyle = j.color;
+    ctx.fill();
+    // Initial
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '700 18px "Inter", system-ui, sans-serif';
+    ctx.fillStyle = '#0A0B0D';
+    ctx.fillText(j.name[0], cx, avatarY + 1);
+    // Name
+    ctx.font = '500 14px "Inter", system-ui, sans-serif';
+    ctx.fillStyle = '#9CA3AF';
+    ctx.fillText(j.name, cx, avatarY + 42);
+  });
+
+  // Decorative score example (right side)
+  const scoreX = W - 260;
+  const scoreY = H/2 - 20;
+
+  // Score card bg
+  roundRect(ctx, scoreX - 80, scoreY - 90, 280, 200, 20);
+  ctx.fillStyle = 'rgba(255,255,255,0.04)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  // "Photo score" label
+  ctx.font = '500 14px "Inter", system-ui, sans-serif';
+  ctx.fillStyle = '#6B7280';
+  ctx.fillText('Photo score', scoreX + 60, scoreY - 55);
+
+  // Score number
+  ctx.font = '700 64px "Inter", system-ui, sans-serif';
+  ctx.fillStyle = '#F5F5F7';
+  ctx.fillText('8.2', scoreX + 40, scoreY + 10);
+
+  // /10
+  ctx.font = '400 24px "Inter", system-ui, sans-serif';
+  ctx.fillStyle = '#6B7280';
+  ctx.fillText('/ 10', scoreX + 120, scoreY + 10);
+
+  // Gold pill
+  const pillX = scoreX - 10;
+  const pillY = scoreY + 55;
+  roundRect(ctx, pillX, pillY, 80, 32, 8);
+  ctx.fillStyle = 'rgba(232,200,74,0.15)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(232,200,74,0.3)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.font = '700 16px "Inter", system-ui, sans-serif';
+  ctx.fillStyle = '#E8C84A';
+  ctx.fillText('Gold', pillX + 40, pillY + 17);
+
+  // Trophy icon next to gold
+  drawTrophy(pillX + 74, pillY + 8, 14);
+}
+
+function drawAperture(cx, cy, r) {
+  const bladeCount = 6;
+  const innerR = r * 0.3;
+  const outerR = r;
+  const colors = ['#D4AA3A', '#B8960F', '#E8C84A', '#D4B430', '#B8960F', '#E8C84A'];
+
+  for (let i = 0; i < bladeCount; i++) {
+    const angle = (i * Math.PI * 2) / bladeCount - Math.PI / 2;
+    const nextAngle = ((i + 1) * Math.PI * 2) / bladeCount - Math.PI / 2;
+    const midAngle = (angle + nextAngle) / 2;
+
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(angle) * innerR, cy + Math.sin(angle) * innerR);
+    ctx.lineTo(cx + Math.cos(angle) * outerR, cy + Math.sin(angle) * outerR);
+    ctx.quadraticCurveTo(
+      cx + Math.cos(midAngle) * outerR * 0.85,
+      cy + Math.sin(midAngle) * outerR * 0.85,
+      cx + Math.cos(nextAngle) * outerR,
+      cy + Math.sin(nextAngle) * outerR
+    );
+    ctx.lineTo(cx + Math.cos(nextAngle) * innerR, cy + Math.sin(nextAngle) * innerR);
+    ctx.closePath();
+
+    const grad = ctx.createLinearGradient(
+      cx + Math.cos(angle) * outerR,
+      cy + Math.sin(angle) * outerR,
+      cx + Math.cos(nextAngle) * outerR,
+      cy + Math.sin(nextAngle) * outerR
+    );
+    grad.addColorStop(0, colors[i]);
+    grad.addColorStop(1, colors[(i + 1) % bladeCount]);
+    ctx.fillStyle = grad;
+    ctx.fill();
+  }
+
+  // Center hole
+  ctx.beginPath();
+  ctx.arc(cx, cy, innerR * 0.6, 0, Math.PI * 2);
+  ctx.fillStyle = '#0A0B0D';
+  ctx.fill();
+
+  // Glint
+  ctx.beginPath();
+  ctx.arc(cx - innerR * 0.15, cy - innerR * 0.2, innerR * 0.15, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.25)';
+  ctx.fill();
+
+  // Outer ring glow
+  ctx.beginPath();
+  ctx.arc(cx, cy, outerR + 4, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(232,200,74,0.15)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+function drawTrophy(x, y, s) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(s/16, s/16);
+  // Cup
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.quadraticCurveTo(0, 11, 3.5, 14);
+  ctx.quadraticCurveTo(6, 16, 8, 16);
+  ctx.quadraticCurveTo(10, 16, 12.5, 14);
+  ctx.quadraticCurveTo(16, 11, 16, 0);
+  ctx.closePath();
+  ctx.fillStyle = '#E8C84A';
+  ctx.fill();
+  // Stem
+  ctx.fillRect(6, 16, 4, 3);
+  // Base
+  ctx.fillRect(4, 19, 8, 2);
+  ctx.restore();
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function download() {
+  const link = document.createElement('a');
+  link.download = 'og-image.png';
+  link.href = c.toDataURL('image/png');
+  link.click();
+}
+
+// Wait for fonts to load
+document.fonts.ready.then(() => {
+  draw();
+});
+</script>
+</body>
+</html>
