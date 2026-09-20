@@ -2,14 +2,9 @@ import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from "re
 import { ImagePlus, Camera } from "lucide-react";
 
 function ShutterAnim() {
-  const [phase, setPhase] = useState("closing");
-  useEffect(() => {
-    const t = setTimeout(() => setPhase("done"), 600);
-    return () => clearTimeout(t);
-  }, []);
   return (
-    <div className={`cb-shutter${phase === "done" ? " is-done" : ""}`} aria-hidden="true">
-      {Array.from({ length: 8 }, (_, i) => <div key={i} className="cb-shutter-blade" />)}
+    <div className="cb-shutter" aria-hidden="true">
+      <div className="cb-shutter-iris" />
       <div className="cb-shutter-flash" />
     </div>
   );
@@ -223,7 +218,7 @@ const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile, g
   useEffect(() => {
     if (status === "judging" && prevStatusRef.current !== "judging") {
       setShowShutter(true);
-      const t = setTimeout(() => setShowShutter(false), 1800);
+      const t = setTimeout(() => setShowShutter(false), 2800);
       return () => clearTimeout(t);
     }
     prevStatusRef.current = status;

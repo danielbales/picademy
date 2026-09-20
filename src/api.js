@@ -12,12 +12,20 @@ function getDeviceId() {
   return id;
 }
 
+function detectPlatform() {
+  const ua = navigator.userAgent || "";
+  if (/iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) return "ios";
+  if (/Android/i.test(ua)) return "android";
+  return "desktop";
+}
+
 export async function grade(photo, temper, previous, guestId, covered) {
   const body = {
     photo: { mediaType: photo.mediaType, base64: photo.base64 },
     temper,
     guestId,
     covered,
+    platform: detectPlatform(),
   };
   if (previous) {
     body.previous = {
