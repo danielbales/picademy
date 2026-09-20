@@ -102,7 +102,7 @@ function ScoreChart({ points }) {
 
 export { Change };
 
-export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain, revealKey, bestScore }) {
+export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain, revealKey, bestScore, recent }) {
   const judging = status === "judging";
   const done = status === "done";
   const shown = useCountUp(avg, revealKey);
@@ -134,14 +134,11 @@ export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain
             <>
               <span className="cb-big cb-display cb-num">{shown.toFixed(1)}</span>
               <span className="cb-big-of">/ 10</span>
-              <span className={`cb-grade cb-num grade-${grade[0].toLowerCase()}`} aria-label={`Grade ${grade}`}>
+              <span className={`cb-grade cb-num grade-${grade.toLowerCase()}`} aria-label={`${grade} tier`}>
                 <span className="cb-grade-row">
-                  <TrophyIcon size={28} tier={grade[0] === "A" ? "gold" : grade[0] === "B" ? "silver" : grade[0] === "C" ? "bronze" : "basic"} />
-                  {grade.replace("-", "\u2212")}
+                  <TrophyIcon size={28} tier={grade.toLowerCase()} />
+                  {grade}
                 </span>
-                {grade[0] === "A" && <small>Gold</small>}
-                {grade[0] === "B" && <small>Silver</small>}
-                {grade[0] === "C" && <small>Bronze</small>}
               </span>
             </>
           ) : previous ? (
@@ -152,13 +149,30 @@ export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain
           ) : null}
         </div>
         {heroSub && <p className="cb-sub">{heroSub}</p>}
-        {bestScore != null && (
-          <p className="cb-best">
-            <TrophyIcon size={18} tier="gold" />
-            {`Best: ${fmt(bestScore.score)} (${toGrade(bestScore.score)}) \u2014 beat it`}
-            {bestScore.thumb && (
-              <img className="cb-best-thumb" src={bestScore.thumb} alt="Best scoring photo" />
+        {recent && recent.length > 0 && (
+          <div className="cb-recent">
+            <div className="cb-recent-thumbs">
+              {recent.map((r, i) => (
+                r.thumb && (
+                  <div key={i} className="cb-recent-item">
+                    <img className="cb-recent-thumb" src={r.thumb} alt={`Score ${fmt(r.score)}`} />
+                    <span className="cb-recent-score cb-num">{fmt(r.score)}</span>
+                  </div>
+                )
+              ))}
+            </div>
+            {bestScore != null && (
+              <p className="cb-best">
+                <TrophyIcon size={16} tier={toGrade(bestScore.score).toLowerCase()} />
+                {`Best: ${fmt(bestScore.score)} (${toGrade(bestScore.score)})`}
+              </p>
             )}
+          </div>
+        )}
+        {!recent?.length && bestScore != null && (
+          <p className="cb-best">
+            <TrophyIcon size={16} tier={toGrade(bestScore.score).toLowerCase()} />
+            {`Best: ${fmt(bestScore.score)} (${toGrade(bestScore.score)})`}
           </p>
         )}
       </section>

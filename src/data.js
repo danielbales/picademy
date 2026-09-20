@@ -129,11 +129,10 @@ export const HOST = {
     "Kai is changing color. That means the editing is either great or terrible.",
   ],
   byGrade: {
-    A: "Now THAT\u2019s a photo! *squawk*",
-    B: "Not bad at all! Getting really good.",
-    C: "It\u2019ll do. Let\u2019s try another one!",
-    D: "We\u2019ve all been there. Try the tips!",
-    F: "Hey, every pro started somewhere. Keep shooting!",
+    Gold: "Now THAT\u2019s a photo! *squawk*",
+    Silver: "Not bad at all! Getting really good.",
+    Bronze: "It\u2019ll do. Let\u2019s try another one!",
+    Basic: "Hey, every pro started somewhere. Keep shooting!",
   },
 };
 

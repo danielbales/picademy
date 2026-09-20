@@ -51,11 +51,16 @@ body { margin: 0; background: #0A0B0D; }
 .cb-grade { margin-left: auto; align-self: center; background: var(--surface-2); border-radius: 16px; padding: 10px 18px; font-weight: 700; font-size: 24px; display: inline-flex; flex-direction: column; align-items: center; gap: 2px; }
 .cb-grade-row { display: flex; align-items: center; gap: 8px; }
 .cb-grade small { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.8; }
-.cb-grade.grade-a { color: #E8C84A; background: rgba(232,200,74,.18); }
-.cb-grade.grade-b { color: #C0C0C0; background: rgba(192,192,192,.18); }
-.cb-grade.grade-c { color: #B87333; background: rgba(184,115,51,.18); }
-.cb-grade.grade-d, .cb-grade.grade-f { color: var(--text-2); }
+.cb-grade.grade-gold { color: #E8C84A; background: rgba(232,200,74,.18); }
+.cb-grade.grade-silver { color: #C0C0C0; background: rgba(192,192,192,.18); }
+.cb-grade.grade-bronze { color: #B87333; background: rgba(184,115,51,.18); }
+.cb-grade.grade-basic { color: var(--text-2); }
 .cb-sub { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 4px 0 0; color: var(--text-2); font-size: 15px; }
+.cb-recent { margin: 12px 0 0; }
+.cb-recent-thumbs { display: flex; gap: 10px; justify-content: center; }
+.cb-recent-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.cb-recent-thumb { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; border: 1.5px solid var(--border); }
+.cb-recent-score { font-size: 13px; font-weight: 600; color: var(--text-2); font-variant-numeric: tabular-nums; }
 .cb-best { display: flex; align-items: center; gap: 8px; margin: 8px 0 0; color: var(--text-2); font-size: 15px; font-weight: 500; }
 .cb-best.is-new { color: var(--green); }
 .cb-best-thumb { width: 28px; height: 28px; border-radius: 6px; object-fit: cover; border: 1.5px solid var(--border); flex: none; margin-left: 2px; }

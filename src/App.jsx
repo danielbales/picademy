@@ -7,7 +7,7 @@ import { toGrade, average } from "./helpers";
 import { fireConfetti } from "./confetti";
 import { renderTurnstile } from "./turnstile";
 import { shareResult, pickFeaturedRoast } from "./share";
-import { saveScore, getBest, saveCovered, getCovered, getStreak, bumpStreak, getRemaining, useGrade, addCredits, bumpLimitHit } from "./scores";
+import { saveScore, getBest, getRecent, saveCovered, getCovered, getStreak, bumpStreak, getRemaining, useGrade, addCredits, bumpLimitHit } from "./scores";
 import Host from "./components/Host";
 import ApertureMark from "./components/ApertureMark";
 import ScoreHero, { Change } from "./components/ScoreHero";
@@ -38,6 +38,7 @@ export default function App() {
   const [temper, setTemper] = useState("honest");
   const [hostNote, setHostNote] = useState(null);
   const [bestScore, setBestScore] = useState(() => getBest());
+  const [recent, setRecent] = useState(() => getRecent());
   const [fileError, setFileError] = useState("");
   const [streak, setStreak] = useState(() => getStreak());
   const [guest, setGuest] = useState(() => GUESTS[Math.floor(Math.random() * GUESTS.length)]);
@@ -79,7 +80,7 @@ export default function App() {
     setShareState("idle");
     const steps = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500];
     const timers = steps.map((ms, i) => setTimeout(() => setRevealStep(i + 2), ms));
-    if (toGrade(average(result.skills))[0] === "A") {
+    if (toGrade(average(result.skills)) === "Gold") {
       timers.push(setTimeout(fireConfetti, 800));
     }
     return () => timers.forEach(clearTimeout);
@@ -137,6 +138,7 @@ export default function App() {
       });
       const best = await saveScore(entry.avg, photo.url);
       setBestScore(best);
+      setRecent(getRecent());
       const streakResult = bumpStreak();
       setStreak(streakResult.count);
       if (streakResult.isNewBest) {
@@ -192,7 +194,7 @@ export default function App() {
   if (hostNote) hostLine = hostNote;
   else if (judging) hostLine = HOST.loading[loadingIdx];
   else if (status === "error") hostLine = HOST.error;
-  else if (done) hostLine = result.host || HOST.byGrade[gradeStr[0]];
+  else if (done) hostLine = result.host || HOST.byGrade[gradeStr];
   else if (status === "ready") hostLine = previous ? HOST.reshootReady : HOST.ready;
 
   const shareLabel =
@@ -238,6 +240,7 @@ export default function App() {
           chain={chain}
           revealKey={revealKey}
           bestScore={bestScore}
+          recent={recent}
         />
 
         {/* Host */}

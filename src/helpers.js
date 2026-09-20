@@ -2,12 +2,10 @@ import { useState, useEffect } from "react";
 import { SKILLS } from "./data";
 
 export function toGrade(avg) {
-  const scale = [
-    [8.5, "A+"], [7.8, "A"], [7.2, "A-"], [6.7, "B+"], [6.2, "B"],
-    [5.7, "B-"], [5.2, "C+"], [4.7, "C"], [4.0, "C-"], [3.0, "D"],
-  ];
-  for (const [min, g] of scale) if (avg >= min) return g;
-  return "F";
+  if (avg >= 7.2) return "Gold";
+  if (avg >= 5.7) return "Silver";
+  if (avg >= 4.0) return "Bronze";
+  return "Basic";
 }
 
 export const average = (skills) => SKILLS.reduce((sum, s) => sum + skills[s.id], 0) / SKILLS.length;

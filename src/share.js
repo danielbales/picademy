@@ -109,9 +109,8 @@ export async function generateShareCard({ photoUrl, score, grade, roast, criticN
   const ctx = c.getContext("2d");
   const pad = 48;
 
-  const g = grade[0];
   const accent =
-    g === "A" ? "#E8C84A" : g === "B" ? "#C0C0C0" : g === "C" ? "#B87333" : "#6B7280";
+    grade === "Gold" ? "#E8C84A" : grade === "Silver" ? "#C0C0C0" : grade === "Bronze" ? "#B87333" : "#6B7280";
 
   // Background with soft radial glow
   ctx.fillStyle = "#0A0B0D";
@@ -176,17 +175,10 @@ export async function generateShareCard({ photoUrl, score, grade, roast, criticN
   ctx.fillText("/ 10", pad + 12 + sm.width + 10, scoreY);
 
   // Grade pill with glow
-  const gradeText = grade.replace("-", "\u2212");
-  const tierLabel = g === "A" ? "GOLD" : g === "B" ? "SILVER" : g === "C" ? "BRONZE" : "";
   ctx.font = "700 36px Inter, system-ui, -apple-system, sans-serif";
-  const gm = ctx.measureText(gradeText);
-  let tierW = 0;
-  if (tierLabel) {
-    ctx.font = "600 16px Inter, system-ui, sans-serif";
-    tierW = ctx.measureText(tierLabel).width + 14;
-  }
+  const gm = ctx.measureText(grade);
   const pillPad = 20;
-  const pillW = gm.width + tierW + pillPad * 2;
+  const pillW = gm.width + pillPad * 2;
   const pillH = 52;
   const pillX = W - pad - 12 - pillW;
   const pillY = scoreY - 42;
@@ -206,12 +198,7 @@ export async function generateShareCard({ photoUrl, score, grade, roast, criticN
   ctx.textAlign = "left";
   ctx.font = "700 36px Inter, system-ui, -apple-system, sans-serif";
   ctx.fillStyle = accent;
-  ctx.fillText(gradeText, pillX + pillPad, scoreY - 6);
-  if (tierLabel) {
-    ctx.font = "600 16px Inter, system-ui, sans-serif";
-    ctx.fillStyle = hexA(accent, 0.85);
-    ctx.fillText(tierLabel, pillX + pillPad + gm.width + 14, scoreY - 12);
-  }
+  ctx.fillText(grade, pillX + pillPad, scoreY - 6);
 
   // Skill bars (2x2 grid)
   if (skills) {

@@ -114,15 +114,20 @@ export async function saveScore(avg, photoUrl) {
   const scores = getAll();
   scores.push(avg);
   sessionStorage.setItem(KEY, JSON.stringify(scores));
+  const thumb = await makeThumbnail(photoUrl);
   // Track best photo thumbnail
   const prev = getBest();
+  let best = prev;
   if (prev === null || avg >= prev.score) {
-    const thumb = await makeThumbnail(photoUrl);
-    const best = { score: avg, thumb };
+    best = { score: avg, thumb };
     sessionStorage.setItem(KEY + "-best", JSON.stringify(best));
-    return best;
   }
-  return prev;
+  // Track last 3 submissions
+  const recent = getRecent();
+  recent.push({ score: avg, thumb });
+  if (recent.length > 3) recent.shift();
+  sessionStorage.setItem(KEY + "-recent", JSON.stringify(recent));
+  return best;
 }
 
 function makeThumbnail(dataUrl) {
@@ -159,6 +164,15 @@ export function getBest() {
   const scores = getAll();
   if (!scores.length) return null;
   return { score: Math.max(...scores), thumb: null };
+}
+
+export function getRecent() {
+  try {
+    const raw = sessionStorage.getItem(KEY + "-recent");
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
 }
 
 export function saveCovered(covered) {

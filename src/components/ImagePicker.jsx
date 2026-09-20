@@ -12,11 +12,7 @@ function ShutterAnim() {
 
 function trophyTier(grade) {
   if (!grade) return "";
-  const g = grade[0];
-  if (g === "A") return " trophy-gold";
-  if (g === "B") return " trophy-silver";
-  if (g === "C") return " trophy-bronze";
-  return " trophy-basic";
+  return ` trophy-${grade.toLowerCase()}`;
 }
 
 const TROPHY_COLORS = {
@@ -28,10 +24,9 @@ const TROPHY_COLORS = {
 
 function TrophyBase({ grade }) {
   if (!grade) return null;
-  const g = grade[0];
-  const tier = g === "A" ? "gold" : g === "B" ? "silver" : g === "C" ? "bronze" : "basic";
+  const tier = grade.toLowerCase();
   const c = TROPHY_COLORS[tier];
-  const label = tier === "basic" ? "" : tier.charAt(0).toUpperCase() + tier.slice(1);
+  const label = tier === "basic" ? "" : grade;
   const p = `tr-${tier}`;
 
   return (
