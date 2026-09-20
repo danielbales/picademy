@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Target, Flame, Share2 } from "lucide-react";
+import { Flame, Share2 } from "lucide-react";
 import { SKILLS, CRITICS, GUESTS, TEMPERS, HOST } from "./data";
 import { grade } from "./api";
 import { prepareImage } from "./image";
@@ -89,7 +89,7 @@ export default function App() {
     return () => timers.forEach(clearTimeout);
   }, [status, result]);
 
-  async function handleFile(file, mode = "new") {
+  async function handleFile(file, mode = "new", source = "gallery") {
     if (!file) return;
     setFileError("");
     let prepared;
@@ -99,6 +99,7 @@ export default function App() {
       setFileError(e.message);
       return;
     }
+    prepared.source = source;
     runId.current++;
     if (mode === "reshoot" && photo && result) {
       setPrevious({ photo, result });
@@ -380,20 +381,6 @@ export default function App() {
           </section>
         )}
 
-        {done && result.assignment && revealStep >= 10 && (
-          <section className="cb-section cb-fade-in">
-            <div className="cb-promo">
-              <span className="cb-icon">
-                <Target size={20} aria-hidden="true" />
-              </span>
-              <div>
-                <p className="cb-promo-title">This week&rsquo;s assignment</p>
-                <p className="cb-promo-body">{result.assignment}</p>
-              </div>
-            </div>
-          </section>
-        )}
-
         {/* Skills */}
         {((done && revealStep >= 10) || judging) && (
         <section className="cb-section" aria-live="polite">
@@ -426,9 +413,15 @@ export default function App() {
       {done && (
         <div className="cb-sticky-bar">
           <div className="cb-sticky-inner">
-            <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openCamera("reshoot")}>
-              Reshoot and compare
-            </button>
+            {photo?.source === "camera" ? (
+              <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openCamera("reshoot")}>
+                Reshoot and compare
+              </button>
+            ) : (
+              <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openGallery("new")}>
+                Try another photo
+              </button>
+            )}
             <button
               type="button"
               className={`cb-btn is-share${shareState !== "idle" ? " is-active" : ""}`}

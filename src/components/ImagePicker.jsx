@@ -240,9 +240,14 @@ const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile, g
     },
   }));
 
-  function handleChange(e) {
+  function handleCamera(e) {
     const file = e.target.files?.[0];
-    if (file) onFile(file, pickModeRef.current);
+    if (file) onFile(file, pickModeRef.current, "camera");
+    e.target.value = "";
+  }
+  function handleGallery(e) {
+    const file = e.target.files?.[0];
+    if (file) onFile(file, pickModeRef.current, "gallery");
     e.target.value = "";
   }
 
@@ -261,7 +266,7 @@ const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile, g
           onDrop={(e) => {
             e.preventDefault();
             setDragging(false);
-            onFile(e.dataTransfer.files?.[0], "new");
+            onFile(e.dataTransfer.files?.[0], "new", "gallery");
           }}
         >
           {showShutter && <ShutterAnim />}
@@ -319,14 +324,14 @@ const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile, g
         accept="image/*"
         capture="environment"
         style={{ display: "none" }}
-        onChange={handleChange}
+        onChange={handleCamera}
       />
       <input
         ref={galleryRef}
         type="file"
         accept="image/*"
         style={{ display: "none" }}
-        onChange={handleChange}
+        onChange={handleGallery}
       />
     </>
   );

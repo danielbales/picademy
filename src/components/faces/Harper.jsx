@@ -32,35 +32,35 @@ export default function Harper({ mood = "neutral", temper }) {
   return (
     <svg viewBox="0 0 40 40" aria-hidden="true">
       <defs>
-        {/* Head gradient - pink tones */}
+        {/* Head gradient - golden tawny cheetah fur */}
         <radialGradient id="har-head" cx="50%" cy="40%" r="55%">
-          <stop offset="0%" stopColor="#F08ED0" />
-          <stop offset="60%" stopColor="#E26AB5" />
-          <stop offset="100%" stopColor="#C4509A" />
+          <stop offset="0%" stopColor="#E8C870" />
+          <stop offset="60%" stopColor="#D4A840" />
+          <stop offset="100%" stopColor="#B88C28" />
         </radialGradient>
-        {/* Muzzle / light face area */}
+        {/* Muzzle / light cream face area */}
         <radialGradient id="har-muzzle" cx="50%" cy="40%" r="60%">
-          <stop offset="0%" stopColor="#FCD6EC" />
-          <stop offset="100%" stopColor="#F0B8D8" />
+          <stop offset="0%" stopColor="#FFF5E0" />
+          <stop offset="100%" stopColor="#F0DFC0" />
         </radialGradient>
-        {/* Nose gradient */}
+        {/* Nose gradient - dark pinkish-brown like a real cheetah */}
         <radialGradient id="har-nose" cx="45%" cy="35%" r="55%">
-          <stop offset="0%" stopColor="#9A3068" />
-          <stop offset="100%" stopColor="#6A1848" />
+          <stop offset="0%" stopColor="#3A2A20" />
+          <stop offset="100%" stopColor="#1A1008" />
         </radialGradient>
-        {/* Eye iris gradient - amber/gold for sharp cheetah eyes */}
+        {/* Eye iris gradient - intense amber */}
         <radialGradient id="har-iris" cx="50%" cy="45%" r="50%">
           <stop offset="0%" stopColor="#E8A830" />
           <stop offset="100%" stopColor="#B87020" />
         </radialGradient>
         {/* Ear inner gradient */}
         <radialGradient id="har-ear-in" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#F5A0D0" />
-          <stop offset="100%" stopColor="#D46AA0" />
+          <stop offset="0%" stopColor="#E8C0A0" />
+          <stop offset="100%" stopColor="#C8A080" />
         </radialGradient>
       </defs>
 
-      {/* ---- HEAD - narrower, more angular cheetah shape ---- */}
+      {/* ---- HEAD - narrow angular cheetah face ---- */}
       <ellipse cx="20" cy="21" rx="15" ry="16.5" fill="url(#har-head)" />
 
       {/* ---- EARS - small and round like a cheetah ---- */}
@@ -69,43 +69,48 @@ export default function Harper({ mood = "neutral", temper }) {
       <circle cx="30" cy="7" r="3.5" fill="url(#har-head)" />
       <circle cx="30" cy="7.5" r="2" fill="url(#har-ear-in)" />
       {/* Dark ear backs - cheetah signature */}
-      <path d="M7.5 5 Q10 3.5 12.5 5" fill="#6A1848" opacity="0.5" />
-      <path d="M27.5 5 Q30 3.5 32.5 5" fill="#6A1848" opacity="0.5" />
+      <path d="M7 5.5 Q10 3 13 5.5" fill="#1A1008" opacity="0.6" />
+      <path d="M27 5.5 Q30 3 33 5.5" fill="#1A1008" opacity="0.6" />
 
-      {/* ---- SPOTS - dense, small, solid cheetah spots ---- */}
-      <circle cx="8" cy="14" r="1" fill="#8A2868" opacity="0.55" />
-      <circle cx="10" cy="11" r="0.8" fill="#8A2868" opacity="0.5" />
-      <circle cx="13" cy="9" r="0.7" fill="#8A2868" opacity="0.45" />
-      <circle cx="17" cy="7" r="0.6" fill="#8A2868" opacity="0.4" />
-      <circle cx="20" cy="5.5" r="0.5" fill="#8A2868" opacity="0.35" />
-      <circle cx="23" cy="7" r="0.6" fill="#8A2868" opacity="0.4" />
-      <circle cx="27" cy="9" r="0.7" fill="#8A2868" opacity="0.45" />
-      <circle cx="30" cy="11" r="0.8" fill="#8A2868" opacity="0.5" />
-      <circle cx="32" cy="14" r="1" fill="#8A2868" opacity="0.55" />
-      <circle cx="7" cy="20" r="0.9" fill="#8A2868" opacity="0.4" />
-      <circle cx="33" cy="20" r="0.9" fill="#8A2868" opacity="0.4" />
-      <circle cx="9" cy="17" r="0.7" fill="#8A2868" opacity="0.45" />
-      <circle cx="31" cy="17" r="0.7" fill="#8A2868" opacity="0.45" />
-      <circle cx="7" cy="26" r="0.7" fill="#8A2868" opacity="0.35" />
-      <circle cx="33" cy="26" r="0.7" fill="#8A2868" opacity="0.35" />
-      <circle cx="11" cy="30" r="0.6" fill="#8A2868" opacity="0.3" />
-      <circle cx="29" cy="30" r="0.6" fill="#8A2868" opacity="0.3" />
-      <circle cx="15" cy="6" r="0.5" fill="#8A2868" opacity="0.35" />
-      <circle cx="25" cy="6" r="0.5" fill="#8A2868" opacity="0.35" />
-      <circle cx="6" cy="23" r="0.6" fill="#8A2868" opacity="0.3" />
-      <circle cx="34" cy="23" r="0.6" fill="#8A2868" opacity="0.3" />
+      {/* ---- SPOTS - solid black cheetah spots ---- */}
+      <circle cx="8" cy="14" r="1.1" fill="#2A1A08" opacity="0.7" />
+      <circle cx="10" cy="11" r="0.9" fill="#2A1A08" opacity="0.65" />
+      <circle cx="13" cy="9" r="0.8" fill="#2A1A08" opacity="0.6" />
+      <circle cx="17" cy="7" r="0.7" fill="#2A1A08" opacity="0.55" />
+      <circle cx="20" cy="5.5" r="0.6" fill="#2A1A08" opacity="0.5" />
+      <circle cx="23" cy="7" r="0.7" fill="#2A1A08" opacity="0.55" />
+      <circle cx="27" cy="9" r="0.8" fill="#2A1A08" opacity="0.6" />
+      <circle cx="30" cy="11" r="0.9" fill="#2A1A08" opacity="0.65" />
+      <circle cx="32" cy="14" r="1.1" fill="#2A1A08" opacity="0.7" />
+      <circle cx="7" cy="20" r="1" fill="#2A1A08" opacity="0.55" />
+      <circle cx="33" cy="20" r="1" fill="#2A1A08" opacity="0.55" />
+      <circle cx="9" cy="17" r="0.8" fill="#2A1A08" opacity="0.6" />
+      <circle cx="31" cy="17" r="0.8" fill="#2A1A08" opacity="0.6" />
+      <circle cx="7" cy="26" r="0.8" fill="#2A1A08" opacity="0.45" />
+      <circle cx="33" cy="26" r="0.8" fill="#2A1A08" opacity="0.45" />
+      <circle cx="11" cy="30" r="0.7" fill="#2A1A08" opacity="0.4" />
+      <circle cx="29" cy="30" r="0.7" fill="#2A1A08" opacity="0.4" />
+      <circle cx="15" cy="6" r="0.6" fill="#2A1A08" opacity="0.5" />
+      <circle cx="25" cy="6" r="0.6" fill="#2A1A08" opacity="0.5" />
+      <circle cx="6" cy="23" r="0.7" fill="#2A1A08" opacity="0.4" />
+      <circle cx="34" cy="23" r="0.7" fill="#2A1A08" opacity="0.4" />
+      {/* Extra spots for density */}
+      <circle cx="11" cy="13" r="0.6" fill="#2A1A08" opacity="0.5" />
+      <circle cx="29" cy="13" r="0.6" fill="#2A1A08" opacity="0.5" />
+      <circle cx="8" cy="28" r="0.5" fill="#2A1A08" opacity="0.35" />
+      <circle cx="32" cy="28" r="0.5" fill="#2A1A08" opacity="0.35" />
 
-      {/* ---- MUZZLE AREA ---- */}
+      {/* ---- MUZZLE AREA - cream/white ---- */}
       <ellipse cx="20" cy="24" rx="9" ry="8.5" fill="url(#har-muzzle)" />
 
       {/* Forehead shading */}
-      <ellipse cx="20" cy="14" rx="7" ry="3.5" fill="#F08ED0" opacity="0.3" />
+      <ellipse cx="20" cy="14" rx="7" ry="3.5" fill="#D4A840" opacity="0.3" />
 
-      {/* ---- BROW MARKINGS ---- */}
-      <path d={browAngleL} fill="none" stroke="#A03878" strokeWidth="0.9" strokeLinecap="round" />
-      <path d={browAngleR} fill="none" stroke="#A03878" strokeWidth="0.9" strokeLinecap="round" />
+      {/* ---- BROW MARKINGS - dark like real cheetah ---- */}
+      <path d={browAngleL} fill="none" stroke="#4A3018" strokeWidth="0.9" strokeLinecap="round" />
+      <path d={browAngleR} fill="none" stroke="#4A3018" strokeWidth="0.9" strokeLinecap="round" />
 
-      {/* ---- EYES - angular amber cheetah eyes ---- */}
+      {/* ---- EYES - intense amber cheetah eyes ---- */}
       {/* Left eye */}
       <ellipse cx="14.5" cy={17 + eyeYOffset} rx="2.8" ry={eyeRy} fill="#FFFFFF" />
       <ellipse cx="14.8" cy={17 + eyeYOffset} rx="1.8" ry={eyeRy * 0.7} fill="url(#har-iris)" />
@@ -130,49 +135,47 @@ export default function Harper({ mood = "neutral", temper }) {
         </>
       )}
 
-      {/* ---- TEAR MARKS - thick, prominent cheetah signature ---- */}
-      {/* Left tear mark - bold dark line from inner eye down to jaw */}
+      {/* ---- TEAR MARKS - thick black cheetah signature ---- */}
       <path
         d="M12.5 19 Q11.5 22 10.5 26 Q10 28.5 10 31"
         fill="none"
-        stroke="#3A0820"
+        stroke="#1A1008"
         strokeWidth="2.2"
         strokeLinecap="round"
       />
-      {/* Right tear mark */}
       <path
         d="M27.5 19 Q28.5 22 29.5 26 Q30 28.5 30 31"
         fill="none"
-        stroke="#3A0820"
+        stroke="#1A1008"
         strokeWidth="2.2"
         strokeLinecap="round"
       />
 
-      {/* ---- NOSE ---- */}
+      {/* ---- NOSE - dark brown/black ---- */}
       <ellipse cx="20" cy="23" rx="2.5" ry="1.8" fill="url(#har-nose)" />
       {/* Nose highlight */}
-      <ellipse cx="19.5" cy="22.4" rx="1" ry="0.4" fill="#B84888" opacity="0.5" />
+      <ellipse cx="19.5" cy="22.4" rx="1" ry="0.4" fill="#4A3828" opacity="0.5" />
 
       {/* ---- NOSE TO MOUTH LINE ---- */}
-      <path d="M20 24.8 L20 26.5" stroke="#6A2848" strokeWidth="0.7" strokeLinecap="round" />
+      <path d="M20 24.8 L20 26.5" stroke="#3A2818" strokeWidth="0.7" strokeLinecap="round" />
 
       {/* ---- MOUTH ---- */}
-      <path d={mouth} fill="none" stroke="#6A2848" strokeWidth="0.8" strokeLinecap="round" />
+      <path d={mouth} fill="none" stroke="#3A2818" strokeWidth="0.8" strokeLinecap="round" />
 
       {/* ---- WHISKERS - subtle ---- */}
-      <line x1="12" y1="23" x2="5" y2="21.5" stroke="#D8A0C0" strokeWidth="0.3" opacity="0.5" />
-      <line x1="12" y1="24.5" x2="4.5" y2="24.5" stroke="#D8A0C0" strokeWidth="0.3" opacity="0.5" />
-      <line x1="12" y1="26" x2="5" y2="27.5" stroke="#D8A0C0" strokeWidth="0.3" opacity="0.4" />
-      <line x1="28" y1="23" x2="35" y2="21.5" stroke="#D8A0C0" strokeWidth="0.3" opacity="0.5" />
-      <line x1="28" y1="24.5" x2="35.5" y2="24.5" stroke="#D8A0C0" strokeWidth="0.3" opacity="0.5" />
-      <line x1="28" y1="26" x2="35" y2="27.5" stroke="#D8A0C0" strokeWidth="0.3" opacity="0.4" />
+      <line x1="12" y1="23" x2="5" y2="21.5" stroke="#C8A870" strokeWidth="0.3" opacity="0.5" />
+      <line x1="12" y1="24.5" x2="4.5" y2="24.5" stroke="#C8A870" strokeWidth="0.3" opacity="0.5" />
+      <line x1="12" y1="26" x2="5" y2="27.5" stroke="#C8A870" strokeWidth="0.3" opacity="0.4" />
+      <line x1="28" y1="23" x2="35" y2="21.5" stroke="#C8A870" strokeWidth="0.3" opacity="0.5" />
+      <line x1="28" y1="24.5" x2="35.5" y2="24.5" stroke="#C8A870" strokeWidth="0.3" opacity="0.5" />
+      <line x1="28" y1="26" x2="35" y2="27.5" stroke="#C8A870" strokeWidth="0.3" opacity="0.4" />
 
       {/* ---- CHEEK SHADING ---- */}
-      <ellipse cx="10" cy="25" rx="2.5" ry="2" fill="#E880C0" opacity="0.2" />
-      <ellipse cx="30" cy="25" rx="2.5" ry="2" fill="#E880C0" opacity="0.2" />
+      <ellipse cx="10" cy="25" rx="2.5" ry="2" fill="#C8A040" opacity="0.2" />
+      <ellipse cx="30" cy="25" rx="2.5" ry="2" fill="#C8A040" opacity="0.2" />
 
       {/* ---- CHIN ---- */}
-      <ellipse cx="20" cy="33" rx="5" ry="2" fill="#FCD6EC" opacity="0.3" />
+      <ellipse cx="20" cy="33" rx="5" ry="2" fill="#FFF5E0" opacity="0.3" />
 
       {/* ---- TEMPER OVERLAYS ---- */}
       {temper === "brutal" && (
