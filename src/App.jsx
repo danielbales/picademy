@@ -231,6 +231,8 @@ export default function App() {
           )}
         </header>
 
+        <p className="cb-tagline">Get your photos judged by AI critics</p>
+
         <ScoreHero
           status={status}
           avg={avg}

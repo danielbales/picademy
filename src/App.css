@@ -37,6 +37,7 @@ body { margin: 0; background: #0A0B0D; }
 .cb-brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 20px; letter-spacing: -0.01em; margin: 0; }
 .cb-brand-mark { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 0 6px rgba(232,200,74,.4)); }
 .cb-brand-mark svg { width: 36px; height: 36px; flex: none; }
+.cb-tagline { margin: 0 0 4px; font-size: 14px; color: var(--text-2); letter-spacing: 0.01em; }
 .cb-streak { margin-left: auto; display: flex; align-items: center; gap: 4px; font-weight: 700; font-size: 16px; color: #F97316; }
 .cb-streak svg { filter: drop-shadow(0 0 4px rgba(249,115,22,.4)); }
 
