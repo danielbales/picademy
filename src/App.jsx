@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { Flame, Share2 } from "lucide-react";
-import { SKILLS, CRITICS, GUESTS, TEMPERS, HOST } from "./data";
+import { CRITICS, GUESTS, TEMPERS, HOST } from "./data";
 import { grade } from "./api";
 import { prepareImage } from "./image";
-import { toGrade, average, fmt } from "./helpers";
+import { toGrade, average } from "./helpers";
 import { fireConfetti } from "./confetti";
 import { renderTurnstile } from "./turnstile";
 import { shareResult, pickFeaturedRoast } from "./share";
@@ -27,11 +27,6 @@ const MYSTERY_GUEST = {
   focus: "Surprise",
   waiting: "A mystery judge is stepping out of the shadows...",
 };
-
-function Skel({ w, h = 14, r = 8, style }) {
-  return <span className="cb-skel" style={{ width: w, height: h, borderRadius: r, ...style }} aria-hidden="true" />;
-}
-
 
 export default function App() {
   const [photo, setPhoto] = useState(null);
@@ -165,10 +160,6 @@ export default function App() {
   const avg = done ? average(result.skills) : null;
   const gradeStr = done ? toGrade(avg) : null;
   const prevAvg = previous ? average(previous.result.skills) : null;
-  const weakest = done
-    ? SKILLS.reduce((low, s) => (result.skills[s.id] < result.skills[low.id] ? s : low), SKILLS[0]).id
-    : null;
-
   const criticReveal = (criticIdx) => ({
     roastRevealed: revealStep >= criticIdx * 2 + 2,
     fixRevealed: revealStep >= criticIdx * 2 + 3,
@@ -380,30 +371,6 @@ export default function App() {
               </div>
             </div>
           </section>
-        )}
-
-        {/* Skills */}
-        {((done && revealStep >= 10) || judging) && (
-        <section className="cb-section" aria-live="polite">
-          <h2 className="cb-h2 cb-display">Skill breakdown</h2>
-          <div className="cb-skills-grid">
-            {SKILLS.map((s) => {
-              const score = done ? result.skills[s.id] : null;
-              const isWeak = s.id === weakest;
-              return (
-                <div key={s.id} className={`cb-skill-cell${isWeak ? " is-weak" : ""}`}>
-                  <p className="cb-skill-label">{s.label}</p>
-                  {judging ? (
-                    <Skel w={36} h={20} r={6} />
-                  ) : (
-                    <p className="cb-skill-score cb-num">{score !== null ? fmt(score) : "\u2013"}</p>
-                  )}
-                  {done && previous && <Change value={score - previous.result.skills[s.id]} />}
-                </div>
-              );
-            })}
-          </div>
-        </section>
         )}
 
       </div>
