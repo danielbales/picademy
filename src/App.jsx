@@ -438,15 +438,9 @@ export default function App() {
       {done && (
         <div className="cb-sticky-bar">
           <div className="cb-sticky-inner">
-            {photo?.source === "camera" ? (
-              <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openCamera("reshoot")}>
-                Reshoot and compare
-              </button>
-            ) : (
-              <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openGallery("reshoot")}>
-                Compare another
-              </button>
-            )}
+            <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openGallery("new")}>
+              Try another photo
+            </button>
             <button
               type="button"
               className={`cb-btn is-share${shareState !== "idle" ? " is-active" : ""}`}
@@ -456,9 +450,6 @@ export default function App() {
               title={shareLabel}
             >
               <Share2 size={20} aria-hidden="true" />
-            </button>
-            <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
-              New photo
             </button>
           </div>
         </div>

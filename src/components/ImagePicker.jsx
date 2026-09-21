@@ -277,7 +277,6 @@ const ImagePicker = forwardRef(function ImagePicker({ photo, previous, onFile, g
                     <div className="cb-crop-mask cb-crop-bottom" style={{ height: `${crop.bottom * 100}%` }} />
                     <div className="cb-crop-mask cb-crop-left" style={{ top: `${crop.top * 100}%`, bottom: `${crop.bottom * 100}%`, width: `${crop.left * 100}%` }} />
                     <div className="cb-crop-mask cb-crop-right" style={{ top: `${crop.top * 100}%`, bottom: `${crop.bottom * 100}%`, width: `${crop.right * 100}%` }} />
-                    <p className="cb-crop-label">{crop.description}</p>
                   </div>
                 )}
               </div>
