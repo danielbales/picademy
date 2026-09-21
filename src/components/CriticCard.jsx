@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { fmt } from "../helpers";
 import FixCard from "./FixCard";
 import FACES from "./faces";
@@ -9,7 +10,32 @@ function scoreMood(score) {
   return "grumpy";
 }
 
-export default function CriticCard({ critic, result, status, roastRevealed, fixRevealed, temper }) {
+function FollowUpInput({ criticName, onSubmit, disabled }) {
+  const [value, setValue] = useState("");
+  function handleSubmit(e) {
+    e.preventDefault();
+    const q = value.trim();
+    if (!q || disabled) return;
+    onSubmit(q);
+    setValue("");
+  }
+  return (
+    <form className="cb-followup-form" onSubmit={handleSubmit}>
+      <input
+        className="cb-followup-input"
+        type="text"
+        placeholder={`Ask ${criticName} a question...`}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        maxLength={200}
+        disabled={disabled}
+      />
+      <button type="submit" className="cb-followup-send" disabled={disabled || !value.trim()}>Ask</button>
+    </form>
+  );
+}
+
+export default function CriticCard({ critic, result, status, roastRevealed, fixRevealed, temper, followUps = [], onFollowUp, photoUrl, crop }) {
   const judging = status === "judging";
   const isGuest = !!critic.isGuest;
   const r = result ? result[isGuest ? "guest" : critic.id] : null;
@@ -53,7 +79,22 @@ export default function CriticCard({ critic, result, status, roastRevealed, fixR
       {r && roastRevealed && (
         <>
           {r.roast && <p className="cb-roast cb-fade-in">{r.roast}</p>}
-          {r.fundamental && fixRevealed && <div className="cb-fade-in"><FixCard fix={r} isHabit={isGuest} /></div>}
+          {r.fundamental && fixRevealed && <div className="cb-fade-in"><FixCard fix={r} isHabit={isGuest} photoUrl={photoUrl} crop={crop} /></div>}
+          {fixRevealed && followUps.map((fu, i) => (
+            <div key={i} className="cb-followup cb-fade-in">
+              <p className="cb-followup-q">{fu.q}</p>
+              {fu.status === "loading" && <p className="cb-followup-loading">Thinking...</p>}
+              {fu.status === "done" && <p className="cb-followup-a">{fu.a}</p>}
+              {fu.status === "error" && <p className="cb-followup-error">Couldn't get a response.</p>}
+            </div>
+          ))}
+          {fixRevealed && followUps.length < 3 && onFollowUp && (
+            <FollowUpInput
+              criticName={critic.name}
+              onSubmit={onFollowUp}
+              disabled={followUps.some(f => f.status === "loading")}
+            />
+          )}
         </>
       )}
     </article>

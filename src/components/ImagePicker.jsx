@@ -4,8 +4,7 @@ import { ImagePlus, Camera } from "lucide-react";
 function ShutterAnim() {
   return (
     <div className="cb-shutter" aria-hidden="true">
-      <div className="cb-shutter-iris" />
-      <div className="cb-shutter-flash" />
+      <div className="cb-shutter-breathe" />
     </div>
   );
 }

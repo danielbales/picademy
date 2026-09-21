@@ -1,6 +1,7 @@
 import { getTurnstileToken } from "./turnstile";
 
 const API_URL = "https://crit-api.dbales1210.workers.dev/grade";
+const ASK_URL = "https://crit-api.dbales1210.workers.dev/ask";
 
 function getDeviceId() {
   const key = "picademy-device-id";
@@ -61,5 +62,30 @@ export async function grade(photo, temper, previous, guestId, covered) {
   if (!res.ok) {
     throw new Error(`Request failed with status ${res.status}`);
   }
+  return res.json();
+}
+
+export async function askFollowUp(criticId, guestId, question, critique) {
+  const headers = {
+    "Content-Type": "application/json",
+    "x-device-id": getDeviceId(),
+  };
+  const tsToken = await getTurnstileToken();
+  if (tsToken) {
+    headers["x-turnstile-token"] = tsToken;
+  } else {
+    headers["x-app-token"] = import.meta.env.VITE_APP_TOKEN;
+  }
+  const res = await fetch(ASK_URL, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ criticId, guestId, question, critique }),
+  });
+  if (res.status === 429) {
+    const err = new Error("rate-limit");
+    err.isRateLimit = true;
+    throw err;
+  }
+  if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
   return res.json();
 }

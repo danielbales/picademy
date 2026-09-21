@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Flame, Share2 } from "lucide-react";
 import { CRITICS, GUESTS, TEMPERS, HOST } from "./data";
-import { grade } from "./api";
+import { grade, askFollowUp } from "./api";
 import { prepareImage } from "./image";
 import { toGrade, average } from "./helpers";
 import { fireConfetti } from "./confetti";
@@ -48,6 +48,7 @@ export default function App() {
   const [revealStep, setRevealStep] = useState(0);
   const [remaining, setRemaining] = useState(() => getRemaining());
   const [shareState, setShareState] = useState("idle"); // idle | sharing | shared | downloaded
+  const [followUps, setFollowUps] = useState({});
   const pickerRef = useRef(null);
   const runId = useRef(0);
 
@@ -107,6 +108,7 @@ export default function App() {
     }
     setPhoto(prepared);
     setResult(null);
+    setFollowUps({});
     setHostNote(null);
     setShareState("idle");
     setStatus("ready");
@@ -119,6 +121,7 @@ export default function App() {
     setGuest(pickedGuest);
     setHostNote(null);
     setStatus("judging");
+    window.scrollTo({ top: 0, behavior: "smooth" });
     try {
       const data = await grade(photo, temper, previous, pickedGuest.id, covered);
       if (runId.current !== id) return;
@@ -155,6 +158,29 @@ export default function App() {
       if (runId.current !== id) return;
       setHostNote(e.isRateLimit ? HOST.rateLimit : null);
       setStatus("error");
+    }
+  }
+
+  async function handleFollowUp(criticId, question) {
+    const key = criticId;
+    const existing = followUps[key] || [];
+    if (existing.length >= 3) return;
+    const critiqueData = result[key === "guest" ? "guest" : key];
+    const idx = existing.length;
+    setFollowUps(prev => ({ ...prev, [key]: [...(prev[key] || []), { q: question, a: null, status: "loading" }] }));
+    try {
+      const data = await askFollowUp(criticId, guest.id, question, critiqueData);
+      setFollowUps(prev => {
+        const arr = [...(prev[key] || [])];
+        arr[idx] = { q: question, a: data.answer, status: "done" };
+        return { ...prev, [key]: arr };
+      });
+    } catch {
+      setFollowUps(prev => {
+        const arr = [...(prev[key] || [])];
+        arr[idx] = { q: question, a: null, status: "error" };
+        return { ...prev, [key]: arr };
+      });
     }
   }
 
@@ -320,7 +346,10 @@ export default function App() {
           crop={done ? result.crop : null}
         />
 
-        {/* Temper - hidden after grading */}
+        {/* Temper */}
+        {done && (
+          <p className="cb-temper-label">Judged on <strong>{temper}</strong> mode</p>
+        )}
         {!done && (
           <>
             <p className="cb-control-label" id="cb-temper">How harsh should the Judges be?</p>
@@ -406,7 +435,7 @@ export default function App() {
           <h2 className="cb-h2 cb-display">Judges</h2>
           <div className={`cb-panel-grid${revealStep >= 2 ? " is-list" : ""}`}>
             {[...CRITICS, judging || done ? guest : MYSTERY_GUEST].map((c, i) => (
-              <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} temper={temper} {...criticReveal(i)} />
+              <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} temper={temper} followUps={followUps[c.isGuest ? "guest" : c.id] || []} onFollowUp={(q) => handleFollowUp(c.isGuest ? "guest" : c.id, q)} photoUrl={photo?.url} crop={done ? result.crop : null} {...criticReveal(i)} />
             ))}
           </div>
         </section>
