@@ -242,7 +242,7 @@ export default function App() {
             : "How good are your photos?"}
         </p>
 
-        {status === "idle" && !bestScore && (
+        {status === "idle" && (
           <section className="cb-onboard">
             <div className="cb-onboard-steps">
               <div className="cb-onboard-step">
@@ -444,7 +444,7 @@ export default function App() {
               </button>
             ) : (
               <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openGallery("reshoot")}>
-                Try another and compare
+                Compare another
               </button>
             )}
             <button

@@ -75,7 +75,7 @@ export function pickFeaturedRoast(result, guest) {
   for (const id of ["kai", "harper", "curren"]) {
     const r = result[id];
     if (r?.roast) {
-      const name = id === "kai" ? "Kai" : id === "harper" ? "Harper" : "Curren";
+      const name = id === "kai" ? "Greyson" : id === "harper" ? "Harper" : "Curren";
       candidates.push({ roast: r.roast, criticName: name, focus: CRITIC_FOCUS[id], priority: 6 });
     }
   }

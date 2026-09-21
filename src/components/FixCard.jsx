@@ -1,4 +1,7 @@
 import { FUND_BY_ID } from "../data";
+import { detectPlatform } from "../api";
+
+const EDITOR_LABEL = detectPlatform() === "ios" ? "Apple Photos" : detectPlatform() === "android" ? "Google Photos" : "photo editor";
 
 export default function FixCard({ fix, isHabit }) {
   const f = FUND_BY_ID[fix.fundamental];
@@ -6,7 +9,7 @@ export default function FixCard({ fix, isHabit }) {
     <div className="cb-fix">
       {fix.postTip && (
         <div className="cb-post-tip">
-          <p className="cb-fix-kicker">Fix this photo now</p>
+          <p className="cb-fix-kicker">Fix in {EDITOR_LABEL}</p>
           <p className="cb-post-tip-body">{fix.postTip}</p>
         </div>
       )}

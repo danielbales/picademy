@@ -12,7 +12,7 @@ function getDeviceId() {
   return id;
 }
 
-function detectPlatform() {
+export function detectPlatform() {
   const ua = navigator.userAgent || "";
   if (/iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) return "ios";
   if (/Android/i.test(ua)) return "android";

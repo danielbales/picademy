@@ -3,8 +3,8 @@ import { LayoutGrid, Sun, Aperture, Palette } from "lucide-react";
 export const SKILLS = [
   { id: "composition", label: "Composition", teacher: "Harper", Icon: LayoutGrid, color: "#578BFA", tint: "rgba(87,139,250,.16)" },
   { id: "light", label: "Light", teacher: "Curren", Icon: Sun, color: "#F4B740", tint: "rgba(244,183,64,.16)" },
-  { id: "technical", label: "Focus and exposure", teacher: "Kai", Icon: Aperture, color: "#3CC8C8", tint: "rgba(60,200,200,.16)" },
-  { id: "editing", label: "Color and editing", teacher: "Kai", Icon: Palette, color: "#A78BFA", tint: "rgba(167,139,250,.16)" },
+  { id: "technical", label: "Focus and exposure", teacher: "Greyson", Icon: Aperture, color: "#3CC8C8", tint: "rgba(60,200,200,.16)" },
+  { id: "editing", label: "Color and editing", teacher: "Greyson", Icon: Palette, color: "#A78BFA", tint: "rgba(167,139,250,.16)" },
 ];
 export const SKILL_BY_ID = Object.fromEntries(SKILLS.map((s) => [s.id, s]));
 
@@ -33,9 +33,9 @@ export const CRITICS = [
   },
   {
     id: "kai",
-    name: "Kai",
+    name: "Greyson",
     role: "The octopus who catches every detail. Judge of focus and color.",
-    initials: "K",
+    initials: "G",
     color: "#7B68EE",
     tint: "rgba(123,104,238,.16)",
     skills: ["technical", "editing"],
@@ -125,8 +125,8 @@ export const HOST = {
     "Curren is squinting. That\u2019s either deep thought or the lighting.",
     "Mom just asked if she can frame this one. She asks every time.",
     "Harper is pacing. She does this when the composition is interesting.",
-    "Kai has three arms on the white balance and two on the focus ring.",
-    "Kai is changing color. That means the editing is either great or terrible.",
+    "Greyson has three arms on the white balance and two on the focus ring.",
+    "Greyson is changing color. That means the editing is either great or terrible.",
   ],
   byGrade: {
     Gold: "Now THAT\u2019s a photo! *squawk*",
@@ -147,7 +147,7 @@ export const FUNDAMENTALS = [
   { id: "bounce_light", name: "Bounce the light", critic: "curren", skill: "light" },
   { id: "avoid_mixed_light", name: "Watch mixed lighting", critic: "curren", skill: "light" },
   { id: "flash_off", name: "Turn off the flash", critic: "curren", skill: "light" },
-  // Kai — Technical
+  // Greyson — Technical
   { id: "tap_exposure", name: "Tap and slide exposure", critic: "kai", skill: "technical" },
   { id: "tap_focus", name: "Tap to focus", critic: "kai", skill: "technical" },
   { id: "hold_steady", name: "Hold it steady", critic: "kai", skill: "technical" },
@@ -171,7 +171,7 @@ export const FUNDAMENTALS = [
   { id: "frame_in_frame", name: "Frame within a frame", critic: "harper", skill: "composition" },
   { id: "foreground_interest", name: "Add foreground interest", critic: "harper", skill: "composition" },
   { id: "depth_layers", name: "Create depth layers", critic: "harper", skill: "composition" },
-  // Kai — Editing
+  // Greyson — Editing
   { id: "crop_it", name: "Crop with purpose", critic: "kai", skill: "editing" },
   { id: "natural_color", name: "Natural color", critic: "kai", skill: "editing" },
   { id: "light_touch_edits", name: "Light-touch edits", critic: "kai", skill: "editing" },
