@@ -76,16 +76,6 @@ export default function FixCard({ fix, isHabit, photoUrl, crop }) {
       {fix.why && <p className="cb-why">{fix.why}</p>}
       {fix.reference && <p className="cb-reference">{fix.reference}</p>}
       {fix.bonus && <p className="cb-bonus">{fix.bonus}</p>}
-      {f && (
-        <a
-          className="cb-learn-more"
-          href={`https://www.youtube.com/results?search_query=${encodeURIComponent(f.name + " phone photography")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn more about {f.name.toLowerCase()}
-        </a>
-      )}
     </div>
   );
 }
