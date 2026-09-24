@@ -65,7 +65,7 @@ export async function grade(photo, temper, previous, guestId, covered) {
   return res.json();
 }
 
-export async function askFollowUp(criticId, guestId, question, critique) {
+export async function askFollowUp(criticId, guestId, question, critique, photo) {
   const headers = {
     "Content-Type": "application/json",
     "x-device-id": getDeviceId(),
@@ -79,7 +79,7 @@ export async function askFollowUp(criticId, guestId, question, critique) {
   const res = await fetch(ASK_URL, {
     method: "POST",
     headers,
-    body: JSON.stringify({ criticId, guestId, question, critique }),
+    body: JSON.stringify({ criticId, guestId, question, critique, photo: photo ? { mediaType: photo.mediaType, base64: photo.base64 } : undefined }),
   });
   if (res.status === 429) {
     const err = new Error("rate-limit");

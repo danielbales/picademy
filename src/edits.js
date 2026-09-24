@@ -14,12 +14,12 @@ const EDIT_MAP = {
   saturation_restraint: { op: "saturation", amount: -30 },
 };
 
-// Every fundamental gets an auto-edit. Specific ones use their tailored op,
-// everything else gets a gentle enhance (shadow lift + contrast + slight warmth).
-const FALLBACK_EDIT = { op: "enhance" };
+// Only fundamentals with a real canvas operation get auto-edit.
+// Shooting lessons stay as shooting lessons.
+const AUTO_EDIT_IDS = new Set(["crop_it", "warmth_adjust", "try_bw", "recover_highlights", "lift_shadows"]);
 
-export function canAutoEdit() {
-  return true;
+export function canAutoEdit(fundamentalId) {
+  return AUTO_EDIT_IDS.has(fundamentalId);
 }
 
 export function getEditLabel(fundamentalId) {
@@ -31,13 +31,13 @@ export function getEditLabel(fundamentalId) {
     bw: "Convert to B&W",
     temperature: "Fix warmth",
     saturation: "Fix saturation",
-    enhance: "Auto-enhance",
   };
-  return labels[e.op] || "Auto-enhance";
+  return labels[e.op] || "Auto-edit";
 }
 
 export async function applyEdit(photoUrl, fundamentalId, crop) {
-  const edit = EDIT_MAP[fundamentalId] || FALLBACK_EDIT;
+  const edit = EDIT_MAP[fundamentalId];
+  if (!edit) return null;
 
   const img = await loadImg(photoUrl);
   const c = document.createElement("canvas");
@@ -94,21 +94,6 @@ export async function applyEdit(photoUrl, fundamentalId, crop) {
         if (hil && v > 128) v += (128 - v) * (-hil);
         d[i + ch] = clamp(v);
       }
-    }
-  } else if (edit.op === "enhance") {
-    // Gentle all-around enhancement: lift shadows, bump contrast, slight warmth
-    for (let i = 0; i < d.length; i += 4) {
-      for (let ch = 0; ch < 3; ch++) {
-        let v = d[i + ch];
-        // Lift shadows
-        if (v < 128) v += (128 - v) * 0.2;
-        // Gentle contrast
-        v = ((v / 255 - 0.5) * 1.1 + 0.5) * 255;
-        d[i + ch] = clamp(v);
-      }
-      // Slight warmth: nudge red up, blue down
-      d[i] = clamp(d[i] + 5);
-      d[i + 2] = clamp(d[i + 2] - 5);
     }
   }
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { fmt } from "../helpers";
+import { fmt, average } from "../helpers";
 import FixCard from "./FixCard";
 import FACES from "./faces";
 
@@ -41,7 +41,7 @@ export default function CriticCard({ critic, result, status, roastRevealed, fixR
   const r = result ? result[isGuest ? "guest" : critic.id] : null;
   const score = r
     ? isGuest
-      ? 10
+      ? Math.round(average(result.skills) * 10) / 10
       : critic.skills.length === 1
         ? result.skills[critic.skills[0]]
         : Math.round((critic.skills.reduce((sum, s) => sum + result.skills[s], 0) / critic.skills.length) * 10) / 10

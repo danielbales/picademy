@@ -37,11 +37,11 @@ export default function FixCard({ fix, isHabit, photoUrl, crop }) {
 
   return (
     <div className="cb-fix">
-      {fix.postTip && (
+      {showAutoEdit && fix.postTip && (
         <div className="cb-post-tip">
-          <p className="cb-fix-kicker">Fix in {EDITOR_LABEL}</p>
+          <p className="cb-fix-kicker">Fix this photo</p>
           <p className="cb-post-tip-body">{fix.postTip}</p>
-          {showAutoEdit && editState === "idle" && (
+          {editState === "idle" && (
             <button type="button" className="cb-auto-edit" onClick={handleAutoEdit}>
               {getEditLabel(fix.fundamental)}
             </button>
@@ -65,17 +65,12 @@ export default function FixCard({ fix, isHabit, photoUrl, crop }) {
       </div>
       {fix.steps.length > 0 && (
         <ol className="cb-steps">
-          {fix.steps.map((step, i) => (
-            <li key={i}>
-              <span className="cb-step-num" aria-hidden="true">{i + 1}</span>
-              <span>{step}</span>
-            </li>
-          ))}
+          <li>
+            <span className="cb-step-num" aria-hidden="true">1</span>
+            <span>{fix.steps[0]}</span>
+          </li>
         </ol>
       )}
-      {fix.why && <p className="cb-why">{fix.why}</p>}
-      {fix.reference && <p className="cb-reference">{fix.reference}</p>}
-      {fix.bonus && <p className="cb-bonus">{fix.bonus}</p>}
     </div>
   );
 }

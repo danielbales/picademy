@@ -14,6 +14,7 @@ import ScoreHero, { Change } from "./components/ScoreHero";
 import CriticCard from "./components/CriticCard";
 import FACES from "./components/faces";
 import ImagePicker from "./components/ImagePicker";
+import Fundamentals from "./components/Fundamentals";
 import "./App.css";
 
 const BUY_LINK = "https://buy.stripe.com/REPLACE_WITH_YOUR_LINK";
@@ -169,7 +170,7 @@ export default function App() {
     const idx = existing.length;
     setFollowUps(prev => ({ ...prev, [key]: [...(prev[key] || []), { q: question, a: null, status: "loading" }] }));
     try {
-      const data = await askFollowUp(criticId, guest.id, question, critiqueData);
+      const data = await askFollowUp(criticId, guest.id, question, critiqueData, photo);
       setFollowUps(prev => {
         const arr = [...(prev[key] || [])];
         arr[idx] = { q: question, a: data.answer, status: "done" };
@@ -268,46 +269,6 @@ export default function App() {
             : "How good are your photos?"}
         </p>
 
-        {status === "idle" && (
-          <section className="cb-onboard">
-            <div className="cb-onboard-steps">
-              <div className="cb-onboard-step">
-                <span className="cb-onboard-num">1</span>
-                <p>Upload any photo</p>
-              </div>
-              <div className="cb-onboard-step">
-                <span className="cb-onboard-num">2</span>
-                <p>Get roasted by our judges</p>
-              </div>
-              <div className="cb-onboard-step">
-                <span className="cb-onboard-num">3</span>
-                <p>Improve with personalized tips</p>
-              </div>
-            </div>
-            <div className="cb-onboard-judges">
-              <p className="cb-onboard-label">Meet the judges</p>
-              <div className="cb-onboard-faces">
-                {CRITICS.map((c) => {
-                  const Face = FACES[c.id];
-                  return (
-                    <div key={c.id} className="cb-onboard-judge">
-                      <span className="cb-avatar cb-avatar-face" style={{ background: c.tint }} aria-hidden="true">
-                        {Face && <Face mood="neutral" temper="honest" />}
-                      </span>
-                      <span className="cb-onboard-name">{c.name}</span>
-                      <span className="cb-onboard-focus">{c.focus}</span>
-                    </div>
-                  );
-                })}
-                <div className="cb-onboard-judge">
-                  <span className="cb-avatar cb-onboard-mystery" aria-hidden="true">?</span>
-                  <span className="cb-onboard-name">Surprise Judge</span>
-                  <span className="cb-onboard-focus">A new guest each time</span>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
 
         <ScoreHero
           status={status}
@@ -321,20 +282,17 @@ export default function App() {
           recent={recent}
         />
 
-        {/* Host - hidden on idle since onboarding covers it */}
-        {status !== "idle" && (
-          <div className="cb-host" aria-live="polite">
-            <span className="cb-avatar cb-avatar-host" aria-hidden="true">
-              <Host />
-            </span>
-            <div>
-              <p className="cb-host-name">
-                Lida<span>Host</span>
-              </p>
-              <p className="cb-host-line">{hostLine}</p>
-            </div>
+        <div className="cb-host" aria-live="polite">
+          <span className="cb-avatar cb-avatar-host" aria-hidden="true">
+            <Host />
+          </span>
+          <div>
+            <p className="cb-host-name">
+              Lida<span>Host</span>
+            </p>
+            <p className="cb-host-line">{hostLine}</p>
           </div>
-        )}
+        </div>
 
         <ImagePicker
           ref={pickerRef}
@@ -346,14 +304,10 @@ export default function App() {
           crop={done ? result.crop : null}
         />
 
-        {/* Temper */}
-        {done && (
-          <p className="cb-temper-label">Judged on <strong>{temper}</strong> mode</p>
-        )}
+        {/* Temper - small control, hidden once grade is in */}
         {!done && (
-          <>
-            <p className="cb-control-label" id="cb-temper">How harsh should your Judges be?</p>
-            <div className="cb-seg" role="group" aria-labelledby="cb-temper">
+          <div className="cb-temper-compact">
+            <div className="cb-seg cb-seg-sm" role="group" aria-label="Judge harshness">
               {TEMPERS.map((t) => (
                 <button
                   key={t.id}
@@ -369,7 +323,7 @@ export default function App() {
                 </button>
               ))}
             </div>
-          </>
+          </div>
         )}
 
         {/* Inline actions (pre-results) */}
@@ -430,7 +384,6 @@ export default function App() {
           </div>
         )}
 
-        {/* Panel — hidden on idle since onboarding already shows the judges */}
         {status !== "idle" && (
           <section className="cb-section" aria-live="polite">
             <h2 className="cb-h2 cb-display">Judges</h2>
@@ -461,6 +414,19 @@ export default function App() {
           </section>
         )}
 
+        {done && result.assignment && revealStep >= 10 && (
+          <section className="cb-section cb-fade-in">
+            <div className="cb-assignment">
+              <p className="cb-assignment-kicker">Your next shot</p>
+              <p className="cb-assignment-body">{result.assignment}</p>
+            </div>
+          </section>
+        )}
+
+        {done && revealStep >= 10 && (
+          <Fundamentals covered={covered} />
+        )}
+
       </div>
 
       {/* Sticky bottom bar for results */}
@@ -468,9 +434,12 @@ export default function App() {
 
       {done && (
         <div className="cb-sticky-bar">
-          <div className="cb-sticky-inner">
-            <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openGallery("new")}>
-              Try another photo
+          <div className="cb-sticky-inner cb-sticky-3col">
+            <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openCamera("reshoot")}>
+              Reshoot this
+            </button>
+            <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
+              New photo
             </button>
             <button
               type="button"

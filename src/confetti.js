@@ -1,9 +1,9 @@
 // Lightweight canvas confetti burst - no dependencies
 const COLORS = ["#E8C84A", "#F0D860", "#FFE566", "#D4A843", "#FF6B6B", "#4ECDC4", "#A78BFA", "#F472B6"];
-const COUNT = 80;
+const COUNT = 30;
 const GRAVITY = 0.003;
 const DRAG = 0.97;
-const DURATION = 2500;
+const DURATION = 1500;
 
 export function fireConfetti() {
   if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;

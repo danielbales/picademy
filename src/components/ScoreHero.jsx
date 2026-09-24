@@ -136,7 +136,7 @@ export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain
               <span className="cb-big-of">/ 10</span>
               <span className={`cb-grade cb-num grade-${grade.toLowerCase()}`} aria-label={`${grade} tier`}>
                 <span className="cb-grade-row">
-                  <TrophyIcon size={28} tier={grade.toLowerCase()} />
+                  <TrophyIcon size={18} tier={grade.toLowerCase()} />
                   {grade}
                 </span>
               </span>
