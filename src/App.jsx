@@ -435,7 +435,7 @@ export default function App() {
           <section className="cb-section" aria-live="polite">
             <h2 className="cb-h2 cb-display">Judges</h2>
             <div className={`cb-panel-grid${revealStep >= 2 ? " is-list" : ""}`}>
-              {[...CRITICS, judging || done ? guest : MYSTERY_GUEST].map((c, i) => (
+              {[judging || done ? guest : MYSTERY_GUEST, ...CRITICS].map((c, i) => (
                 <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} temper={temper} followUps={followUps[c.isGuest ? "guest" : c.id] || []} onFollowUp={(q) => handleFollowUp(c.isGuest ? "guest" : c.id, q)} photoUrl={photo?.url} crop={done ? result.crop : null} {...criticReveal(i)} />
               ))}
             </div>
