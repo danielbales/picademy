@@ -336,23 +336,13 @@ export default function App() {
           </div>
         )}
 
-        <ImagePicker
-          ref={pickerRef}
-          photo={photo}
-          previous={previous}
-          onFile={handleFile}
-          grade={gradeStr}
-          status={status}
-          crop={done ? result.crop : null}
-        />
-
         {/* Temper */}
         {done && (
           <p className="cb-temper-label">Judged on <strong>{temper}</strong> mode</p>
         )}
         {!done && (
           <>
-            <p className="cb-control-label" id="cb-temper">How harsh should the Judges be?</p>
+            <p className="cb-control-label" id="cb-temper">How harsh should your Judges be?</p>
             <div className="cb-seg" role="group" aria-labelledby="cb-temper">
               {TEMPERS.map((t) => (
                 <button
@@ -371,6 +361,16 @@ export default function App() {
             </div>
           </>
         )}
+
+        <ImagePicker
+          ref={pickerRef}
+          photo={photo}
+          previous={previous}
+          onFile={handleFile}
+          grade={gradeStr}
+          status={status}
+          crop={done ? result.crop : null}
+        />
 
         {/* Inline actions (pre-results) */}
         <div className="cb-actions">
