@@ -321,8 +321,8 @@ export default function App() {
           recent={recent}
         />
 
-        {/* Host - hidden until user has a photo */}
-        {(status !== "idle" || photo || bestScore) && (
+        {/* Host - hidden on idle since onboarding covers it */}
+        {status !== "idle" && (
           <div className="cb-host" aria-live="polite">
             <span className="cb-avatar cb-avatar-host" aria-hidden="true">
               <Host />
@@ -335,6 +335,16 @@ export default function App() {
             </div>
           </div>
         )}
+
+        <ImagePicker
+          ref={pickerRef}
+          photo={photo}
+          previous={previous}
+          onFile={handleFile}
+          grade={gradeStr}
+          status={status}
+          crop={done ? result.crop : null}
+        />
 
         {/* Temper */}
         {done && (
@@ -361,16 +371,6 @@ export default function App() {
             </div>
           </>
         )}
-
-        <ImagePicker
-          ref={pickerRef}
-          photo={photo}
-          previous={previous}
-          onFile={handleFile}
-          grade={gradeStr}
-          status={status}
-          crop={done ? result.crop : null}
-        />
 
         {/* Inline actions (pre-results) */}
         <div className="cb-actions">
