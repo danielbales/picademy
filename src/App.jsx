@@ -277,11 +277,11 @@ export default function App() {
               </div>
               <div className="cb-onboard-step">
                 <span className="cb-onboard-num">2</span>
-                <p>Get roasted by AI judges</p>
+                <p>Get roasted by our judges</p>
               </div>
               <div className="cb-onboard-step">
                 <span className="cb-onboard-num">3</span>
-                <p>Learn real tips to improve</p>
+                <p>Improve with personalized tips</p>
               </div>
             </div>
             <div className="cb-onboard-judges">
