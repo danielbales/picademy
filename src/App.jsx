@@ -20,7 +20,7 @@ const BUY_LINK = "https://buy.stripe.com/REPLACE_WITH_YOUR_LINK";
 
 const MYSTERY_GUEST = {
   id: "mystery",
-  name: "Random",
+  name: "Surprise Judge",
   initials: "?",
   color: "#6B7280",
   tint: "rgba(107,114,128,.16)",
@@ -301,8 +301,8 @@ export default function App() {
                 })}
                 <div className="cb-onboard-judge">
                   <span className="cb-avatar cb-onboard-mystery" aria-hidden="true">?</span>
-                  <span className="cb-onboard-name">Mystery</span>
-                  <span className="cb-onboard-focus">Surprise guest</span>
+                  <span className="cb-onboard-name">Surprise Judge</span>
+                  <span className="cb-onboard-focus">A new guest each time</span>
                 </div>
               </div>
             </div>
@@ -430,15 +430,17 @@ export default function App() {
           </div>
         )}
 
-        {/* Panel */}
-        <section className="cb-section" aria-live="polite">
-          <h2 className="cb-h2 cb-display">Judges</h2>
-          <div className={`cb-panel-grid${revealStep >= 2 ? " is-list" : ""}`}>
-            {[...CRITICS, judging || done ? guest : MYSTERY_GUEST].map((c, i) => (
-              <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} temper={temper} followUps={followUps[c.isGuest ? "guest" : c.id] || []} onFollowUp={(q) => handleFollowUp(c.isGuest ? "guest" : c.id, q)} photoUrl={photo?.url} crop={done ? result.crop : null} {...criticReveal(i)} />
-            ))}
-          </div>
-        </section>
+        {/* Panel — hidden on idle since onboarding already shows the judges */}
+        {status !== "idle" && (
+          <section className="cb-section" aria-live="polite">
+            <h2 className="cb-h2 cb-display">Judges</h2>
+            <div className={`cb-panel-grid${revealStep >= 2 ? " is-list" : ""}`}>
+              {[...CRITICS, judging || done ? guest : MYSTERY_GUEST].map((c, i) => (
+                <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} temper={temper} followUps={followUps[c.isGuest ? "guest" : c.id] || []} onFollowUp={(q) => handleFollowUp(c.isGuest ? "guest" : c.id, q)} photoUrl={photo?.url} crop={done ? result.crop : null} {...criticReveal(i)} />
+              ))}
+            </div>
+          </section>
+        )}
 
         {done && result.frameTip && revealStep >= 10 && (
           <section className="cb-section cb-fade-in">
