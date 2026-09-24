@@ -4,7 +4,7 @@ const STREAK_KEY = "picademy-streak";
 const DAILY_KEY = "picademy-daily";
 const CREDITS_KEY = "picademy-credits";
 const LIMIT_HITS_KEY = "picademy-limit-hits";
-const FREE_DAILY = 9999; // TODO: set back to 5 before launch
+const FREE_DAILY = 5;
 
 function today() {
   return new Date().toISOString().slice(0, 10);

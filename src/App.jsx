@@ -342,10 +342,11 @@ export default function App() {
             <>
               <div className="cb-paywall">
                 <p className="cb-paywall-title">You've used your 5 free critiques today</p>
-                <a href={BUY_LINK} className="cb-btn cb-btn-buy" target="_blank" rel="noopener noreferrer">
-                  Buy 20 critiques - $4.99
+                <p className="cb-paywall-sub">Want more? Unlimited critiques coming soon.</p>
+                <a href="https://forms.gle/REPLACE_WITH_YOUR_FORM" className="cb-btn cb-btn-buy" target="_blank" rel="noopener noreferrer">
+                  Notify me when it's available
                 </a>
-                <p className="cb-paywall-sub">Or come back tomorrow for 5 more free ones.</p>
+                <p className="cb-paywall-sub">Come back tomorrow for 5 more free ones.</p>
               </div>
               <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
                 Choose a different photo

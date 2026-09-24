@@ -1,4 +1,4 @@
-const CACHE = "aperture-v2";
+const CACHE = "aperture-v3";
 
 self.addEventListener("install", () => {
   self.skipWaiting();
