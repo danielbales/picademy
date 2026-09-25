@@ -20,7 +20,6 @@ function roundRect(ctx, x, y, w, h, r) {
 function wrapText(ctx, text, x, y, maxW, lineH) {
   const words = text.split(" ");
   let line = "";
-  let curY = y;
   const lines = [];
   for (const word of words) {
     const test = line + (line ? " " : "") + word;
@@ -32,11 +31,11 @@ function wrapText(ctx, text, x, y, maxW, lineH) {
     }
   }
   if (line) lines.push(line);
-  // Cap at 3 lines so the card never gets too tall with long roasts
   const shown = lines.slice(0, 3);
   if (lines.length > 3) {
-    shown[2] = shown[2].replace(/\s+\S*$/, "…");
+    shown[2] = shown[2].replace(/\s+\S*$/, "") + "\u2026";
   }
+  let curY = y;
   for (const l of shown) {
     ctx.fillText(l, x, curY);
     curY += lineH;
@@ -55,7 +54,6 @@ export function pickFeaturedRoast(result, guest) {
   const CRITIC_FOCUS = { curren: "Light", harper: "Composition", kai: "Focus & color" };
   const candidates = [];
 
-  // Guest judges (highest priority when they are the savage ones)
   if (result.guest?.roast && guest) {
     const id = guest.id;
     if (id === "reef") candidates.push({ roast: result.guest.roast, criticName: guest.name, focus: guest.focus, priority: 1 });
@@ -66,12 +64,10 @@ export function pickFeaturedRoast(result, guest) {
     }
   }
 
-  // Host one-liner (often punchy)
   if (result.host && typeof result.host === "string" && result.host.length > 12) {
     candidates.push({ roast: result.host, criticName: "Lida", focus: "Host", priority: 4 });
   }
 
-  // Fallback to core judges if needed (prefer the ones with actual roasts)
   for (const id of ["kai", "harper", "curren"]) {
     const r = result[id];
     if (r?.roast) {
@@ -87,10 +83,9 @@ export function pickFeaturedRoast(result, guest) {
   candidates.sort((a, b) => a.priority - b.priority);
   const best = candidates[0];
 
-  // Soft length cap for shareability (~110 chars)
   let roast = best.roast.trim();
   if (roast.length > 110) {
-    roast = roast.slice(0, 107).replace(/\s+\S*$/, "") + "…";
+    roast = roast.slice(0, 107).replace(/\s+\S*$/, "") + "\u2026";
   }
 
   return { roast, criticName: best.criticName, focus: best.focus || "" };
@@ -107,191 +102,208 @@ export async function generateShareCard({ photoUrl, score, grade, roast, criticN
   c.width = W;
   c.height = H;
   const ctx = c.getContext("2d");
-  const pad = 48;
+  const pad = 40;
 
   const accent =
     grade === "Gold" ? "#E8C84A" : grade === "Silver" ? "#C0C0C0" : grade === "Bronze" ? "#B87333" : "#6B7280";
 
-  // Background with soft radial glow
+  // --- Background ---
   ctx.fillStyle = "#0A0B0D";
   ctx.fillRect(0, 0, W, H);
-  const glow = ctx.createRadialGradient(W / 2, 740, 60, W / 2, 740, 480);
-  glow.addColorStop(0, hexA(accent, 0.1));
+
+  // Subtle radial glow behind the score area
+  const glow = ctx.createRadialGradient(W / 2, 700, 40, W / 2, 700, 500);
+  glow.addColorStop(0, hexA(accent, 0.08));
   glow.addColorStop(1, "transparent");
   ctx.fillStyle = glow;
-  ctx.fillRect(0, 300, W, 900);
+  ctx.fillRect(0, 200, W, 800);
 
-  // Photo with drop shadow
+  // --- Photo (large, with rounded corners and shadow) ---
   const img = await loadImage(photoUrl);
+  const photoX = pad;
+  const photoY = pad;
   const photoW = W - pad * 2;
-  const photoH = 620;
+  const photoH = 680;
+
+  // Shadow
   ctx.save();
-  ctx.shadowColor = "rgba(0,0,0,0.5)";
-  ctx.shadowBlur = 40;
-  ctx.shadowOffsetY = 8;
-  roundRect(ctx, pad, pad, photoW, photoH, 24);
+  ctx.shadowColor = "rgba(0,0,0,0.6)";
+  ctx.shadowBlur = 48;
+  ctx.shadowOffsetY = 12;
+  roundRect(ctx, photoX, photoY, photoW, photoH, 28);
   ctx.fillStyle = "#000";
   ctx.fill();
   ctx.restore();
 
+  // Photo fill
   ctx.save();
-  roundRect(ctx, pad, pad, photoW, photoH, 24);
+  roundRect(ctx, photoX, photoY, photoW, photoH, 28);
   ctx.clip();
   const scale = Math.max(photoW / img.width, photoH / img.height);
   const sw = photoW / scale;
   const sh = photoH / scale;
   const sx = (img.width - sw) / 2;
   const sy = (img.height - sh) / 2;
-  ctx.drawImage(img, sx, sy, sw, sh, pad, pad, photoW, photoH);
+  ctx.drawImage(img, sx, sy, sw, sh, photoX, photoY, photoW, photoH);
+
+  // Gradient overlay at bottom of photo for score readability
+  const photoGrad = ctx.createLinearGradient(0, photoY + photoH - 200, 0, photoY + photoH);
+  photoGrad.addColorStop(0, "rgba(10,11,13,0)");
+  photoGrad.addColorStop(1, "rgba(10,11,13,0.85)");
+  ctx.fillStyle = photoGrad;
+  ctx.fillRect(photoX, photoY + photoH - 200, photoW, 200);
   ctx.restore();
 
-  // Gradient accent line under photo
-  const lineGrad = ctx.createLinearGradient(pad + 60, 0, W - pad - 60, 0);
-  lineGrad.addColorStop(0, "transparent");
-  lineGrad.addColorStop(0.3, accent);
-  lineGrad.addColorStop(0.7, accent);
-  lineGrad.addColorStop(1, "transparent");
-  ctx.fillStyle = lineGrad;
-  ctx.fillRect(pad, pad + photoH + 16, photoW, 3);
+  // Thin accent border on photo
+  ctx.save();
+  roundRect(ctx, photoX, photoY, photoW, photoH, 28);
+  ctx.strokeStyle = hexA(accent, 0.25);
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.restore();
 
-  // Score (left) + Grade pill (right)
-  const scoreY = pad + photoH + 100;
+  // --- Score overlaid at bottom of photo ---
+  const scoreBaseY = photoY + photoH - 28;
   ctx.textBaseline = "alphabetic";
   ctx.textAlign = "left";
 
-  // Context label so viewers understand the card
-  ctx.font = "600 20px Inter, system-ui, sans-serif";
-  ctx.fillStyle = "#6B7280";
-  ctx.fillText("JUDGES' REVIEW", pad + 12, scoreY - 32);
-
-  ctx.font = "600 88px Inter, system-ui, -apple-system, sans-serif";
-  ctx.fillStyle = "#F5F5F7";
+  // Big score
+  ctx.font = "700 96px Inter, system-ui, sans-serif";
+  ctx.fillStyle = "#FFFFFF";
   const scoreStr = score.toFixed(1);
   const sm = ctx.measureText(scoreStr);
-  ctx.fillText(scoreStr, pad + 12, scoreY);
+  ctx.fillText(scoreStr, photoX + 28, scoreBaseY);
 
-  ctx.font = "400 34px Inter, system-ui, -apple-system, sans-serif";
-  ctx.fillStyle = "#6B7280";
-  ctx.fillText("/ 10", pad + 12 + sm.width + 10, scoreY);
+  // /10
+  ctx.font = "400 36px Inter, system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.5)";
+  ctx.fillText("/ 10", photoX + 28 + sm.width + 8, scoreBaseY);
 
-  // Grade pill with glow
-  ctx.font = "700 36px Inter, system-ui, -apple-system, sans-serif";
+  // Grade pill (right side, overlaid on photo)
+  ctx.font = "700 32px Inter, system-ui, sans-serif";
   const gm = ctx.measureText(grade);
-  const pillPad = 20;
+  const pillPad = 18;
   const pillW = gm.width + pillPad * 2;
-  const pillH = 52;
-  const pillX = W - pad - 12 - pillW;
-  const pillY = scoreY - 42;
+  const pillH = 48;
+  const pillX = photoX + photoW - 28 - pillW;
+  const pillY = scoreBaseY - 38;
 
   ctx.save();
-  ctx.shadowColor = hexA(accent, 0.2);
-  ctx.shadowBlur = 24;
-  roundRect(ctx, pillX, pillY, pillW, pillH, 14);
-  ctx.fillStyle = hexA(accent, 0.12);
+  roundRect(ctx, pillX, pillY, pillW, pillH, 12);
+  ctx.fillStyle = hexA(accent, 0.18);
   ctx.fill();
-  ctx.shadowBlur = 0;
-  ctx.strokeStyle = hexA(accent, 0.3);
+  ctx.strokeStyle = hexA(accent, 0.4);
   ctx.lineWidth = 1.5;
   ctx.stroke();
   ctx.restore();
 
-  ctx.textAlign = "left";
-  ctx.font = "700 36px Inter, system-ui, -apple-system, sans-serif";
+  ctx.font = "700 32px Inter, system-ui, sans-serif";
   ctx.fillStyle = accent;
-  ctx.fillText(grade, pillX + pillPad, scoreY - 6);
+  ctx.textAlign = "left";
+  ctx.fillText(grade, pillX + pillPad, scoreBaseY - 6);
 
-  // Skill bars (2x2 grid)
+  // --- Skill bars (horizontal row under photo) ---
   if (skills) {
-    const barTop = scoreY + 48;
+    const barTop = photoY + photoH + 36;
     const skillInfo = [
-      { key: "composition", label: "Composition", color: "#578BFA" },
       { key: "light", label: "Light", color: "#F4B740" },
+      { key: "composition", label: "Comp", color: "#578BFA" },
       { key: "technical", label: "Focus", color: "#3CC8C8" },
-      { key: "editing", label: "Editing", color: "#A78BFA" },
+      { key: "editing", label: "Edit", color: "#A78BFA" },
     ];
-    const colW = (W - pad * 2 - 48) / 2;
-    const rowGap = 48;
+    const gap = 16;
+    const barW = (W - pad * 2 - gap * 3) / 4;
 
     for (let i = 0; i < 4; i++) {
       const { key, label, color } = skillInfo[i];
-      const col = i % 2;
-      const row = Math.floor(i / 2);
-      const bx = pad + 12 + col * (colW + 48);
-      const by = barTop + row * rowGap;
+      const bx = pad + i * (barW + gap);
 
-      ctx.textAlign = "left";
-      ctx.font = "500 18px Inter, system-ui, sans-serif";
-      ctx.fillStyle = "#8A919E";
-      ctx.fillText(label, bx, by);
+      // Score number
+      ctx.textAlign = "center";
+      ctx.font = "700 28px Inter, system-ui, sans-serif";
+      ctx.fillStyle = color;
+      ctx.fillText(skills[key].toFixed(1), bx + barW / 2, barTop);
 
-      ctx.textAlign = "right";
-      ctx.font = "600 18px Inter, system-ui, sans-serif";
-      ctx.fillStyle = "#D4D8DE";
-      ctx.fillText(skills[key].toFixed(1), bx + colW, by);
+      // Label
+      ctx.font = "500 16px Inter, system-ui, sans-serif";
+      ctx.fillStyle = "#6B7280";
+      ctx.fillText(label, bx + barW / 2, barTop + 22);
 
-      const barY = by + 10;
-      const barH = 8;
-      roundRect(ctx, bx, barY, colW, barH, 4);
+      // Bar track
+      const trackY = barTop + 32;
+      const trackH = 6;
+      roundRect(ctx, bx, trackY, barW, trackH, 3);
       ctx.fillStyle = "#1E2025";
       ctx.fill();
 
-      const fillW = Math.max(6, (skills[key] / 10) * colW);
+      // Bar fill
+      const fillW = Math.max(4, (skills[key] / 10) * barW);
       ctx.save();
-      ctx.shadowColor = hexA(color, 0.3);
-      ctx.shadowBlur = 8;
-      roundRect(ctx, bx, barY, fillW, barH, 4);
+      ctx.shadowColor = hexA(color, 0.4);
+      ctx.shadowBlur = 10;
+      roundRect(ctx, bx, trackY, fillW, trackH, 3);
       ctx.fillStyle = color;
       ctx.fill();
       ctx.restore();
     }
   }
 
-  // Faded divider
-  const divY = scoreY + 168;
-  const divGrad = ctx.createLinearGradient(pad, 0, W - pad, 0);
-  divGrad.addColorStop(0, "transparent");
-  divGrad.addColorStop(0.15, "#2A2D33");
-  divGrad.addColorStop(0.85, "#2A2D33");
-  divGrad.addColorStop(1, "transparent");
-  ctx.fillStyle = divGrad;
-  ctx.fillRect(pad, divY, W - pad * 2, 1);
+  // --- Roast section ---
+  const roastTop = photoY + photoH + 120;
 
-  // Roast with decorative quote mark
-  const roastY = divY + 48;
+  // Decorative accent line
+  const lineGrad = ctx.createLinearGradient(pad, 0, W - pad, 0);
+  lineGrad.addColorStop(0, "transparent");
+  lineGrad.addColorStop(0.15, hexA(accent, 0.3));
+  lineGrad.addColorStop(0.85, hexA(accent, 0.3));
+  lineGrad.addColorStop(1, "transparent");
+  ctx.fillStyle = lineGrad;
+  ctx.fillRect(pad, roastTop - 16, W - pad * 2, 1.5);
+
+  // Big decorative quote mark
   ctx.textAlign = "left";
-  ctx.font = "700 72px Georgia, 'Times New Roman', serif";
-  ctx.fillStyle = hexA(accent, 0.2);
-  ctx.fillText("\u201C", pad - 4, roastY + 10);
+  ctx.font = "700 80px Georgia, 'Times New Roman', serif";
+  ctx.fillStyle = hexA(accent, 0.15);
+  ctx.fillText("\u201C", pad - 6, roastTop + 40);
 
-  ctx.font = "italic 32px Inter, system-ui, -apple-system, sans-serif";
+  // Roast text
+  ctx.font = "italic 30px Inter, system-ui, sans-serif";
   ctx.fillStyle = "#D4D8DE";
-  const lines = wrapText(ctx, roast, pad + 12, roastY, W - pad * 2 - 24, 48);
+  const lines = wrapText(ctx, roast, pad + 16, roastTop + 32, W - pad * 2 - 32, 44);
 
-  // Attribution with focus
-  const attrY = roastY + lines * 48 + 24;
-  ctx.font = "600 26px Inter, system-ui, -apple-system, sans-serif";
+  // Attribution
+  const attrY = roastTop + 32 + lines * 44 + 20;
+  ctx.font = "600 24px Inter, system-ui, sans-serif";
   ctx.fillStyle = accent;
   const nameStr = `\u2014 ${criticName}`;
-  ctx.fillText(nameStr, pad + 12, attrY);
+  ctx.fillText(nameStr, pad + 16, attrY);
   if (focus) {
     const nameW = ctx.measureText(nameStr).width;
-    ctx.font = "500 22px Inter, system-ui, -apple-system, sans-serif";
+    ctx.font = "500 20px Inter, system-ui, sans-serif";
     ctx.fillStyle = "#6B7280";
-    ctx.fillText(`\u00B7  ${focus}`, pad + 12 + nameW + 14, attrY);
+    ctx.fillText(`\u00B7  ${focus}`, pad + 16 + nameW + 12, attrY);
   }
 
-  // Footer
+  // --- Footer ---
+  const footerY = H - pad - 16;
+
+  // Accent line
+  const footLine = ctx.createLinearGradient(W / 2 - 60, 0, W / 2 + 60, 0);
+  footLine.addColorStop(0, "transparent");
+  footLine.addColorStop(0.3, hexA(accent, 0.4));
+  footLine.addColorStop(0.7, hexA(accent, 0.4));
+  footLine.addColorStop(1, "transparent");
+  ctx.fillStyle = footLine;
+  ctx.fillRect(W / 2 - 60, footerY - 48, 120, 1.5);
+
   ctx.textAlign = "center";
-  ctx.fillStyle = hexA(accent, 0.3);
-  ctx.fillRect(W / 2 - 50, H - pad - 72, 100, 2);
+  ctx.font = "700 36px 'Inter Tight', Inter, system-ui, sans-serif";
+  ctx.fillStyle = hexA(accent, 0.85);
+  ctx.fillText("APERTURE", W / 2, footerY - 12);
 
-  ctx.font = "700 40px 'Inter Tight', Inter, system-ui, -apple-system, sans-serif";
-  ctx.fillStyle = hexA(accent, 0.9);
-  ctx.fillText("APERTURE", W / 2, H - pad - 24);
-
-  ctx.font = "400 20px Inter, system-ui, -apple-system, sans-serif";
-  ctx.fillStyle = "#6B7280";
-  ctx.fillText("aperture.app", W / 2, H - pad + 8);
+  ctx.font = "400 18px Inter, system-ui, sans-serif";
+  ctx.fillStyle = "#4A4D54";
+  ctx.fillText("How good are your photos?", W / 2, footerY + 14);
 
   return new Promise((resolve) => c.toBlob(resolve, "image/jpeg", 0.92));
 }
@@ -312,7 +324,6 @@ export async function shareResult(opts) {
     }
   }
 
-  // Fallback: download
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;

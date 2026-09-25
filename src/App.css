@@ -173,9 +173,9 @@ body { margin: 0; background: #0A0B0D; }
 .cb-host-line { margin: 2px 0 0; }
 
 /* Controls */
-.cb-temper-compact { margin: 8px auto 0; display: flex; justify-content: center; }
-.cb-seg.cb-seg-sm { max-width: 280px; }
-.cb-seg.cb-seg-sm button { font-size: 13px; padding: 7px 0; }
+.cb-temper-compact { margin: 8px 0 0; display: flex; justify-content: center; }
+.cb-seg.cb-seg-sm { max-width: 360px; width: 100%; }
+.cb-seg.cb-seg-sm button { font-size: 14px; padding: 8px 0; }
 .cb-seg { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--surface); border-radius: 999px; padding: 4px; }
 .cb-seg button { font: inherit; font-weight: 600; font-size: 15px; border: 0; background: transparent; color: #B0B7C3; padding: 10px 0; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .cb-seg button[aria-pressed="true"] { background: var(--surface-2); color: var(--text); box-shadow: inset 0 0 0 1.5px rgba(232,200,74,.5); }
