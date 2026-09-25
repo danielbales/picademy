@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Flame, Share2 } from "lucide-react";
 import { CRITICS, GUESTS, TEMPERS, HOST } from "./data";
-import { grade, askFollowUp } from "./api";
+import { grade, askFollowUp, joinWaitlist } from "./api";
 import { prepareImage } from "./image";
 import { toGrade, average } from "./helpers";
 import { fireConfetti } from "./confetti";
@@ -17,7 +17,6 @@ import ImagePicker from "./components/ImagePicker";
 import Fundamentals from "./components/Fundamentals";
 import "./App.css";
 
-const BUY_LINK = "https://buy.stripe.com/REPLACE_WITH_YOUR_LINK";
 
 const MYSTERY_GUEST = {
   id: "mystery",
@@ -50,6 +49,8 @@ export default function App() {
   const [remaining, setRemaining] = useState(() => getRemaining());
   const [shareState, setShareState] = useState("idle"); // idle | sharing | shared | downloaded
   const [followUps, setFollowUps] = useState({});
+  const [waitlist, setWaitlist] = useState("idle"); // idle | sending | done | error
+  const [waitlistEmail, setWaitlistEmail] = useState("");
   const pickerRef = useRef(null);
   const runId = useRef(0);
 
@@ -342,10 +343,38 @@ export default function App() {
             <>
               <div className="cb-paywall">
                 <p className="cb-paywall-title">You've used your 5 free critiques today</p>
-                <p className="cb-paywall-sub">Want more? Unlimited critiques coming soon.</p>
-                <a href="https://forms.gle/REPLACE_WITH_YOUR_FORM" className="cb-btn cb-btn-buy" target="_blank" rel="noopener noreferrer">
-                  Notify me when it's available
-                </a>
+                {waitlist === "done" ? (
+                  <p className="cb-paywall-thanks">You're on the list. We'll let you know when unlimited critiques are available.</p>
+                ) : (
+                  <>
+                    <p className="cb-paywall-sub">Want more? Drop your email and we'll notify you when unlimited critiques launch.</p>
+                    <form className="cb-waitlist-form" onSubmit={async (e) => {
+                      e.preventDefault();
+                      if (!waitlistEmail.trim() || waitlist === "sending") return;
+                      setWaitlist("sending");
+                      try {
+                        await joinWaitlist(waitlistEmail.trim());
+                        setWaitlist("done");
+                      } catch {
+                        setWaitlist("error");
+                      }
+                    }}>
+                      <input
+                        type="email"
+                        className="cb-waitlist-input"
+                        placeholder="you@email.com"
+                        value={waitlistEmail}
+                        onChange={(e) => setWaitlistEmail(e.target.value)}
+                        disabled={waitlist === "sending"}
+                        required
+                      />
+                      <button type="submit" className="cb-btn cb-btn-buy" disabled={waitlist === "sending"}>
+                        {waitlist === "sending" ? "Sending..." : "Notify me"}
+                      </button>
+                    </form>
+                    {waitlist === "error" && <p className="cb-paywall-error">Something went wrong. Try again.</p>}
+                  </>
+                )}
                 <p className="cb-paywall-sub">Come back tomorrow for 5 more free ones.</p>
               </div>
               <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>

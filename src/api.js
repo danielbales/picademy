@@ -2,6 +2,7 @@ import { getTurnstileToken } from "./turnstile";
 
 const API_URL = "https://crit-api.dbales1210.workers.dev/grade";
 const ASK_URL = "https://crit-api.dbales1210.workers.dev/ask";
+const WAITLIST_URL = "https://crit-api.dbales1210.workers.dev/waitlist";
 
 function getDeviceId() {
   const key = "picademy-device-id";
@@ -87,5 +88,15 @@ export async function askFollowUp(criticId, guestId, question, critique, photo) 
     throw err;
   }
   if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
+  return res.json();
+}
+
+export async function joinWaitlist(email) {
+  const res = await fetch(WAITLIST_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  if (!res.ok) throw new Error("Failed");
   return res.json();
 }

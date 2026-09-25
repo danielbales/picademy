@@ -168,7 +168,13 @@ body { margin: 0; background: #0A0B0D; }
 .cb-paywall { text-align: center; padding: 24px 20px; background: var(--surface); border-radius: 20px; }
 .cb-paywall-title { font-weight: 600; font-size: 17px; margin: 0 0 16px; }
 .cb-paywall-sub { font-size: 14px; color: var(--text-2); margin: 14px 0 0; }
-.cb-btn-buy { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.cb-btn-buy { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; white-space: nowrap; }
+.cb-waitlist-form { display: flex; gap: 8px; margin-top: 16px; }
+.cb-waitlist-input { flex: 1; padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); color: var(--text-1); font-size: 15px; outline: none; }
+.cb-waitlist-input:focus { border-color: var(--accent); }
+.cb-waitlist-input::placeholder { color: var(--text-2); }
+.cb-paywall-thanks { font-size: 15px; color: var(--accent); margin: 0 0 8px; }
+.cb-paywall-error { font-size: 13px; color: #E74C3C; margin: 8px 0 0; }
 
 /* Assignment card */
 .cb-assignment { background: var(--surface); border: 1px solid rgba(212,168,67,.25); border-radius: 20px; padding: 16px; }
