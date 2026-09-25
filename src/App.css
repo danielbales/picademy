@@ -33,7 +33,7 @@ body { margin: 0; background: #0A0B0D; }
 .cb button:focus-visible { outline: 2px solid var(--blue-text); outline-offset: 2px; }
 
 /* App bar */
-.cb-bar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; height: 64px; background: var(--bg); }
+.cb-bar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; min-height: 64px; padding-top: env(safe-area-inset-top, 0px); background: var(--bg); }
 .cb-bar-right { display: flex; align-items: center; gap: 10px; }
 .cb-remaining-pill { font-size: 12px; color: var(--text-2); background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 999px; letter-spacing: 0.02em; }
 .cb-brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 20px; letter-spacing: -0.01em; margin: 0; }
@@ -53,10 +53,18 @@ body { margin: 0; background: #0A0B0D; }
 .cb-onboard-judge .cb-avatar { width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; }
 .cb-onboard-judge .cb-avatar-face svg { width: 48px; height: 48px; display: block; flex: none; }
 .cb-onboard-mystery { background: rgba(107,114,128,.16); font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.3); }
-.cb-onboard-preview { margin-top: 20px; padding: 16px; background: var(--surface); border-radius: 16px; text-align: center; }
-.cb-onboard-preview-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-2); margin: 0 0 8px; }
-.cb-onboard-preview-quote { font-size: 15px; font-style: italic; color: var(--text-1); margin: 0 0 8px; line-height: 1.5; }
-.cb-onboard-preview-from { font-size: 13px; color: var(--accent); margin: 0; font-weight: 600; }
+.cb-onboard-preview { margin-top: 20px; }
+.cb-onboard-card { background: var(--surface); border-radius: 20px; padding: 16px; text-align: left; }
+.cb-onboard-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.cb-onboard-card-head .cb-avatar-sm { width: 36px; height: 36px; flex: none; }
+.cb-onboard-card-head .cb-avatar-sm svg { width: 36px; height: 36px; }
+.cb-onboard-card-name { font-weight: 600; font-size: 14px; margin: 0; line-height: 1.2; }
+.cb-onboard-card-focus { font-size: 12px; color: var(--text-2); margin: 0; }
+.cb-onboard-card-score { margin-left: auto; font-weight: 600; font-size: 20px; color: var(--red); font-variant-numeric: tabular-nums; }
+.cb-onboard-card-roast { margin: 0 0 12px; font-size: 15px; color: var(--body); line-height: 1.5; font-style: italic; }
+.cb-onboard-card-fix { background: var(--surface-2); border-radius: 12px; padding: 10px 12px; }
+.cb-onboard-card-kicker { font-size: 12px; color: var(--text-2); font-weight: 500; margin: 0; }
+.cb-onboard-card-tip { font-size: 14px; font-weight: 600; margin: 2px 0 0; }
 .cb-onboard-name { font-size: 14px; font-weight: 600; color: var(--text-1); }
 .cb-onboard-focus { font-size: 12px; color: var(--text-2); }
 .cb-streak { margin-left: auto; display: flex; align-items: center; gap: 4px; font-weight: 700; font-size: 16px; color: #F97316; }
@@ -165,7 +173,7 @@ body { margin: 0; background: #0A0B0D; }
 .cb-host-line { margin: 2px 0 0; }
 
 /* Controls */
-.cb-temper-compact { margin: 8px 0 0; }
+.cb-temper-compact { margin: 8px auto 0; display: flex; justify-content: center; }
 .cb-seg.cb-seg-sm { max-width: 280px; }
 .cb-seg.cb-seg-sm button { font-size: 13px; padding: 7px 0; }
 .cb-seg { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--surface); border-radius: 999px; padding: 4px; }

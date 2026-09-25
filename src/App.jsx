@@ -303,9 +303,23 @@ export default function App() {
         {status === "idle" && (
           <section className="cb-onboard">
             <div className="cb-onboard-preview">
-              <p className="cb-onboard-preview-label">Example roast</p>
-              <p className="cb-onboard-preview-quote">"That horizon line is drunk. Even my tail is straighter and I chase it in circles."</p>
-              <p className="cb-onboard-preview-from">- Curren, 7.2/10</p>
+              <div className="cb-onboard-card">
+                <div className="cb-onboard-card-head">
+                  <span className="cb-avatar cb-avatar-face cb-avatar-sm" style={{ background: "rgba(245,166,35,.18)" }} aria-hidden="true">
+                    {FACES.curren && <FACES.curren mood="grumpy" temper="brutal" />}
+                  </span>
+                  <div>
+                    <p className="cb-onboard-card-name">Curren</p>
+                    <p className="cb-onboard-card-focus">Light</p>
+                  </div>
+                  <span className="cb-onboard-card-score">4.2</span>
+                </div>
+                <p className="cb-onboard-card-roast">"The light is flatter than my mood. A flashlight taped to a roomba would create more dimension."</p>
+                <div className="cb-onboard-card-fix">
+                  <p className="cb-onboard-card-kicker">Next time</p>
+                  <p className="cb-onboard-card-tip">Golden hour side lighting</p>
+                </div>
+              </div>
             </div>
           </section>
         )}
