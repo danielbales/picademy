@@ -271,6 +271,47 @@ export default function App() {
         </p>
 
 
+        {status === "idle" && (
+          <section className="cb-onboard">
+            <div className="cb-onboard-steps">
+              <div className="cb-onboard-step">
+                <span className="cb-onboard-num">1</span>
+                <p>Upload any photo</p>
+              </div>
+              <div className="cb-onboard-step">
+                <span className="cb-onboard-num">2</span>
+                <p>Get roasted by our judges</p>
+              </div>
+              <div className="cb-onboard-step">
+                <span className="cb-onboard-num">3</span>
+                <p>Improve with personalized tips</p>
+              </div>
+            </div>
+            <div className="cb-onboard-judges">
+              <p className="cb-onboard-label">Meet the judges</p>
+              <div className="cb-onboard-faces">
+                {CRITICS.map((c) => {
+                  const Face = FACES[c.id];
+                  return (
+                    <div key={c.id} className="cb-onboard-judge">
+                      <span className="cb-avatar cb-avatar-face" style={{ background: c.tint }} aria-hidden="true">
+                        {Face && <Face mood="neutral" temper="honest" />}
+                      </span>
+                      <span className="cb-onboard-name">{c.name}</span>
+                      <span className="cb-onboard-focus">{c.focus}</span>
+                    </div>
+                  );
+                })}
+                <div className="cb-onboard-judge">
+                  <span className="cb-avatar cb-onboard-mystery" aria-hidden="true">?</span>
+                  <span className="cb-onboard-name">Surprise Judge</span>
+                  <span className="cb-onboard-focus">A new guest each time</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
         <ScoreHero
           status={status}
           avg={avg}
@@ -283,6 +324,7 @@ export default function App() {
           recent={recent}
         />
 
+        {status !== "idle" && (
         <div className="cb-host" aria-live="polite">
           <span className="cb-avatar cb-avatar-host" aria-hidden="true">
             <Host />
@@ -294,6 +336,7 @@ export default function App() {
             <p className="cb-host-line">{hostLine}</p>
           </div>
         </div>
+        )}
 
         <ImagePicker
           ref={pickerRef}
