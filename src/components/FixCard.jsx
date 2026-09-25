@@ -70,6 +70,9 @@ export default function FixCard({ fix, isHabit, photoUrl, crop }) {
           ))}
         </ol>
       )}
+      {fix.why && <p className="cb-why">{fix.why}</p>}
+      {fix.reference && <p className="cb-reference">{fix.reference}</p>}
+      {fix.bonus && <p className="cb-bonus">{fix.bonus}</p>}
     </div>
   );
 }

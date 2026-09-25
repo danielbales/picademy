@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { fmt, average } from "../helpers";
+import { FUND_BY_ID } from "../data";
 import FixCard from "./FixCard";
 import FACES from "./faces";
 
@@ -35,7 +36,8 @@ function FollowUpInput({ criticName, onSubmit, disabled }) {
   );
 }
 
-export default function CriticCard({ critic, result, status, roastRevealed, fixRevealed, temper, followUps = [], onFollowUp, photoUrl, crop }) {
+export default function CriticCard({ critic, result, status, roastRevealed, fixRevealed, temper, followUps = [], onFollowUp, photoUrl, crop, collapsed = false }) {
+  const [expanded, setExpanded] = useState(false);
   const judging = status === "judging";
   const isGuest = !!critic.isGuest;
   const r = result ? result[isGuest ? "guest" : critic.id] : null;
@@ -48,6 +50,24 @@ export default function CriticCard({ critic, result, status, roastRevealed, fixR
     : null;
   const Face = FACES[critic.id];
   const mood = roastRevealed ? scoreMood(score) : "neutral";
+  const fundName = r && r.fundamental ? FUND_BY_ID[r.fundamental]?.name : null;
+
+  // Collapsed mode: one-line summary, tap to expand
+  const isCollapsed = collapsed && !expanded && roastRevealed && r;
+  if (isCollapsed) {
+    return (
+      <article className="cb-critic cb-critic-collapsed cb-fade-in" onClick={() => setExpanded(true)}>
+        <span className="cb-avatar cb-avatar-face cb-avatar-sm" style={{ background: critic.tint }} aria-hidden="true">
+          {Face ? <Face mood={mood} temper={temper} /> : critic.initials}
+        </span>
+        <div className="cb-collapsed-main">
+          <span className="cb-collapsed-name">{critic.name}:</span>
+          <span className="cb-collapsed-tip">{fundName || r.roast}</span>
+        </div>
+        <span className="cb-collapsed-score cb-num">{fmt(score)}</span>
+      </article>
+    );
+  }
 
   return (
     <article className="cb-critic">

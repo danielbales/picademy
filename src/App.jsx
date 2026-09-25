@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Flame, Share2 } from "lucide-react";
-import { CRITICS, GUESTS, TEMPERS, HOST } from "./data";
+import { CRITICS, GUESTS, TEMPERS, HOST, FUND_BY_ID } from "./data";
 import { grade, askFollowUp, joinWaitlist } from "./api";
 import { prepareImage } from "./image";
 import { toGrade, average } from "./helpers";
@@ -199,6 +199,25 @@ export default function App() {
     fixRevealed: revealStep >= criticIdx * 2 + 3,
   });
 
+  // Determine lead judge: the one teaching the weakest skill
+  const leadCriticId = done ? (() => {
+    const scores = result.skills;
+    const skillToCritic = { light: "curren", composition: "harper", technical: "kai", editing: "kai" };
+    let weakest = null;
+    let weakScore = 11;
+    for (const [skill, score] of Object.entries(scores)) {
+      if (score < weakScore) { weakScore = score; weakest = skillToCritic[skill]; }
+    }
+    return weakest;
+  })() : null;
+
+  // Lead fundamental name for the sticky button
+  const leadFundamental = done && leadCriticId ? (() => {
+    const r = result[leadCriticId];
+    if (!r || !r.fundamental) return null;
+    return FUND_BY_ID[r.fundamental]?.name || null;
+  })() : null;
+
   async function handleShare() {
     if (!result || !photo || shareState === "sharing") return;
     setShareState("sharing");
@@ -283,42 +302,6 @@ export default function App() {
 
         {status === "idle" && (
           <section className="cb-onboard">
-            <div className="cb-onboard-steps">
-              <div className="cb-onboard-step">
-                <span className="cb-onboard-num">1</span>
-                <p>Upload any photo</p>
-              </div>
-              <div className="cb-onboard-step">
-                <span className="cb-onboard-num">2</span>
-                <p>Get roasted by our judges</p>
-              </div>
-              <div className="cb-onboard-step">
-                <span className="cb-onboard-num">3</span>
-                <p>Improve with personalized tips</p>
-              </div>
-            </div>
-            <div className="cb-onboard-judges">
-              <p className="cb-onboard-label">Meet the judges</p>
-              <div className="cb-onboard-faces">
-                {CRITICS.map((c) => {
-                  const Face = FACES[c.id];
-                  return (
-                    <div key={c.id} className="cb-onboard-judge">
-                      <span className="cb-avatar cb-avatar-face" style={{ background: c.tint }} aria-hidden="true">
-                        {Face && <Face mood="neutral" temper="honest" />}
-                      </span>
-                      <span className="cb-onboard-name">{c.name}</span>
-                      <span className="cb-onboard-focus">{c.focus}</span>
-                    </div>
-                  );
-                })}
-                <div className="cb-onboard-judge">
-                  <span className="cb-avatar cb-onboard-mystery" aria-hidden="true">?</span>
-                  <span className="cb-onboard-name">Surprise Judge</span>
-                  <span className="cb-onboard-focus">A new guest each time</span>
-                </div>
-              </div>
-            </div>
             <div className="cb-onboard-preview">
               <p className="cb-onboard-preview-label">Example roast</p>
               <p className="cb-onboard-preview-quote">"That horizon line is drunk. Even my tail is straighter and I chase it in circles."</p>
@@ -327,17 +310,19 @@ export default function App() {
           </section>
         )}
 
-        <ScoreHero
-          status={status}
-          avg={avg}
-          grade={gradeStr}
-          previous={previous}
-          prevAvg={prevAvg}
-          chain={chain}
-          revealKey={revealKey}
-          bestScore={bestScore}
-          recent={recent}
-        />
+        {!done && (
+          <ScoreHero
+            status={status}
+            avg={avg}
+            grade={gradeStr}
+            previous={previous}
+            prevAvg={prevAvg}
+            chain={chain}
+            revealKey={revealKey}
+            bestScore={bestScore}
+            recent={recent}
+          />
+        )}
 
         {status !== "idle" && (
         <div className="cb-host" aria-live="polite">
@@ -363,6 +348,22 @@ export default function App() {
           crop={done ? result.crop : null}
         />
 
+        {/* Assignment as the headline, right after the photo */}
+        {done && result.assignment && revealStep >= 2 && (
+          <div className="cb-assignment cb-assignment-hero cb-fade-in">
+            <p className="cb-assignment-kicker">Your next shot</p>
+            <p className="cb-assignment-body">{result.assignment}</p>
+          </div>
+        )}
+
+        {/* Progress note for reshoots */}
+        {done && previous && result.progress && revealStep >= 2 && (
+          <div className="cb-note cb-fade-in">
+            <p className="cb-note-title">What changed</p>
+            <p className="cb-note-body">{result.progress}</p>
+          </div>
+        )}
+
         {/* Temper - small control, hidden once grade is in */}
         {!done && (
           <div className="cb-temper-compact">
@@ -387,7 +388,7 @@ export default function App() {
 
         {/* Inline actions (pre-results) */}
         <div className="cb-actions">
-          {status === "ready" && remaining.total > 0 && (
+          {status === "ready" && (
             <>
               <button type="button" className="cb-btn" onClick={judge}>
                 Submit to the Judges
@@ -395,46 +396,6 @@ export default function App() {
               <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
                 Choose a different photo
               </button>
-            </>
-          )}
-          {status === "ready" && remaining.total === 0 && (
-            <>
-              <div className="cb-paywall">
-                <p className="cb-paywall-title">You've used your 5 free critiques today</p>
-                {waitlist === "done" ? (
-                  <p className="cb-paywall-thanks">You're on the list. We'll let you know when unlimited critiques are available.</p>
-                ) : (
-                  <>
-                    <p className="cb-paywall-sub">Want more? Drop your email and we'll notify you when unlimited critiques launch.</p>
-                    <form className="cb-waitlist-form" onSubmit={async (e) => {
-                      e.preventDefault();
-                      if (!waitlistEmail.trim() || waitlist === "sending") return;
-                      setWaitlist("sending");
-                      try {
-                        await joinWaitlist(waitlistEmail.trim());
-                        setWaitlist("done");
-                      } catch {
-                        setWaitlist("error");
-                      }
-                    }}>
-                      <input
-                        type="email"
-                        className="cb-waitlist-input"
-                        placeholder="you@email.com"
-                        value={waitlistEmail}
-                        onChange={(e) => setWaitlistEmail(e.target.value)}
-                        disabled={waitlist === "sending"}
-                        required
-                      />
-                      <button type="submit" className="cb-btn cb-btn-buy" disabled={waitlist === "sending"}>
-                        {waitlist === "sending" ? "Sending..." : "Notify me"}
-                      </button>
-                    </form>
-                    {waitlist === "error" && <p className="cb-paywall-error">Something went wrong. Try again.</p>}
-                  </>
-                )}
-                <p className="cb-paywall-sub">Come back tomorrow for 5 more free ones.</p>
-              </div>
             </>
           )}
           {judging && (
@@ -462,57 +423,176 @@ export default function App() {
         )}
         {fileError && <p className="cb-error" role="alert">{fileError}</p>}
 
-        {done && previous && result.progress && (
-          <div className="cb-note">
-            <p className="cb-note-title">What changed</p>
-            <p className="cb-note-body">{result.progress}</p>
-          </div>
-        )}
-
         {status !== "idle" && (
           <section className="cb-section" aria-live="polite">
-            <h2 className="cb-h2 cb-display">Judges</h2>
+            {judging && (
+              <div className="cb-onboard-judges cb-fade-in">
+                <p className="cb-onboard-label">Your judges</p>
+                <div className="cb-onboard-faces">
+                  {CRITICS.map((c) => {
+                    const Face = FACES[c.id];
+                    return (
+                      <div key={c.id} className="cb-onboard-judge">
+                        <span className="cb-avatar cb-avatar-face" style={{ background: c.tint }} aria-hidden="true">
+                          {Face && <Face mood="neutral" temper={temper} />}
+                        </span>
+                        <span className="cb-onboard-name">{c.name}</span>
+                        <span className="cb-onboard-focus">{c.focus}</span>
+                      </div>
+                    );
+                  })}
+                  <div className="cb-onboard-judge">
+                    <span className="cb-avatar cb-onboard-mystery" aria-hidden="true">?</span>
+                    <span className="cb-onboard-name">Surprise Judge</span>
+                    <span className="cb-onboard-focus">A new guest each time</span>
+                  </div>
+                </div>
+              </div>
+            )}
             {judging && guestRevealed && (
               <p className="cb-guest-reveal cb-fade-in">Today's surprise judge is <strong>{guest.name}</strong></p>
             )}
-            <div className={`cb-panel-grid${revealStep >= 2 ? " is-list" : ""}`}>
-              {[judging || done ? guest : MYSTERY_GUEST, ...CRITICS].map((c, i) => (
-                <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} temper={temper} followUps={followUps[c.isGuest ? "guest" : c.id] || []} onFollowUp={(q) => handleFollowUp(c.isGuest ? "guest" : c.id, q)} photoUrl={photo?.url} crop={done ? result.crop : null} {...criticReveal(i)} />
-              ))}
-            </div>
-          </section>
-        )}
 
-        {done && result.frameTip && revealStep >= 10 && (
-          <section className="cb-section cb-fade-in">
-            <div className="cb-frame-tip">
-              <span className="cb-avatar cb-avatar-host" aria-hidden="true">
-                <Host />
-              </span>
-              <div>
-                <p className="cb-frame-tip-label">
-                  Lida&rsquo;s tip
-                  {result.photoType && result.photoType !== "other" && (
-                    <span className="cb-photo-type">{result.photoType.replace("_", " ")}</span>
-                  )}
-                </p>
-                <p className="cb-frame-tip-body">{result.frameTip}</p>
+            {/* Judging: show all cards in grid */}
+            {judging && (
+              <div className="cb-panel-grid">
+                {[...CRITICS, guest].map((c) => (
+                  <CriticCard key={c.id} critic={c} result={null} status={status} temper={temper} followUps={[]} photoUrl={photo?.url} crop={null} roastRevealed={false} fixRevealed={false} />
+                ))}
               </div>
-            </div>
-          </section>
-        )}
+            )}
 
-        {done && result.assignment && revealStep >= 10 && (
-          <section className="cb-section cb-fade-in">
-            <div className="cb-assignment">
-              <p className="cb-assignment-kicker">Your next shot</p>
-              <p className="cb-assignment-body">{result.assignment}</p>
-            </div>
-          </section>
-        )}
+            {/* Done: lead judge open, others collapsed, guest last */}
+            {done && (() => {
+              const leadCritic = CRITICS.find(c => c.id === leadCriticId) || CRITICS[0];
+              const otherCritics = CRITICS.filter(c => c.id !== leadCritic.id);
+              const actualGuest = guest;
+              return (
+                <>
+                  {/* Lead judge - full card */}
+                  <CriticCard
+                    key={leadCritic.id}
+                    critic={leadCritic}
+                    result={result}
+                    status={status}
+                    temper={temper}
+                    followUps={followUps[leadCritic.id] || []}
+                    onFollowUp={(q) => handleFollowUp(leadCritic.id, q)}
+                    photoUrl={photo?.url}
+                    crop={result.crop}
+                    roastRevealed={revealStep >= 2}
+                    fixRevealed={revealStep >= 3}
+                  />
 
-        {done && revealStep >= 10 && (
-          <Fundamentals covered={covered} />
+                  {/* Score as caption after lead judge */}
+                  {revealStep >= 3 && (
+                    <ScoreHero
+                      status={status}
+                      avg={avg}
+                      grade={gradeStr}
+                      previous={previous}
+                      prevAvg={prevAvg}
+                      chain={chain}
+                      revealKey={revealKey}
+                      bestScore={bestScore}
+                      recent={recent}
+                    />
+                  )}
+
+                  {/* Other teaching judges - collapsed */}
+                  {otherCritics.map((c, i) => (
+                    <CriticCard
+                      key={c.id}
+                      critic={c}
+                      result={result}
+                      status={status}
+                      temper={temper}
+                      followUps={followUps[c.id] || []}
+                      onFollowUp={(q) => handleFollowUp(c.id, q)}
+                      photoUrl={photo?.url}
+                      crop={result.crop}
+                      roastRevealed={revealStep >= 4 + i * 2}
+                      fixRevealed={revealStep >= 5 + i * 2}
+                      collapsed
+                    />
+                  ))}
+
+                  {/* Guest judge - the fun closer */}
+                  {revealStep >= 8 && (
+                    <CriticCard
+                      key={actualGuest.id}
+                      critic={actualGuest}
+                      result={result}
+                      status={status}
+                      temper={temper}
+                      followUps={followUps.guest || []}
+                      onFollowUp={(q) => handleFollowUp("guest", q)}
+                      photoUrl={photo?.url}
+                      crop={result.crop}
+                      roastRevealed
+                      fixRevealed={revealStep >= 9}
+                    />
+                  )}
+
+                  {/* Lida's tip */}
+                  {result.frameTip && revealStep >= 10 && (
+                    <div className="cb-frame-tip cb-fade-in">
+                      <span className="cb-avatar cb-avatar-host" aria-hidden="true">
+                        <Host />
+                      </span>
+                      <div>
+                        <p className="cb-frame-tip-label">
+                          Lida&rsquo;s tip
+                          {result.photoType && result.photoType !== "other" && (
+                            <span className="cb-photo-type">{result.photoType.replace("_", " ")}</span>
+                          )}
+                        </p>
+                        <p className="cb-frame-tip-body">{result.frameTip}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Waitlist capture when out of critiques */}
+                  {revealStep >= 10 && remaining.total === 0 && (
+                    <div className="cb-end-capture cb-fade-in">
+                      {waitlist === "done" ? (
+                        <p className="cb-paywall-thanks">You're on the list. We'll let you know when more critiques are available.</p>
+                      ) : (
+                        <>
+                          <p className="cb-end-capture-title">Want more critiques?</p>
+                          <p className="cb-end-capture-sub">Drop your email and we'll notify you when we open up.</p>
+                          <form className="cb-waitlist-form" onSubmit={async (e) => {
+                            e.preventDefault();
+                            if (!waitlistEmail.trim() || waitlist === "sending") return;
+                            setWaitlist("sending");
+                            try {
+                              await joinWaitlist(waitlistEmail.trim());
+                              setWaitlist("done");
+                            } catch {
+                              setWaitlist("error");
+                            }
+                          }}>
+                            <input
+                              className="cb-waitlist-input"
+                              type="email"
+                              placeholder="you@email.com"
+                              value={waitlistEmail}
+                              onChange={(e) => setWaitlistEmail(e.target.value)}
+                              required
+                            />
+                            <button type="submit" className="cb-btn" disabled={waitlist === "sending"} style={{ height: 44, fontSize: 14 }}>
+                              {waitlist === "sending" ? "Joining..." : "Join"}
+                            </button>
+                          </form>
+                          {waitlist === "error" && <p className="cb-paywall-error">Something went wrong. Try again.</p>}
+                        </>
+                      )}
+                    </div>
+                  )}
+                </>
+              );
+            })()}
+          </section>
         )}
 
       </div>
@@ -522,23 +602,26 @@ export default function App() {
 
       {done && (
         <div className="cb-sticky-bar">
-          <div className="cb-sticky-inner cb-sticky-3col">
+          <div className="cb-sticky-inner">
             <button type="button" className="cb-btn" onClick={() => pickerRef.current?.openCamera("reshoot")}>
-              Reshoot this
+              {leadFundamental ? `Reshoot: ${leadFundamental.toLowerCase()}` : "Reshoot this"}
             </button>
-            <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
-              New photo
-            </button>
-            <button
-              type="button"
-              className={`cb-btn is-share${shareState !== "idle" ? " is-active" : ""}`}
-              onClick={handleShare}
-              disabled={shareState === "sharing"}
-              aria-label={shareLabel}
-              title={shareLabel}
-            >
-              <Share2 size={20} aria-hidden="true" />
-            </button>
+            <div className="cb-sticky-secondary">
+              <button type="button" className="cb-sticky-link" onClick={() => pickerRef.current?.openGallery("new")}>
+                New photo
+              </button>
+              <button
+                type="button"
+                className={`cb-sticky-link${shareState !== "idle" ? " is-active" : ""}`}
+                onClick={handleShare}
+                disabled={shareState === "sharing"}
+                aria-label={shareLabel}
+                title={shareLabel}
+              >
+                <Share2 size={16} aria-hidden="true" />
+                <span>Share</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
