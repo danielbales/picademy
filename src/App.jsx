@@ -483,6 +483,21 @@ export default function App() {
               const actualGuest = guest;
               return (
                 <>
+                  {/* Overall score first */}
+                  {revealStep >= 2 && (
+                    <ScoreHero
+                      status={status}
+                      avg={avg}
+                      grade={gradeStr}
+                      previous={previous}
+                      prevAvg={prevAvg}
+                      chain={chain}
+                      revealKey={revealKey}
+                      bestScore={bestScore}
+                      recent={recent}
+                    />
+                  )}
+
                   {/* Lead judge - full card */}
                   <CriticCard
                     key={leadCritic.id}
@@ -497,21 +512,6 @@ export default function App() {
                     roastRevealed={revealStep >= 2}
                     fixRevealed={revealStep >= 3}
                   />
-
-                  {/* Score as caption after lead judge */}
-                  {revealStep >= 3 && (
-                    <ScoreHero
-                      status={status}
-                      avg={avg}
-                      grade={gradeStr}
-                      previous={previous}
-                      prevAvg={prevAvg}
-                      chain={chain}
-                      revealKey={revealKey}
-                      bestScore={bestScore}
-                      recent={recent}
-                    />
-                  )}
 
                   {/* Other teaching judges - collapsed */}
                   {otherCritics.map((c, i) => (
