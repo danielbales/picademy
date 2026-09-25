@@ -154,10 +154,14 @@ export default function ScoreHero({ status, avg, grade, previous, prevAvg, chain
             <div className="cb-recent-thumbs">
               {recent.map((r, i) => (
                 r.thumb && (
-                  <div key={i} className="cb-recent-item">
+                  <button key={i} className="cb-recent-item" type="button" onClick={(e) => {
+                    const el = e.currentTarget;
+                    el.classList.toggle("is-expanded");
+                  }}>
                     <img className="cb-recent-thumb" src={r.thumb} alt={`Score ${fmt(r.score)}`} />
                     <span className="cb-recent-score cb-num">{fmt(r.score)}</span>
-                  </div>
+                    <span className="cb-recent-grade cb-num">{toGrade(r.score)}</span>
+                  </button>
                 )
               ))}
             </div>

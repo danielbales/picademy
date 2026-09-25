@@ -7,6 +7,7 @@ const DURATION = 1500;
 
 export function fireConfetti() {
   if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+  navigator.vibrate?.([30, 50, 30]);
 
   const canvas = document.createElement("canvas");
   canvas.style.cssText = "position:fixed;inset:0;z-index:9999;pointer-events:none;";

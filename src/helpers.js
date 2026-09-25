@@ -21,11 +21,17 @@ export function useCountUp(target, key) {
       return undefined;
     }
     let raf;
+    let vibrated = false;
     const start = performance.now();
     const tick = (now) => {
       const k = Math.min(1, (now - start) / 700);
       setValue(target * (1 - Math.pow(1 - k, 3)));
-      if (k < 1) raf = requestAnimationFrame(tick);
+      if (k < 1) {
+        raf = requestAnimationFrame(tick);
+      } else if (!vibrated) {
+        vibrated = true;
+        navigator.vibrate?.(40);
+      }
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);

@@ -51,6 +51,7 @@ export default function App() {
   const [followUps, setFollowUps] = useState({});
   const [waitlist, setWaitlist] = useState("idle"); // idle | sending | done | error
   const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [guestRevealed, setGuestRevealed] = useState(false);
   const pickerRef = useRef(null);
   const runId = useRef(0);
 
@@ -121,6 +122,8 @@ export default function App() {
     const id = ++runId.current;
     const pickedGuest = GUESTS[Math.floor(Math.random() * GUESTS.length)];
     setGuest(pickedGuest);
+    setGuestRevealed(true);
+    setTimeout(() => setGuestRevealed(false), 2800);
     setHostNote(null);
     setStatus("judging");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -252,12 +255,19 @@ export default function App() {
             </span>
             Aperture
           </h1>
-          {streak > 0 && (
-            <span className="cb-streak is-active" aria-label={`${streak} day streak`}>
-              <Flame size={18} aria-hidden="true" />
-              <span className="cb-num">{streak}</span>
-            </span>
-          )}
+          <div className="cb-bar-right">
+            {remaining.freeLeft < remaining.daily && (
+              <span className="cb-remaining-pill" aria-label={`${remaining.total} critiques remaining`}>
+                <span className="cb-num">{remaining.total}</span>/{remaining.daily}
+              </span>
+            )}
+            {streak > 0 && (
+              <span className="cb-streak is-active" aria-label={`${streak} day streak`}>
+                <Flame size={18} aria-hidden="true" />
+                <span className="cb-num">{streak}</span>
+              </span>
+            )}
+          </div>
         </header>
 
         <p className="cb-tagline">
@@ -308,6 +318,11 @@ export default function App() {
                   <span className="cb-onboard-focus">A new guest each time</span>
                 </div>
               </div>
+            </div>
+            <div className="cb-onboard-preview">
+              <p className="cb-onboard-preview-label">Example roast</p>
+              <p className="cb-onboard-preview-quote">"That horizon line is drunk. Even my tail is straighter and I chase it in circles."</p>
+              <p className="cb-onboard-preview-from">- Curren, 7.2/10</p>
             </div>
           </section>
         )}
@@ -420,9 +435,6 @@ export default function App() {
                 )}
                 <p className="cb-paywall-sub">Come back tomorrow for 5 more free ones.</p>
               </div>
-              <button type="button" className="cb-btn is-secondary" onClick={() => pickerRef.current?.openGallery("new")}>
-                Choose a different photo
-              </button>
             </>
           )}
           {judging && (
@@ -460,6 +472,9 @@ export default function App() {
         {status !== "idle" && (
           <section className="cb-section" aria-live="polite">
             <h2 className="cb-h2 cb-display">Judges</h2>
+            {judging && guestRevealed && (
+              <p className="cb-guest-reveal cb-fade-in">Today's surprise judge is <strong>{guest.name}</strong></p>
+            )}
             <div className={`cb-panel-grid${revealStep >= 2 ? " is-list" : ""}`}>
               {[judging || done ? guest : MYSTERY_GUEST, ...CRITICS].map((c, i) => (
                 <CriticCard key={c.id} critic={c} result={done ? result : null} status={status} temper={temper} followUps={followUps[c.isGuest ? "guest" : c.id] || []} onFollowUp={(q) => handleFollowUp(c.isGuest ? "guest" : c.id, q)} photoUrl={photo?.url} crop={done ? result.crop : null} {...criticReveal(i)} />

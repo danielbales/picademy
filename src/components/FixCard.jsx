@@ -62,10 +62,12 @@ export default function FixCard({ fix, isHabit, photoUrl, crop }) {
       </div>
       {fix.steps.length > 0 && (
         <ol className="cb-steps">
-          <li>
-            <span className="cb-step-num" aria-hidden="true">1</span>
-            <span>{fix.steps[0]}</span>
-          </li>
+          {fix.steps.map((step, i) => (
+            <li key={i}>
+              <span className="cb-step-num" aria-hidden="true">{i + 1}</span>
+              <span>{step}</span>
+            </li>
+          ))}
         </ol>
       )}
     </div>

@@ -33,7 +33,9 @@ body { margin: 0; background: #0A0B0D; }
 .cb button:focus-visible { outline: 2px solid var(--blue-text); outline-offset: 2px; }
 
 /* App bar */
-.cb-bar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; height: 64px; background: var(--bg); }
+.cb-bar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; height: 64px; background: var(--bg); }
+.cb-bar-right { display: flex; align-items: center; gap: 10px; }
+.cb-remaining-pill { font-size: 12px; color: var(--text-2); background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 999px; letter-spacing: 0.02em; }
 .cb-brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 20px; letter-spacing: -0.01em; margin: 0; }
 .cb-brand-mark { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 0 6px rgba(232,200,74,.4)); }
 .cb-brand-mark svg { width: 36px; height: 36px; flex: none; }
@@ -51,6 +53,10 @@ body { margin: 0; background: #0A0B0D; }
 .cb-onboard-judge .cb-avatar { width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; }
 .cb-onboard-judge .cb-avatar-face svg { width: 48px; height: 48px; display: block; flex: none; }
 .cb-onboard-mystery { background: rgba(107,114,128,.16); font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.3); }
+.cb-onboard-preview { margin-top: 20px; padding: 16px; background: var(--surface); border-radius: 16px; text-align: center; }
+.cb-onboard-preview-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-2); margin: 0 0 8px; }
+.cb-onboard-preview-quote { font-size: 15px; font-style: italic; color: var(--text-1); margin: 0 0 8px; line-height: 1.5; }
+.cb-onboard-preview-from { font-size: 13px; color: var(--accent); margin: 0; font-weight: 600; }
 .cb-onboard-name { font-size: 14px; font-weight: 600; color: var(--text-1); }
 .cb-onboard-focus { font-size: 12px; color: var(--text-2); }
 .cb-streak { margin-left: auto; display: flex; align-items: center; gap: 4px; font-weight: 700; font-size: 16px; color: #F97316; }
@@ -74,9 +80,13 @@ body { margin: 0; background: #0A0B0D; }
 .cb-sub { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 4px 0 0; color: var(--text-2); font-size: 15px; }
 .cb-recent { margin: 12px 0 0; }
 .cb-recent-thumbs { display: flex; gap: 10px; justify-content: center; }
-.cb-recent-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.cb-recent-thumb { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; border: 1.5px solid var(--border); }
+.cb-recent-item { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; padding: 0; cursor: pointer; transition: transform 0.15s ease; -webkit-tap-highlight-color: transparent; }
+.cb-recent-item:active { transform: scale(1.08); }
+.cb-recent-thumb { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; border: 1.5px solid var(--border); transition: border-color 0.15s, box-shadow 0.15s; }
+.cb-recent-item.is-expanded .cb-recent-thumb { border-color: var(--accent); box-shadow: 0 0 8px rgba(232,200,74,0.3); }
 .cb-recent-score { font-size: 13px; font-weight: 600; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.cb-recent-grade { font-size: 11px; color: var(--accent); opacity: 0; max-height: 0; transition: opacity 0.2s, max-height 0.2s; }
+.cb-recent-item.is-expanded .cb-recent-grade { opacity: 1; max-height: 20px; }
 .cb-best { display: flex; align-items: center; gap: 8px; margin: 8px 0 0; color: var(--text-2); font-size: 15px; font-weight: 500; }
 .cb-best.is-new { color: var(--green); }
 .cb-best-thumb { width: 28px; height: 28px; border-radius: 6px; object-fit: cover; border: 1.5px solid var(--border); flex: none; margin-left: 2px; }
@@ -199,6 +209,8 @@ body { margin: 0; background: #0A0B0D; }
 /* Sections */
 .cb-section { margin-top: 20px; }
 .cb-h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 12px; }
+.cb-guest-reveal { text-align: center; font-size: 15px; color: var(--accent); margin: -4px 0 12px; animation: guestReveal 2.8s ease-out forwards; }
+@keyframes guestReveal { 0% { opacity: 0; transform: scale(0.9); } 15% { opacity: 1; transform: scale(1); } 80% { opacity: 1; } 100% { opacity: 0; } }
 .cb-note { background: var(--surface); border-radius: 20px; padding: 16px; margin-top: 16px; }
 .cb-note-title { font-weight: 600; margin: 0 0 2px; }
 .cb-note-body { margin: 0; color: var(--body); }
